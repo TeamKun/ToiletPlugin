@@ -2,6 +2,7 @@ package net.kunmc.lab.toiletplugin.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,9 +20,20 @@ public class CommandFeedBackUtils
     {
         if (min != -1 && args.length < min || (max != -1 && args.length > max))
         {
-            sender.sendMessage(ChatColor.RED + "E: 引数の数が不正です:r:r 必要:r:r " +
-                    (max == -1 ? min : min + "〜" + max) +
-                    " 提供:r:r " + args.length);
+            sender.sendMessage(ChatColor.RED + "E: 引数の数が不正です: 必要: " +
+                    (max == -1 ? min: min + "〜" + max) +
+                    " 提供: " + args.length);
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean checkPlayer(@NotNull CommandSender sender)
+    {
+        if (!(sender instanceof Player))
+        {
+            sender.sendMessage(ChatColor.RED + "E: このコマンドはプレイヤーからのみ実行できます！");
             return true;
         }
 
@@ -41,18 +53,18 @@ public class CommandFeedBackUtils
             int num = Integer.parseInt(arg);
             if (num < min || (max != -1 && num > max))
             {
-                sender.sendMessage(ChatColor.RED + "E: 引数の値が不正です:r:r 必要:r:r " +
-                        (max == -1 ? min : min + "〜" + max) +
-                        " 提供:r:r " + num);
+                sender.sendMessage(ChatColor.RED + "E: 引数の値が不正です: 必要: " +
+                        (max == -1 ? min: min + "〜" + max) +
+                        " 提供: " + num);
                 return null;
             }
             return num;
         }
         catch (NumberFormatException e)
         {
-            sender.sendMessage(ChatColor.RED + "引数が数値ではありません:r:r 必要:r:r " +
-                    (max == -1 ? min : min + "〜" + max) +
-                    " 提供:r:r " + arg);
+            sender.sendMessage(ChatColor.RED + "引数が数値ではありません: 必要: " +
+                    (max == -1 ? min: min + "〜" + max) +
+                    " 提供: " + arg);
             return null;
         }
     }

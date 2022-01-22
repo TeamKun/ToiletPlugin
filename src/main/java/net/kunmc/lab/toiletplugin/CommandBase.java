@@ -11,8 +11,12 @@ import java.util.List;
 public abstract class CommandBase
 {
     public abstract void onCommand(CommandSender sender, String[] args);
+
     public abstract List<String> onTabComplete(CommandSender sender, String[] args);
+
     public abstract TextComponent getHelpOneLine();
+
+    public abstract String[] getArguments();
 
     protected static String required(String argName, String typeName)
     {

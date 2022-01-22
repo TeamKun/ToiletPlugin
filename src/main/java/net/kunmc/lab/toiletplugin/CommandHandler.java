@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin;
 
 import net.kunmc.lab.toiletplugin.commands.HelpCommand;
+import net.kunmc.lab.toiletplugin.commands.ToolCommand;
 import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,6 +28,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter
         helpInstance = new HelpCommand(commands);
 
         commands.put("help", helpInstance);
+        commands.put("tool", new ToolCommand());
     }
 
     @Override
@@ -43,7 +45,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter
 
         if (!commands.containsKey(args[0]))
         {
-            sender.sendMessage(ChatColor.RED + "E: サブコマンドが見つかりませんでした:r:r " + args[0]);
+            sender.sendMessage(ChatColor.RED + "E: サブコマンドが見つかりませんでした:  " + args[0]);
             helpInstance.onCommand(sender, removeFirst(args));
             return true;
         }

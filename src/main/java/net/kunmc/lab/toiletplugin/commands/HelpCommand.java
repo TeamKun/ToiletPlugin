@@ -11,7 +11,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.util.StringUtil;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,12 +35,16 @@ public class HelpCommand extends CommandBase
         int start = (page - 1) * 5;
         int end = Math.min(start + 5, commands.size());
 
-        int max_length = commands.keySet().stream().mapToInt(String::length).max().orElse(0);
+        int max_length = commands.entrySet().stream().mapToInt(value -> value.getKey().length() + 1 +
+                String.join(" ", value.getValue().getArguments()).length()).max().orElse(0);
 
         commands.entrySet().stream()
                 .skip(start)
                 .limit(end - start)
-                .forEach(entry -> send(sender, entry.getValue().getHelpOneLine(), entry.getKey(), max_length));
+                .forEach(entry -> send(sender, entry.getValue().getHelpOneLine().append(
+                                of(" " + String.join(" ", entry.getValue().getArguments()))),
+                        entry.getKey(), max_length
+                ));
 
         TextComponent footer = of(ChatColor.GOLD + "-----=====");
 
@@ -83,5 +86,11 @@ public class HelpCommand extends CommandBase
     public TextComponent getHelpOneLine()
     {
         return of("ヘルプを表示します。");
+    }
+
+    @Override
+    public String[] getArguments()
+    {
+        return new String[0];
     }
 }

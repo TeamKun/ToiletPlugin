@@ -1,7 +1,10 @@
 package net.kunmc.lab.toiletplugin;
 
 import lombok.Getter;
+import net.kunmc.lab.toiletplugin.toilet.ModelManager;
+import net.kunmc.lab.toiletplugin.toilet.ToolManager;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -24,10 +27,16 @@ public final class ToiletPlugin extends JavaPlugin
     @Getter
     private static ToiletPlugin plugin;
 
+    @Getter
+    private final ModelManager modelManager;
+
     public ToiletPlugin()
     {
         plugin = this;
         LOGGER = getLogger();
+
+        modelManager = new ModelManager();
+
     }
 
 
@@ -42,6 +51,10 @@ public final class ToiletPlugin extends JavaPlugin
         getCommand("toilet").setTabCompleter(new CommandHandler());
 
         copyFilesFromJar();
+
+        modelManager.scan(new File(getDataFolder(), "assets/toilet_models"));
+
+        Bukkit.getPluginManager().registerEvents(new ToolManager(), this);
     }
 
     public static void copyFilesFromJar()
