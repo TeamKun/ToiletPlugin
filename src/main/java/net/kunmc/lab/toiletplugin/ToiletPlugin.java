@@ -1,8 +1,8 @@
 package net.kunmc.lab.toiletplugin;
 
 import lombok.Getter;
-import net.kunmc.lab.toiletplugin.toilet.ModelManager;
-import net.kunmc.lab.toiletplugin.toilet.ToolManager;
+import net.kunmc.lab.toiletplugin.toilet.generate.ModelManager;
+import net.kunmc.lab.toiletplugin.toilet.generate.ToolManager;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
