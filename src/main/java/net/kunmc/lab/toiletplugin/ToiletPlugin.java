@@ -21,9 +21,14 @@ public final class ToiletPlugin extends JavaPlugin
 
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onEnable()
     {
         LOGGER.info("ToiletPlugin has enabled!");
+
+        getCommand("toilet").setExecutor(new CommandHandler());
+        getCommand("toilet").setTabCompleter(new CommandHandler());
+
     }
 
     @Override
