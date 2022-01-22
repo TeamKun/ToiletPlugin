@@ -1,19 +1,21 @@
 package net.kunmc.lab.toiletplugin;
 
 import lombok.Getter;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
 import java.security.CodeSource;
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.zip.ZipFile;
 
 public final class ToiletPlugin extends JavaPlugin
 {
@@ -42,7 +44,7 @@ public final class ToiletPlugin extends JavaPlugin
         copyFilesFromJar();
     }
 
-    private static void copyFilesFromJar()
+    public static void copyFilesFromJar()
     {
         File dataDir = plugin.getDataFolder();
 
@@ -54,19 +56,27 @@ public final class ToiletPlugin extends JavaPlugin
         }
 
         URL jar = codeSource.getLocation();
-        try(ZipInputStream zip = new ZipInputStream(jar.openStream()))
+        try(ZipFile zip = new ZipFile(jar.getPath()))
         {
+            Enumeration<? extends ZipEntry> entries = zip.entries();
             while (true)
             {
-                ZipEntry entry = zip.getNextEntry();
+                if (!entries.hasMoreElements())
+                    break;
+
+                ZipEntry entry = entries.nextElement();
                 if (entry == null)
                     break;
 
                 String name = entry.getName();
                 if (name.startsWith("assets") && !entry.isDirectory())
                 {
-                    actualCopy(zip, new File(dataDir, name));
+                    File file = new File(dataDir, name);
+
+                    if (!file.exists() || !checkDigest(zip.getInputStream(entry), new FileInputStream(file)))
+                        actualCopy(zip.getInputStream(entry), file);
                 }
+
             }
         }
         catch (Exception e)
@@ -76,8 +86,16 @@ public final class ToiletPlugin extends JavaPlugin
         }
     }
 
+    private static boolean checkDigest(InputStream one, InputStream two) throws IOException
+    {
+        return Arrays.equals(DigestUtils.sha1(one), DigestUtils.sha1(two));
+    }
+
     private static void actualCopy(InputStream inputStream,  File file) throws IOException
     {
+        LOGGER.info("Copying " + file.getName());
+        if (file.exists())
+            file.delete();
         file.getParentFile().mkdirs();
         try(FileOutputStream out = new FileOutputStream(file))
         {
