@@ -1,0 +1,24 @@
+name: ToiletPlugin
+version: '${project.version}'
+main: net.kunmc.lab.toiletplugin.ToiletPlugin
+api-version: 1.16
+authors: [Peyang]
+description: Die if you don't go to the toilet.
+website: https://kunmc.net/
+prefix: ToiletPlugin
+
+commands:
+  toilet:
+    aliases:
+      - poop
+    description: "Toilet main command"
+
+permissions:
+  toilet:
+    description: "Toilet main permission"
+    default: op
+    children:
+      toilet.admin: true
+  toilet.admin:
+    description: "Toilet admin command permission"
+    default: false
