@@ -74,7 +74,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter
         else if (commands.containsKey(args[0]))
         {
             CommandBase commandBase = commands.get(args[0]);
-            List<String> commandCompletes = commandBase.onTabComplete(sender, args);
+            List<String> commandCompletes = commandBase.onTabComplete(sender, removeFirst(args));
             if (commandCompletes != null)
                 completes.addAll(commandCompletes);
         }
