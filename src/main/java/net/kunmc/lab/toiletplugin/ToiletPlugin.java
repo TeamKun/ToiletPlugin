@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin;
 
 import lombok.Getter;
+import net.kunmc.lab.toiletplugin.toilet.ToiletRegister;
 import net.kunmc.lab.toiletplugin.toilet.generate.ModelManager;
 import net.kunmc.lab.toiletplugin.toilet.generate.ToolManager;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -29,17 +30,18 @@ public final class ToiletPlugin extends JavaPlugin
 
     @Getter
     private final ModelManager modelManager;
+    @Getter
+    private final ToiletRegister toilets;
 
-    public ToiletPlugin()
+    public ToiletPlugin() throws IOException
     {
         plugin = this;
         LOGGER = getLogger();
 
         modelManager = new ModelManager();
 
+        toilets = new ToiletRegister(new File(getDataFolder(), "toilets.json"));
     }
-
-
 
     @Override
     @SuppressWarnings("ConstantConditions")
@@ -60,6 +62,8 @@ public final class ToiletPlugin extends JavaPlugin
                 });
 
         Bukkit.getPluginManager().registerEvents(new ToolManager(), this);
+
+
     }
 
     public static void copyFilesFromJar()
@@ -127,6 +131,14 @@ public final class ToiletPlugin extends JavaPlugin
     @Override
     public void onDisable()
     {
-        LOGGER.info("ToiletPlugin has enabled!");
+        try
+        {
+            this.toilets.save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        LOGGER.info("ToiletPlugin has disabled!");
     }
 }

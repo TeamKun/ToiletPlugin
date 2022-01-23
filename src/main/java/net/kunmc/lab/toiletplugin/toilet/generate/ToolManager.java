@@ -138,6 +138,6 @@ public class ToolManager implements Listener
         Location generateLoc = e.getClickedBlock().getLocation();
         generateLoc.setY(generateLoc.getY() - 1);
 
-        ToiletGenerator.generateToilet(name, generateLoc, ((Directional) chest.getBlockData()).getFacing());
+        ToiletGenerator.generateToilet(e.getPlayer(), name, generateLoc, ((Directional) chest.getBlockData()).getFacing());
     }
 }
