@@ -54,6 +54,11 @@ public final class ToiletPlugin extends JavaPlugin
 
         modelManager.scan(new File(getDataFolder(), "assets/toilet_models"));
 
+        Bukkit.getWorlds().stream().parallel()
+                .forEach(world -> {
+                    modelManager.scan(new File(world.getWorldFolder(), "generated"));
+                });
+
         Bukkit.getPluginManager().registerEvents(new ToolManager(), this);
     }
 

@@ -3,6 +3,7 @@ package net.kunmc.lab.toiletplugin.toilet.generate;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ModelManager
 {
@@ -25,10 +26,10 @@ public class ModelManager
 
     public List<String> getNames()
     {
-        return models.keySet().stream().sorted().collect(java.util.stream.Collectors.toList());
+        return models.keySet().stream().sorted().collect(Collectors.toList());
     }
 
-    public void scan(File folder)
+    public void scan(File folder, String prefix)
     {
         File[] files = folder.listFiles();
         if (files != null)
@@ -36,16 +37,26 @@ public class ModelManager
             for (File file : files)
             {
                 if (file.isDirectory())
-                    scan(file);
+                {
+                    if (prefix == null)
+                        scan(file, file.getName());
+                    else
+                        scan(file, prefix);
+                }
                 else
                 {
                     String name = file.getName();
                     if (name.endsWith(".nbt"))
-                        models.put(name.substring(0, name.length() - 4), file);
+                        models.put((prefix == null ? "": prefix + ":") + name.substring(0, name.length() - 4), file);
                     if (name.endsWith(".schematic"))
-                        models.put(name.substring(0, name.length() - 11), file);
+                        models.put((prefix == null ? "": prefix + ":") + name.substring(0, name.length() - 11), file);
                 }
             }
         }
+    }
+
+    public void scan(File folder)
+    {
+        scan(folder, null);
     }
 }
