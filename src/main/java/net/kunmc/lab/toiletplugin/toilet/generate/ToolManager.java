@@ -3,9 +3,11 @@ package net.kunmc.lab.toiletplugin.toilet.generate;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.Directional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -124,6 +126,15 @@ public class ToolManager implements Listener
 
         e.setCancelled(true);
 
-        System.out.println(name);
+        System.out.println("Generating:" + name);
+
+        chest.getBlockInventory().clear();
+        chest.getBlock().breakNaturally();
+
+        Location generateLoc = e.getClickedBlock().getLocation();
+
+        generateLoc.setY(generateLoc.getY() - 1);
+
+        ToiletGenerator.generateToilet(name, generateLoc, ((Directional) chest.getBlockData()).getFacing());
     }
 }

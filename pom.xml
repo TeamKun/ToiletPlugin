@@ -45,11 +45,26 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>nbt</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>bin</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
         </plugins>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources/assets/toilet_models</directory>
+                <filtering>false</filtering>
             </resource>
         </resources>
     </build>
@@ -84,9 +99,15 @@
             <version>114.191.981.0</version>
         </dependency>
         <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>1.15</version>
-    </dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.shynixn.structureblocklib</groupId>
+            <artifactId>structureblocklib-bukkit-api</artifactId>
+            <version>2.3.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

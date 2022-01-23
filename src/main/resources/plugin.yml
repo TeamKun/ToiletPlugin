@@ -1,11 +1,12 @@
 name: ToiletPlugin
-version: '${project.version}'
+version: 1.0.0
 main: net.kunmc.lab.toiletplugin.ToiletPlugin
 api-version: 1.16
 authors: [Peyang]
 description: Die if you don't go to the toilet.
 website: https://kunmc.net/
 prefix: ToiletPlugin
+depend: [StructureBlockLib]
 
 commands:
   toilet:
