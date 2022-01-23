@@ -129,7 +129,7 @@ public class ToolManager implements Listener
         System.out.println("Generating:" + name);
 
         chest.getBlockInventory().clear();
-        chest.getBlock().breakNaturally();
+        chest.getBlock().setType(Material.AIR);
 
         Location generateLoc = e.getClickedBlock().getLocation();
 
