@@ -57,6 +57,8 @@ public class CommandHandler implements CommandExecutor, TabCompleter
 
     private static String[] removeFirst(String[] args)
     {
+        if (args.length == 0)
+            return args;
         String[] newArgs = new String[args.length - 1];
         System.arraycopy(args, 1, newArgs, 0, args.length - 1);
         return newArgs;
