@@ -52,12 +52,15 @@ public class ToiletRegister
                     if (location.getBlock().getType() == Material.CAULDRON)
                         scytheLoc = location;
                     if (ironDoorLoc != null && scytheLoc != null)
+                    {
                         return new Toilet(
                                 new Toilet.LocationPojo(armorStandLoc.getWorld().getName(), armorStandLoc.getBlockX(), armorStandLoc.getBlockY(), armorStandLoc.getBlockZ()),
+                                new Toilet.LocationPojo(scytheLoc.getWorld().getName(), scytheLoc.getBlockX(), scytheLoc.getBlockY(), scytheLoc.getBlockZ()),
                                 new Toilet.LocationPojo(ironDoorLoc.getWorld().getName(), ironDoorLoc.getBlockX(), ironDoorLoc.getBlockY(), ironDoorLoc.getBlockZ()),
-                                new Toilet.LocationPojo(scytheLoc.getWorld().getName(), scytheLoc.getBlockX(), scytheLoc.getBlockY(), scytheLoc.getBlockZ())
+                                stand.getUniqueId().toString(),
+                                null
                         );
-
+                    }
                 }
         return null;
     }

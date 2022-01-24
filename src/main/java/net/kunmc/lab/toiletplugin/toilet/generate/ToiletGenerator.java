@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -66,18 +67,38 @@ public class ToiletGenerator
                         return;
                     }
 
+                    Toilet.LocationPojo doorLoc = toilet.getDoorLocation();
+                    ArmorStand iDAS = (ArmorStand) location.getWorld().spawnEntity(
+                            new Location(location.getWorld(), doorLoc.getX(), doorLoc.getY(), doorLoc.getZ()),
+                            EntityType.ARMOR_STAND
+                    );
+
+
+                    toilet = new Toilet(toilet.getArmorStandLocation(), toilet.getScytheLocation(), toilet.getDoorLocation(),
+                            toilet.getArmorStandUUID(), iDAS.getUniqueId().toString()
+                    );
+
                     String name = UUID.randomUUID().toString().substring(0, 8);
                     ToiletPlugin.getPlugin().getToilets().registerToilet(name, toilet);
 
-                    patchArmorStand(armorStand, direction);
+                    patchArmorStand(armorStand, name, direction);
+                    patchArmorStand(iDAS, name, null);
 
                     placer.sendMessage(ChatColor.GREEN + "S: トイレを「" + name + "」として作成しました。");
                 });
     }
 
-    private static void patchArmorStand(ArmorStand stand, BlockFace direction)
+    private static void patchArmorStand(ArmorStand stand, String name, BlockFace direction)
     {
         stand.addScoreboardTag("registered_toilet");
+        stand.addScoreboardTag("toilet_" + name);
+        stand.setVisible(false);
+        stand.setGravity(false);
+        stand.setCustomName(ChatColor.GREEN + "Toilet: " + name);
+
+        if (direction == null)
+            return;
+
         switch (direction)
         {
             case EAST:
