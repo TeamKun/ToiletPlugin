@@ -7,6 +7,7 @@ import net.kunmc.lab.toiletplugin.toilet.Toilet;
 import net.kunmc.lab.toiletplugin.toilet.ToiletRegister;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -72,8 +73,14 @@ public class ToiletGenerator
                             EntityType.ARMOR_STAND
                     );
 
+                    int scanned_door_y = doorLoc.getY();
 
-                    toilet = new Toilet(toilet.getName(), toilet.getArmorStandLocation(), toilet.getScytheLocation(), toilet.getDoorLocation(),
+                    if (placer.getWorld().getBlockAt(doorLoc.getX(), scanned_door_y - 1, doorLoc.getZ()).getType() == Material.IRON_DOOR)
+                        scanned_door_y -= 1;
+
+                    Toilet.LocationPojo toiletLoc = new Toilet.LocationPojo(doorLoc.getWorldName(), doorLoc.getX(), scanned_door_y, doorLoc.getZ());
+
+                    toilet = new Toilet(toilet.getName(), toilet.getArmorStandLocation(), toilet.getScytheLocation(), toiletLoc,
                             toilet.getArmorStandUUID(), iDAS.getUniqueId().toString()
                     );
 
