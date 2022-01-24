@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin;
 
 import lombok.Getter;
+import net.kunmc.lab.toiletplugin.toilet.ToiletLogic;
 import net.kunmc.lab.toiletplugin.toilet.ToiletRegister;
 import net.kunmc.lab.toiletplugin.toilet.generate.ModelManager;
 import net.kunmc.lab.toiletplugin.toilet.generate.ToolManager;
@@ -62,6 +63,7 @@ public final class ToiletPlugin extends JavaPlugin
                 });
 
         Bukkit.getPluginManager().registerEvents(new ToolManager(), this);
+        Bukkit.getPluginManager().registerEvents(new ToiletLogic(this.toilets), this);
 
 
     }

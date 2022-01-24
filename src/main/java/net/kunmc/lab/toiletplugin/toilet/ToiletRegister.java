@@ -54,6 +54,7 @@ public class ToiletRegister
                     if (ironDoorLoc != null && scytheLoc != null)
                     {
                         return new Toilet(
+                                stand.getUniqueId().toString().substring(0, 8),
                                 new Toilet.LocationPojo(armorStandLoc.getWorld().getName(), armorStandLoc.getBlockX(), armorStandLoc.getBlockY(), armorStandLoc.getBlockZ()),
                                 new Toilet.LocationPojo(scytheLoc.getWorld().getName(), scytheLoc.getBlockX(), scytheLoc.getBlockY(), scytheLoc.getBlockZ()),
                                 new Toilet.LocationPojo(ironDoorLoc.getWorld().getName(), ironDoorLoc.getBlockX(), ironDoorLoc.getBlockY(), ironDoorLoc.getBlockZ()),
@@ -91,6 +92,18 @@ public class ToiletRegister
                 .map(Toilet::getArmorStandLocation)
                 .map(locationPojo -> new Location(Bukkit.getWorld(locationPojo.getWorldName()), locationPojo.getX(), locationPojo.getY(), locationPojo.getZ()))
                 .toArray(Location[]::new);
+    }
+
+    public Toilet getToilet(Location anyLoc)
+    {
+        return this.toilets.values().stream()
+                .filter(toilet ->
+                        toilet.getArmorStandLocation().equals(Toilet.LocationPojo.fromLocation(anyLoc))
+                                || toilet.getDoorLocation().equals(Toilet.LocationPojo.fromLocation(anyLoc))
+                                || toilet.getScytheLocation().equals(Toilet.LocationPojo.fromLocation(anyLoc))
+                )
+                .findFirst()
+                .orElse(null);
     }
 
     public void saveToFile(File file) throws IOException

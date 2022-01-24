@@ -13,7 +13,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
-import java.util.UUID;
 
 public class ToiletGenerator
 {
@@ -74,11 +73,11 @@ public class ToiletGenerator
                     );
 
 
-                    toilet = new Toilet(toilet.getArmorStandLocation(), toilet.getScytheLocation(), toilet.getDoorLocation(),
+                    toilet = new Toilet(toilet.getName(), toilet.getArmorStandLocation(), toilet.getScytheLocation(), toilet.getDoorLocation(),
                             toilet.getArmorStandUUID(), iDAS.getUniqueId().toString()
                     );
 
-                    String name = UUID.randomUUID().toString().substring(0, 8);
+                    String name = toilet.getName();
                     ToiletPlugin.getPlugin().getToilets().registerToilet(name, toilet);
 
                     patchArmorStand(armorStand, name, direction);
