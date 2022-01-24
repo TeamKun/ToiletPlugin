@@ -69,7 +69,7 @@ public class ToiletGenerator
 
                     Toilet.LocationPojo doorLoc = toilet.getDoorLocation();
                     ArmorStand iDAS = (ArmorStand) location.getWorld().spawnEntity(
-                            new Location(location.getWorld(), doorLoc.getX(), doorLoc.getY(), doorLoc.getZ()),
+                            new Location(location.getWorld(), doorLoc.getX() + 0.5, doorLoc.getY(), doorLoc.getZ() + 0.5),
                             EntityType.ARMOR_STAND
                     );
 
