@@ -82,7 +82,7 @@ public class ToiletGenerator
                     ToiletPlugin.getPlugin().getToilets().registerToilet(name, toilet);
 
                     patchArmorStand(armorStand, name, direction);
-                    patchArmorStand(iDAS, name, null);
+                    patchArmorStand(iDAS, name, direction);
 
                     placer.sendMessage(ChatColor.GREEN + "S: トイレを「" + name + "」として作成しました。");
                 });
