@@ -39,14 +39,14 @@ public class CommandHandler implements CommandExecutor, TabCompleter
 
         if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 1))
         {
-            helpInstance.onCommand(sender, removeFirst(args));
+            helpInstance.onCommand(sender, removeFirst(new String[0]));
             return true;
         }
 
         if (!commands.containsKey(args[0]))
         {
             sender.sendMessage(ChatColor.RED + "E: サブコマンドが見つかりませんでした:  " + args[0]);
-            helpInstance.onCommand(sender, removeFirst(args));
+            helpInstance.onCommand(sender, removeFirst(new String[0]));
             return true;
         }
 
