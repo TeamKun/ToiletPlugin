@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ToiletRegister
 {
@@ -81,9 +83,9 @@ public class ToiletRegister
         this.saveToFile(file);
     }
 
-    public void unregisterToilet(String name)
+    public Toilet unregisterToilet(String name)
     {
-        toilets.remove(name);
+        return toilets.remove(name);
     }
 
     public Location[] getToilets()
@@ -92,6 +94,16 @@ public class ToiletRegister
                 .map(Toilet::getArmorStandLocation)
                 .map(locationPojo -> new Location(Bukkit.getWorld(locationPojo.getWorldName()), locationPojo.getX(), locationPojo.getY(), locationPojo.getZ()))
                 .toArray(Location[]::new);
+    }
+
+    public List<String> getToiletNames()
+    {
+        return new ArrayList<>(this.toilets.keySet());
+    }
+
+    public boolean containsToilet(String name)
+    {
+        return this.toilets.containsKey(name);
     }
 
     public Toilet getToilet(Location anyLoc)
