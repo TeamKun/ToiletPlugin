@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 
 import java.io.File;
@@ -38,11 +39,12 @@ public class ToiletRegister
 
     }
 
-    public static Toilet detect(ArmorStand stand)
+    public Toilet detect(ArmorStand stand)
     {
         Location armorStandLoc = stand.getLocation();
         Location ironDoorLoc = null;
         Location scytheLoc = null;
+        World world = stand.getWorld();
 
         for (int x = -radius; x <= radius; x++)
             for (int y = -radius; y <= radius; y++)
@@ -50,9 +52,22 @@ public class ToiletRegister
                 {
                     Location location = stand.getLocation().clone().add(x, y, z);
                     if (location.getBlock().getType() == Material.IRON_DOOR)
+                    {
+                        if (getToilet(location) != null)
+                            continue;
+                        if (world.getBlockAt(location.getBlockX(), location.getBlockY() - 1, location.getBlockZ()).getType() == Material.IRON_DOOR)
+                            if (getToilet(location.clone().add(0, -1, 0)) != null)
+                                continue;
+                        if (world.getBlockAt(location.getBlockX(), location.getBlockY() + 1, location.getBlockZ()).getType() == Material.IRON_DOOR)
+                            if (getToilet(location.clone().add(0, 1, 0)) != null)
+                                continue;
                         ironDoorLoc = location;
+                    }
                     if (location.getBlock().getType() == Material.CAULDRON)
-                        scytheLoc = location;
+                    {
+                        if (getToilet(location) == null)
+                            scytheLoc = location;
+                    }
                     if (ironDoorLoc != null && scytheLoc != null)
                     {
                         return new Toilet(
@@ -109,11 +124,19 @@ public class ToiletRegister
     public Toilet getToilet(Location anyLoc)
     {
         return this.toilets.values().stream()
-                .filter(toilet ->
-                        toilet.getArmorStandLocation().equals(Toilet.LocationPojo.fromLocation(anyLoc))
-                                || toilet.getDoorLocation().equals(Toilet.LocationPojo.fromLocation(anyLoc))
-                                || toilet.getScytheLocation().equals(Toilet.LocationPojo.fromLocation(anyLoc))
-                )
+                .filter(toilet -> {
+                    Toilet.LocationPojo doorLocation = toilet.getDoorLocation();
+                    return
+                            toilet.getArmorStandLocation().equals(Toilet.LocationPojo.fromLocation(anyLoc))
+                                    || ((
+                                    doorLocation.getX() == anyLoc.getBlockX()
+                                            && doorLocation.getZ() == anyLoc.getBlockZ()
+                            ) && (
+                                    doorLocation.getY() == anyLoc.getBlockY()
+                                            || doorLocation.getY() == anyLoc.getBlockY() - 1
+                                            || doorLocation.getY() == anyLoc.getBlockY() + 1
+                            )) || toilet.getScytheLocation().equals(Toilet.LocationPojo.fromLocation(anyLoc));
+                })
                 .findFirst()
                 .orElse(null);
     }

@@ -4,7 +4,6 @@ import com.github.shynixn.structureblocklib.api.bukkit.StructureBlockLibApi;
 import com.github.shynixn.structureblocklib.api.enumeration.StructureRotation;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.toilet.Toilet;
-import net.kunmc.lab.toiletplugin.toilet.ToiletRegister;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -59,7 +58,7 @@ public class ToiletGenerator
                     return tags.contains("toilet") && !tags.contains("registered_toilet");
                 })
                 .forEach(armorStand -> {
-                    Toilet toilet = ToiletRegister.detect(armorStand);
+                    Toilet toilet = ToiletPlugin.getPlugin().getToilets().detect(armorStand);
                     if (toilet == null)
                     {
                         placer.sendMessage(ChatColor.RED + "E: トイレの検出に失敗しました。");
