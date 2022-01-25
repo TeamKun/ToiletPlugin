@@ -1,4 +1,4 @@
-package net.kunmc.lab.toiletplugin.toilet.generate;
+package net.kunmc.lab.toiletplugin.toiletobject.generate;
 
 import java.io.File;
 import java.util.HashMap;

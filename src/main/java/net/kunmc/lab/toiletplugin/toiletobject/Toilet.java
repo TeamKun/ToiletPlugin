@@ -1,4 +1,4 @@
-package net.kunmc.lab.toiletplugin.toilet;
+package net.kunmc.lab.toiletplugin.toiletobject;
 
 import lombok.Data;
 import org.bukkit.Location;

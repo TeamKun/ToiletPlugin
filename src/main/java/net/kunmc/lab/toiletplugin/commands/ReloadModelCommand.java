@@ -2,7 +2,7 @@ package net.kunmc.lab.toiletplugin.commands;
 
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
-import net.kunmc.lab.toiletplugin.toilet.generate.ModelManager;
+import net.kunmc.lab.toiletplugin.toiletobject.generate.ModelManager;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

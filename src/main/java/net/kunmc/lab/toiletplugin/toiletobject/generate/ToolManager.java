@@ -1,4 +1,4 @@
-package net.kunmc.lab.toiletplugin.toilet.generate;
+package net.kunmc.lab.toiletplugin.toiletobject.generate;
 
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kyori.adventure.key.Key;

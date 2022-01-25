@@ -1,4 +1,4 @@
-package net.kunmc.lab.toiletplugin.toilet;
+package net.kunmc.lab.toiletplugin.toiletobject;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

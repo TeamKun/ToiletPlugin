@@ -1,4 +1,4 @@
-package net.kunmc.lab.toiletplugin.toilet;
+package net.kunmc.lab.toiletplugin.toiletobject;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;

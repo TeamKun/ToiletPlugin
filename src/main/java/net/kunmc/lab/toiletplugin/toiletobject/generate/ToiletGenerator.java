@@ -1,9 +1,9 @@
-package net.kunmc.lab.toiletplugin.toilet.generate;
+package net.kunmc.lab.toiletplugin.toiletobject.generate;
 
 import com.github.shynixn.structureblocklib.api.bukkit.StructureBlockLibApi;
 import com.github.shynixn.structureblocklib.api.enumeration.StructureRotation;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
-import net.kunmc.lab.toiletplugin.toilet.Toilet;
+import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
