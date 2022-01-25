@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin;
 
 import lombok.Getter;
+import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.toiletobject.ToiletLogic;
 import net.kunmc.lab.toiletplugin.toiletobject.ToiletRegister;
 import net.kunmc.lab.toiletplugin.toiletobject.generate.ModelManager;
@@ -33,6 +34,8 @@ public final class ToiletPlugin extends JavaPlugin
     private final ModelManager modelManager;
     @Getter
     private final ToiletRegister toilets;
+    @Getter
+    private final GameMain game;
 
     public ToiletPlugin() throws IOException
     {
@@ -42,7 +45,9 @@ public final class ToiletPlugin extends JavaPlugin
         modelManager = new ModelManager();
 
         toilets = new ToiletRegister(new File(getDataFolder(), "toilets.json"));
+        game = new GameMain(this);
     }
+
 
     @Override
     @SuppressWarnings("ConstantConditions")
@@ -65,7 +70,7 @@ public final class ToiletPlugin extends JavaPlugin
         Bukkit.getPluginManager().registerEvents(new ToolManager(), this);
         Bukkit.getPluginManager().registerEvents(new ToiletLogic(this.toilets), this);
 
-
+        game.setup();
     }
 
     public static void copyFilesFromJar()
