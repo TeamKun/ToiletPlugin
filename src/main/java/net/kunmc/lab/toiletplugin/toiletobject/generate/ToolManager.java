@@ -126,6 +126,9 @@ public class ToolManager implements Listener
 
         String name = getName(chest);
 
+        if (name == null)
+            return;
+
         e.setCancelled(true);
 
         System.out.println("Generating:" + name);
