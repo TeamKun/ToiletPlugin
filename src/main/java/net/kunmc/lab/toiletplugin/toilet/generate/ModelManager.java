@@ -59,4 +59,9 @@ public class ModelManager
     {
         scan(folder, null);
     }
+
+    public void clear()
+    {
+        models.clear();
+    }
 }

@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin;
 
 import net.kunmc.lab.toiletplugin.commands.HelpCommand;
+import net.kunmc.lab.toiletplugin.commands.ReloadModelCommand;
 import net.kunmc.lab.toiletplugin.commands.RemoveCommand;
 import net.kunmc.lab.toiletplugin.commands.ToolCommand;
 import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
@@ -31,6 +32,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter
         commands.put("help", helpInstance);
         commands.put("tool", new ToolCommand());
         commands.put("remove", new RemoveCommand());
+        commands.put("reloadmodel", new ReloadModelCommand());
     }
 
     @Override
