@@ -1,9 +1,11 @@
 package net.kunmc.lab.toiletplugin;
 
+import net.kunmc.lab.toiletplugin.commands.ConfigCommand;
 import net.kunmc.lab.toiletplugin.commands.HelpCommand;
 import net.kunmc.lab.toiletplugin.commands.ReloadModelCommand;
 import net.kunmc.lab.toiletplugin.commands.RemoveCommand;
 import net.kunmc.lab.toiletplugin.commands.ToolCommand;
+import net.kunmc.lab.toiletplugin.game.config.ConfigManager;
 import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -33,6 +35,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter
         commands.put("tool", new ToolCommand());
         commands.put("remove", new RemoveCommand());
         commands.put("reloadmodel", new ReloadModelCommand());
+        commands.put("config", new ConfigCommand(new ConfigManager(ToiletPlugin.getPlugin().getGame().getGameConfig())));
     }
 
     @Override

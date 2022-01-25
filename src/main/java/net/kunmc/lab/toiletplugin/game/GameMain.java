@@ -17,6 +17,9 @@ public class GameMain
     @Getter
     private final List<Player> spectators;
 
+    @Getter
+    private final GameConfig gameConfig;
+
     private final ToiletPlugin plugin;
 
     public GameMain(ToiletPlugin plugin)
@@ -24,6 +27,7 @@ public class GameMain
         this.plugin = plugin;
         this.players = new ArrayList<>();
         this.spectators = new ArrayList<>();
+        this.gameConfig = new GameConfig();
     }
 
     public void setup()
