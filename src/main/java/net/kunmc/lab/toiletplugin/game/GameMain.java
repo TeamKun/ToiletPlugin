@@ -3,6 +3,8 @@ package net.kunmc.lab.toiletplugin.game;
 import com.google.gson.Gson;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
+import net.kunmc.lab.toiletplugin.game.toilet.ToiletLogic;
+import net.kunmc.lab.toiletplugin.toiletobject.ToiletRegister;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -20,22 +22,33 @@ public class GameMain
     private final List<Player> players;
     @Getter
     private final List<Player> spectators;
+    @Getter
+    private final List<Player> quested;
 
     @Getter
     private final GameConfig gameConfig;
     @Getter
     private final File configFile;
 
+    @Getter
+    private final ToiletRegister register;
+
     private final ToiletPlugin plugin;
+
+    private final ToiletLogic logic;
 
     public GameMain(ToiletPlugin plugin)
     {
         this.plugin = plugin;
+        this.register = plugin.getToilets();
         this.players = new ArrayList<>();
         this.spectators = new ArrayList<>();
+        this.quested = new ArrayList<>();
 
         this.configFile = new File(plugin.getDataFolder(), "config_game.json");
         this.gameConfig = loadConfig(configFile);
+
+        this.logic = new ToiletLogic(this);
     }
 
     private static GameConfig loadConfig(File file)
@@ -73,6 +86,8 @@ public class GameMain
     public void setup()
     {
         Bukkit.getPluginManager().registerEvents(new GameEventListener(this), this.plugin);
+        Bukkit.getPluginManager().registerEvents(this.logic, plugin);
+        this.logic.runTaskTimer(plugin, 0, 2);
 
         plugin.getServer().getOnlinePlayers().stream().parallel()
                 .forEach(this::updatePlayer);

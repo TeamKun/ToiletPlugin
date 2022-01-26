@@ -139,6 +139,7 @@ public class ToiletGenerator implements Listener
 
                     if (placer.getWorld().getBlockAt(doorLoc.getX(), scanned_door_y - 1, doorLoc.getZ()).getType() == Material.IRON_DOOR)
                         scanned_door_y -= 1;
+                    iDAS.addScoreboardTag("door_toilet");
 
                     Toilet.LocationPojo toiletLoc = new Toilet.LocationPojo(doorLoc.getWorldName(), doorLoc.getX(), scanned_door_y, doorLoc.getZ());
 

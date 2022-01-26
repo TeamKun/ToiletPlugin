@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin.toiletobject;
 
 import lombok.Data;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.io.Serializable;
@@ -28,6 +29,11 @@ public class Toilet implements Serializable
         public static LocationPojo fromLocation(Location loc)
         {
             return new LocationPojo(loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        }
+
+        public Location toLocation()
+        {
+            return new Location(Bukkit.getWorld(worldName), x, y, z);
         }
     }
 }
