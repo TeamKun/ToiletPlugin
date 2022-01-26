@@ -2,9 +2,9 @@ package net.kunmc.lab.toiletplugin;
 
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.game.GameMain;
-import net.kunmc.lab.toiletplugin.toiletobject.ToiletLogic;
 import net.kunmc.lab.toiletplugin.toiletobject.ToiletRegister;
 import net.kunmc.lab.toiletplugin.toiletobject.generate.ModelManager;
+import net.kunmc.lab.toiletplugin.toiletobject.generate.ToiletGenerator;
 import net.kunmc.lab.toiletplugin.toiletobject.generate.ToolManager;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.bukkit.Bukkit;
@@ -66,7 +66,7 @@ public final class ToiletPlugin extends JavaPlugin
                 .forEach(world -> modelManager.scan(new File(world.getWorldFolder(), "generated")));
 
         Bukkit.getPluginManager().registerEvents(new ToolManager(), this);
-        Bukkit.getPluginManager().registerEvents(new ToiletLogic(this.toilets), this);
+        Bukkit.getPluginManager().registerEvents(new ToiletGenerator(this.toilets), this);
 
         game.setup();
     }
