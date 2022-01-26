@@ -2,6 +2,7 @@ package net.kunmc.lab.toiletplugin.commands;
 
 import lombok.AllArgsConstructor;
 import net.kunmc.lab.toiletplugin.CommandBase;
+import net.kunmc.lab.toiletplugin.SubCommandable;
 import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -15,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 public class HelpCommand extends CommandBase
@@ -24,6 +26,18 @@ public class HelpCommand extends CommandBase
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
+        Map<String, CommandBase> commands = this.commands;
+        if (args.length > 0 && commands.containsKey(args[0]))
+        {
+            CommandBase command = commands.get(args[0]);
+            if (command instanceof SubCommandable)
+            {
+                SubCommandable subCommandable = (SubCommandable) command;
+                commands = subCommandable.getSubCommands();
+            }
+        }
+
+
         int page_max = commands.size() / 5 + 1;
 
         Integer page = 1;
