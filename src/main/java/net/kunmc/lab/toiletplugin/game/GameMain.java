@@ -1,5 +1,6 @@
 package net.kunmc.lab.toiletplugin.game;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import org.bukkit.Bukkit;
@@ -7,6 +8,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +23,8 @@ public class GameMain
 
     @Getter
     private final GameConfig gameConfig;
+    @Getter
+    private final File configFile;
 
     private final ToiletPlugin plugin;
 
@@ -27,7 +33,41 @@ public class GameMain
         this.plugin = plugin;
         this.players = new ArrayList<>();
         this.spectators = new ArrayList<>();
-        this.gameConfig = new GameConfig();
+
+        this.configFile = new File(plugin.getDataFolder(), "config_game.json");
+        this.gameConfig = loadConfig(configFile);
+    }
+
+    private static GameConfig loadConfig(File file)
+    {
+        if (!file.exists())
+            return new GameConfig();
+
+        Gson gson = new Gson();
+
+        try
+        {
+            return gson.fromJson(new String(Files.readAllBytes(file.toPath())), GameConfig.class);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return new GameConfig();
+    }
+
+    public void saveConfig()
+    {
+        Gson gson = new Gson();
+        try
+        {
+            Files.write(configFile.toPath(), gson.toJson(gameConfig).getBytes());
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void setup()
