@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 
@@ -40,7 +41,7 @@ public class ToiletRegister
 
     }
 
-    public Toilet detect(ArmorStand stand)
+    public Toilet detect(ArmorStand stand, BlockFace direction)
     {
         Location armorStandLoc = stand.getLocation();
         Location ironDoorLoc = null;
@@ -73,6 +74,7 @@ public class ToiletRegister
                     {
                         return new Toilet(
                                 stand.getUniqueId().toString().substring(0, 8),
+                                direction,
                                 new Toilet.LocationPojo(armorStandLoc.getWorld().getName(), armorStandLoc.getBlockX(), armorStandLoc.getBlockY(), armorStandLoc.getBlockZ()),
                                 new Toilet.LocationPojo(scytheLoc.getWorld().getName(), scytheLoc.getBlockX(), scytheLoc.getBlockY(), scytheLoc.getBlockZ()),
                                 new Toilet.LocationPojo(ironDoorLoc.getWorld().getName(), ironDoorLoc.getBlockX(), ironDoorLoc.getBlockY(), ironDoorLoc.getBlockZ()),

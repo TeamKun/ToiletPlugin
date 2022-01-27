@@ -3,6 +3,7 @@ package net.kunmc.lab.toiletplugin.toiletobject;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 
 import java.io.Serializable;
 
@@ -10,6 +11,8 @@ import java.io.Serializable;
 public class Toilet implements Serializable
 {
     private final String name;
+
+    private final BlockFace direction;
 
     private final LocationPojo armorStandLocation;
     private final LocationPojo scytheLocation;

@@ -106,7 +106,7 @@ public class ToiletGenerator implements Listener
                     return tags.contains("toilet") && !tags.contains("registered_toilet");
                 })
                 .forEach(armorStand -> {
-                    Toilet toilet = ToiletPlugin.getPlugin().getToilets().detect(armorStand);
+                    Toilet toilet = ToiletPlugin.getPlugin().getToilets().detect(armorStand, direction);
                     if (toilet == null)
                     {
                         placer.sendMessage(ChatColor.RED + "E: トイレの検出に失敗しました。");
@@ -134,7 +134,8 @@ public class ToiletGenerator implements Listener
 
                     Toilet.LocationPojo toiletLoc = new Toilet.LocationPojo(doorLoc.getWorldName(), doorLoc.getX(), scanned_door_y, doorLoc.getZ());
 
-                    toilet = new Toilet(toilet.getName(), toilet.getArmorStandLocation(), toilet.getScytheLocation(), toiletLoc,
+                    toilet = new Toilet(toilet.getName(), toilet.getDirection(),
+                            toilet.getArmorStandLocation(), toilet.getScytheLocation(), toiletLoc,
                             toilet.getArmorStandUUID(), infoArmorStandEntity.getUniqueId().toString()
                     );
 
