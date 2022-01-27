@@ -11,7 +11,6 @@ import java.util.Map;
 
 public abstract class SubCommandable extends CommandBase
 {
-    private final Map<String, CommandBase> commands = getSubCommands();
 
     private static String[] removeFirst(String[] args)
     {
@@ -31,6 +30,7 @@ public abstract class SubCommandable extends CommandBase
             return;
         }
 
+        Map<String, CommandBase> commands = getSubCommands();
 
         if (!commands.containsKey(args[0]))
         {
@@ -47,6 +47,7 @@ public abstract class SubCommandable extends CommandBase
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
         List<String> completes = new ArrayList<>();
+        Map<String, CommandBase> commands = getSubCommands();
 
         if (args.length == 1)
             completes.addAll(commands.keySet());

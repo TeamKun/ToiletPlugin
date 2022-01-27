@@ -3,6 +3,7 @@ package net.kunmc.lab.toiletplugin.game;
 import com.google.gson.Gson;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
+import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.game.toilet.ToiletLogic;
 import net.kunmc.lab.toiletplugin.toiletobject.ToiletRegister;
 import org.bukkit.Bukkit;
@@ -22,8 +23,6 @@ public class GameMain
     private final List<Player> players;
     @Getter
     private final List<Player> spectators;
-    @Getter
-    private final List<Player> quested;
 
     @Getter
     private final GameConfig gameConfig;
@@ -36,6 +35,8 @@ public class GameMain
     private final ToiletPlugin plugin;
 
     private final ToiletLogic logic;
+    @Getter
+    private final QuestManager questManager;
 
     public GameMain(ToiletPlugin plugin)
     {
@@ -43,11 +44,11 @@ public class GameMain
         this.register = plugin.getToilets();
         this.players = new ArrayList<>();
         this.spectators = new ArrayList<>();
-        this.quested = new ArrayList<>();
 
         this.configFile = new File(plugin.getDataFolder(), "config_game.json");
         this.gameConfig = loadConfig(configFile);
 
+        this.questManager = new QuestManager(this);
         this.logic = new ToiletLogic(this);
     }
 

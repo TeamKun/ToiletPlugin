@@ -2,9 +2,11 @@ package net.kunmc.lab.toiletplugin;
 
 import net.kunmc.lab.toiletplugin.commands.ConfigCommand;
 import net.kunmc.lab.toiletplugin.commands.HelpCommand;
+import net.kunmc.lab.toiletplugin.commands.QuestCommand;
 import net.kunmc.lab.toiletplugin.commands.ReloadModelCommand;
 import net.kunmc.lab.toiletplugin.commands.RemoveCommand;
 import net.kunmc.lab.toiletplugin.commands.ToolCommand;
+import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.config.ConfigManager;
 import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
 import org.bukkit.ChatColor;
@@ -23,10 +25,11 @@ import java.util.List;
 
 public class CommandHandler implements CommandExecutor, TabCompleter
 {
-    private static final HashMap<String, CommandBase> commands;
-    private static final HelpCommand helpInstance;
+    private final HashMap<String, CommandBase> commands;
+    private final HelpCommand helpInstance;
 
-    static {
+    public CommandHandler(GameMain game)
+    {
         commands = new HashMap<>();
 
         helpInstance = new HelpCommand(commands);
@@ -35,7 +38,8 @@ public class CommandHandler implements CommandExecutor, TabCompleter
         commands.put("tool", new ToolCommand());
         commands.put("remove", new RemoveCommand());
         commands.put("reloadmodel", new ReloadModelCommand());
-        commands.put("config", new ConfigCommand(new ConfigManager(ToiletPlugin.getPlugin().getGame().getGameConfig())));
+        commands.put("config", new ConfigCommand(new ConfigManager(game.getGameConfig())));
+        commands.put("quest", new QuestCommand(game));
     }
 
     @Override

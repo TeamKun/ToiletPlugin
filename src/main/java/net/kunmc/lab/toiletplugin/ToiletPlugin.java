@@ -39,13 +39,13 @@ public final class ToiletPlugin extends JavaPlugin
 
     public ToiletPlugin() throws IOException
     {
-        plugin = this;
         LOGGER = getLogger();
 
         modelManager = new ModelManager();
 
         toilets = new ToiletRegister(new File(getDataFolder(), "toilets.json"));
         game = new GameMain(this);
+        plugin = this;
     }
 
 
@@ -54,9 +54,6 @@ public final class ToiletPlugin extends JavaPlugin
     public void onEnable()
     {
         LOGGER.info("ToiletPlugin has enabled!");
-
-        getCommand("toilet").setExecutor(new CommandHandler());
-        getCommand("toilet").setTabCompleter(new CommandHandler());
 
         copyFilesFromJar();
 
@@ -69,6 +66,9 @@ public final class ToiletPlugin extends JavaPlugin
         Bukkit.getPluginManager().registerEvents(new ToiletGenerator(this.toilets), this);
 
         game.setup();
+
+        getCommand("toilet").setExecutor(new CommandHandler(this.game));
+        getCommand("toilet").setTabCompleter(new CommandHandler(this.game));
     }
 
     public static void copyFilesFromJar()
