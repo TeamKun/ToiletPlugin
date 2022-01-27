@@ -20,7 +20,22 @@ public class DirectionUtils
                 return loc.clone().add(-distance, 0.0D, 0.0D);
         }
 
-        return null;
+        return loc;
+    }
+
+    public static BlockFace reverseDirection(BlockFace face)
+    {
+        switch (face)
+        {
+            case NORTH:
+                return BlockFace.SOUTH;
+            case EAST:
+                return BlockFace.WEST;
+            case WEST:
+                return BlockFace.EAST;
+            default:
+                return BlockFace.NORTH;
+        }
     }
 
     public static StructureRotation convertBlockFaceToStructureRotation(BlockFace face)

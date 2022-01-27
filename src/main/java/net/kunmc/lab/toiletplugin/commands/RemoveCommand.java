@@ -35,7 +35,7 @@ public class RemoveCommand extends CommandBase
         try
         {
             Objects.requireNonNull(Bukkit.getEntity(UUID.fromString(removedToilet.getArmorStandUUID()))).remove();
-            Objects.requireNonNull(Bukkit.getEntity(UUID.fromString(removedToilet.getIronDoorASUUID()))).remove();
+            Objects.requireNonNull(Bukkit.getEntity(UUID.fromString(removedToilet.getToiletInfoBaseArmorStandUUID()))).remove();
         }
         catch (NullPointerException ignored)
         {

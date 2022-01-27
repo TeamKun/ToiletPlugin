@@ -16,7 +16,7 @@ public class Toilet implements Serializable
     private final LocationPojo doorLocation;
 
     private final String armorStandUUID;
-    private final String ironDoorASUUID;
+    private final String toiletInfoBaseArmorStandUUID;
 
     @Data
     public static class LocationPojo

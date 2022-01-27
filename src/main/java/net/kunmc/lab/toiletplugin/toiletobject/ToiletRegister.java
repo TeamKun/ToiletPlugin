@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -136,6 +137,17 @@ public class ToiletRegister
                                             || doorLocation.getY() == anyLoc.getBlockY() - 1
                                             || doorLocation.getY() == anyLoc.getBlockY() + 1
                             )) || toilet.getScytheLocation().equals(Toilet.LocationPojo.fromLocation(anyLoc));
+                })
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Toilet getToilet(Entity entity)
+    {
+        return this.toilets.values().stream()
+                .filter(toilet -> {
+                    String toiletName = toilet.getName();
+                    return entity.getScoreboardTags().contains("toilet_" + toiletName);
                 })
                 .findFirst()
                 .orElse(null);

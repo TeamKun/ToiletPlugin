@@ -115,28 +115,34 @@ public class ToiletGenerator implements Listener
                     }
 
                     Toilet.LocationPojo doorLoc = toilet.getDoorLocation();
-                    ArmorStand iDAS = (ArmorStand) location.getWorld().spawnEntity(
-                            new Location(location.getWorld(), doorLoc.getX() + 0.5, doorLoc.getY(), doorLoc.getZ() + 0.5),
-                            EntityType.ARMOR_STAND
-                    );
-
                     int scanned_door_y = doorLoc.getY();
 
                     if (placer.getWorld().getBlockAt(doorLoc.getX(), scanned_door_y - 1, doorLoc.getZ()).getType() == Material.IRON_DOOR)
                         scanned_door_y -= 1;
-                    iDAS.addScoreboardTag("door_toilet");
+
+                    Location infoArmorStand = new Location(location.getWorld(), doorLoc.getX() + 0.5, scanned_door_y, doorLoc.getZ() + 0.5);
+                    infoArmorStand = DirectionUtils.getDirLoc(infoArmorStand, 1, direction);
+
+
+                    assert infoArmorStand != null;
+                    ArmorStand infoArmorStandEntity = (ArmorStand) location.getWorld().spawnEntity(
+                            infoArmorStand, EntityType.ARMOR_STAND);
+
+                    infoArmorStandEntity.addScoreboardTag("info_toilet");
+                    infoArmorStandEntity.setCustomName(ChatColor.GOLD + "TOILET!!");
+                    infoArmorStandEntity.setCustomNameVisible(true);
 
                     Toilet.LocationPojo toiletLoc = new Toilet.LocationPojo(doorLoc.getWorldName(), doorLoc.getX(), scanned_door_y, doorLoc.getZ());
 
                     toilet = new Toilet(toilet.getName(), toilet.getArmorStandLocation(), toilet.getScytheLocation(), toiletLoc,
-                            toilet.getArmorStandUUID(), iDAS.getUniqueId().toString()
+                            toilet.getArmorStandUUID(), infoArmorStandEntity.getUniqueId().toString()
                     );
 
                     String name = toilet.getName();
                     ToiletPlugin.getPlugin().getToilets().registerToilet(name, toilet);
 
                     patchArmorStand(armorStand, name, direction);
-                    patchArmorStand(iDAS, name, direction);
+                    patchArmorStand(infoArmorStandEntity, name, direction);
 
                     placer.sendMessage(ChatColor.GREEN + "S: トイレを「" + name + "」として作成しました。");
                 });
@@ -148,7 +154,6 @@ public class ToiletGenerator implements Listener
         stand.addScoreboardTag("toilet_" + name);
         stand.setVisible(false);
         stand.setGravity(false);
-        stand.setCustomName(ChatColor.GREEN + "Toilet: " + name);
 
         if (direction == null)
             return;
