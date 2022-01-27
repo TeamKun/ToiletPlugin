@@ -56,7 +56,7 @@ public class ToiletLogic extends BukkitRunnable implements Listener
 
             backDoorLock.setWorld(player.getWorld());
             backDoorLock = DirectionUtils.getDirLoc(backDoorLock, 1,
-                    DirectionUtils.reverseDirection(door.getFacing())
+                    DirectionUtils.reverseDirection(toilet.getDirection())
             );
 
             if (door.getHalf() == Bisected.Half.TOP)
