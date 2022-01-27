@@ -131,6 +131,7 @@ public class GameMain
 
     public void removePlayer(Player player)
     {
+        this.questManager.cancel(player, true);
         boolean removed = players.remove(player);
 
         if (!removed)

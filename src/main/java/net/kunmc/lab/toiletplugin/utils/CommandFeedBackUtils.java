@@ -29,6 +29,17 @@ public class CommandFeedBackUtils
         return false;
     }
 
+    public static Player getPlayer(CommandSender sender, String query)
+    {
+        Player player = sender.getServer().getPlayer(query);
+        if (player == null)
+        {
+            sender.sendMessage(ChatColor.RED + "E: プレイヤーが見つかりません: " + query);
+            return null;
+        }
+        return player;
+    }
+
     public static boolean checkPlayer(@NotNull CommandSender sender)
     {
         if (!(sender instanceof Player))
