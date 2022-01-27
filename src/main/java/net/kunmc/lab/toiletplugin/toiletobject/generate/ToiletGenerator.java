@@ -5,6 +5,7 @@ import com.github.shynixn.structureblocklib.api.enumeration.StructureRotation;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
 import net.kunmc.lab.toiletplugin.toiletobject.ToiletRegister;
+import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -84,7 +85,7 @@ public class ToiletGenerator implements Listener
         if (!ToiletPlugin.getPlugin().getModelManager().contains(name))
             return;
 
-        StructureRotation dir = convertBlockFaceToStructureRotation(direction);
+        StructureRotation dir = DirectionUtils.convertBlockFaceToStructureRotation(direction);
 
         StructureBlockLibApi.INSTANCE
                 .loadStructure(ToiletPlugin.getPlugin())
@@ -96,22 +97,6 @@ public class ToiletGenerator implements Listener
                     throw new RuntimeException(throwable);
                 })
                 .onResult(a -> onComplete(placer, location, direction));
-    }
-
-    public static StructureRotation convertBlockFaceToStructureRotation(BlockFace face)
-    {
-        switch (face)
-        {
-            case NORTH:
-                return StructureRotation.NONE;
-            case EAST:
-                return StructureRotation.ROTATION_90;
-            case WEST:
-                return StructureRotation.ROTATION_270;
-            case SOUTH:
-            default:
-                return StructureRotation.ROTATION_180;
-        }
     }
 
     private static void onComplete(Player placer, Location location, BlockFace direction)
