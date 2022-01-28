@@ -17,18 +17,36 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class ToiletLogic extends BukkitRunnable implements Listener
 {
     private final GameMain game;
+    private final InformationDisplay toiletInformationDisplay;
     private final QuestManager questManager;
+    private final ToiletManager toiletManager;
+    private int count = 0;
 
     public ToiletLogic(GameMain game)
     {
         this.game = game;
+        this.toiletInformationDisplay = new InformationDisplay(game);
         this.questManager = this.game.getQuestManager();
+        this.toiletManager = this.game.getToiletManager();
+    }
+
+    public void init()
+    {
+        this.toiletInformationDisplay.init();
     }
 
     @Override
     public void run()
     {
+        count += 2;
+        // Detect player join to toilet.
         this.questManager.getQuestingPlayer().forEach(this::checkCollision);
+        if (count < 20)
+            return;
+        count = 0;
+
+        // Onsec
+        this.toiletInformationDisplay.update();
     }
 
     public void checkCollision(Player player)
@@ -67,9 +85,18 @@ public class ToiletLogic extends BukkitRunnable implements Listener
                     || player.getLocation().getBlockZ() != backDoorLock.getBlockZ())
                 return;
 
-            door.setOpen(true);
-            toiletBlock.setBlockData(door, true);
+            this.playerJoinToilet(player, toilet, door, toiletBlock, armorStand);
         });
     }
 
+    public void playerJoinToilet(Player player, Toilet toilet, Door door, Block doorBlock, ArmorStand informationDisplay)
+    {
+        player.getWorld().playSound(player.getLocation(), "block.iron_door.close", 1.0F, 1.0F);
+        door.setOpen(true);
+        doorBlock.setBlockData(door, true);
+
+        this.toiletInformationDisplay.playerJoinToilet(player, toilet.getName());
+
+        this.toiletManager.playerJoinToilet(player, toilet, informationDisplay);
+    }
 }

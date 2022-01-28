@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
-import net.kunmc.lab.toiletplugin.game.toilet.ToiletLogic;
+import net.kunmc.lab.toiletplugin.game.toilet.ToiletManager;
 import net.kunmc.lab.toiletplugin.toiletobject.ToiletRegister;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,10 +31,10 @@ public class GameMain
 
     @Getter
     private final ToiletRegister register;
-
     private final ToiletPlugin plugin;
 
-    private final ToiletLogic logic;
+    @Getter
+    private final ToiletManager toiletManager;
     @Getter
     private final QuestManager questManager;
 
@@ -49,7 +49,7 @@ public class GameMain
         this.gameConfig = loadConfig(configFile);
 
         this.questManager = new QuestManager(this);
-        this.logic = new ToiletLogic(this);
+        this.toiletManager = new ToiletManager(this);
     }
 
     private static GameConfig loadConfig(File file)
@@ -87,8 +87,7 @@ public class GameMain
     public void setup()
     {
         Bukkit.getPluginManager().registerEvents(new GameEventListener(this), this.plugin);
-        Bukkit.getPluginManager().registerEvents(this.logic, plugin);
-        this.logic.runTaskTimer(plugin, 0, 2);
+        this.toiletManager.init();
 
         plugin.getServer().getOnlinePlayers().stream().parallel()
                 .forEach(this::updatePlayer);

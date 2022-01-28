@@ -106,6 +106,11 @@ public class ToiletRegister
         return toilets.remove(name);
     }
 
+    public List<Toilet> getToiletList()
+    {
+        return new ArrayList<>(toilets.values());
+    }
+
     public Location[] getToilets()
     {
         return this.toilets.values().stream()
