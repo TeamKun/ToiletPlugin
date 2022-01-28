@@ -118,6 +118,8 @@ public class ToiletGenerator implements Listener
                     int scanned_door_y = doorLoc.getY();
 
                     if (placer.getWorld().getBlockAt(doorLoc.getX(), scanned_door_y - 1, doorLoc.getZ()).getType() == Material.IRON_DOOR)
+                        scanned_door_y -= 2;
+                    else
                         scanned_door_y -= 1;
 
                     Location infoArmorStand = new Location(location.getWorld(), doorLoc.getX() + 0.5, scanned_door_y, doorLoc.getZ() + 0.5);
@@ -141,6 +143,7 @@ public class ToiletGenerator implements Listener
 
                     String name = toilet.getName();
                     ToiletPlugin.getPlugin().getToilets().registerToilet(name, toilet);
+                    ToiletPlugin.getPlugin().getGame().getToiletManager().getLogic().getToiletInformationDisplay().addToilet(toilet);
 
                     patchArmorStand(armorStand, name, direction);
                     patchArmorStand(infoArmorStandEntity, name, direction);

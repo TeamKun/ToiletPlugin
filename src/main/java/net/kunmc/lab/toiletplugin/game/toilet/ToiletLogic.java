@@ -1,5 +1,6 @@
 package net.kunmc.lab.toiletplugin.game.toilet;
 
+import lombok.Getter;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
@@ -17,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class ToiletLogic extends BukkitRunnable implements Listener
 {
     private final GameMain game;
+    @Getter
     private final InformationDisplay toiletInformationDisplay;
     private final QuestManager questManager;
     private final ToiletManager toiletManager;

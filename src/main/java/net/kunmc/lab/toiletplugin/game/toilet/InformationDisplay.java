@@ -34,6 +34,11 @@ public class InformationDisplay
         });
     }
 
+    public void addToilet(Toilet toilet)
+    {
+        this.toilets.put(toilet.getName(), new ToiletDisplay(toilet));
+    }
+
     public void playerJoinToilet(Player player, String toiletName)
     {
         if (!toilets.containsKey(toiletName))

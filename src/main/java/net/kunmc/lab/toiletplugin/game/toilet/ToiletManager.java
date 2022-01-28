@@ -1,5 +1,6 @@
 package net.kunmc.lab.toiletplugin.game.toilet;
 
+import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 public class ToiletManager
 {
     private final GameMain game;
+    @Getter
     private final ToiletLogic logic;
 
     public ToiletManager(GameMain game)
