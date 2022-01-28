@@ -134,7 +134,7 @@ public class ToiletGenerator implements Listener
                     infoArmorStandEntity.setCustomName(ChatColor.GOLD + "TOILET!!");
                     infoArmorStandEntity.setCustomNameVisible(true);
 
-                    Toilet.LocationPojo toiletLoc = new Toilet.LocationPojo(doorLoc.getWorldName(), doorLoc.getX(), scanned_door_y, doorLoc.getZ());
+                    Toilet.LocationPojo toiletLoc = new Toilet.LocationPojo(doorLoc.getWorldName(), doorLoc.getX(), doorLoc.getY(), doorLoc.getZ());
 
                     toilet = new Toilet(toilet.getName(), toilet.getDirection(),
                             toilet.getArmorStandLocation(), toilet.getScytheLocation(), toiletLoc,
