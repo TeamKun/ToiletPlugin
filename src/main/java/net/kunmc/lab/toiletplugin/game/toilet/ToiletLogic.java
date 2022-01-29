@@ -24,12 +24,12 @@ public class ToiletLogic extends BukkitRunnable implements Listener
     private final ToiletManager toiletManager;
     private int count = 0;
 
-    public ToiletLogic(GameMain game)
+    public ToiletLogic(GameMain game, ToiletManager toiletManager)
     {
         this.game = game;
-        this.toiletInformationDisplay = new InformationDisplay(game);
         this.questManager = this.game.getQuestManager();
-        this.toiletManager = this.game.getToiletManager();
+        this.toiletManager = toiletManager;
+        this.toiletInformationDisplay = new InformationDisplay(game);
     }
 
     public void init()

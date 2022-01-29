@@ -17,7 +17,7 @@ public class ToiletManager
     public ToiletManager(GameMain game)
     {
         this.game = game;
-        this.logic = new ToiletLogic(game);
+        this.logic = new ToiletLogic(game, this);
     }
 
     public void init()
