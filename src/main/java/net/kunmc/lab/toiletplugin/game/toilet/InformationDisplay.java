@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
@@ -40,12 +41,6 @@ public class InformationDisplay
         this.toilets.put(toilet.getName(), new ToiletDisplay(toilet));
     }
 
-    private static void removePassengers(Entity entity)
-    {
-        List<Entity> passengers = entity.getPassengers();
-        passengers.forEach(InformationDisplay::removePassengers);
-        entity.remove();
-    }
 
     public void init()
     {
@@ -54,11 +49,7 @@ public class InformationDisplay
 
     public void removeToilet(ToiletDisplay toilet)
     {
-        ArmorStand infoStand = toilet.getInformationArmorStand();
-
-        if (infoStand != null)
-            removePassengers(infoStand);
-
+        toilet.displays.forEach(Entity::remove);
         this.toilets.remove(toilet.getToilet().getName());
     }
 
@@ -123,7 +114,7 @@ public class InformationDisplay
         List<Entity> passengers = display.getInformationArmorStand().getPassengers();
 
         if (passengers.isEmpty())
-            spawnPassengers(display.getInformationArmorStand());
+            spawnPassengers(display.getInformationArmorStand(), display.displays);
 
         batchPassenger(display.getInformationArmorStand(), display);
         batchPassenger(display.getInformationArmorStand().getPassengers().get(0), display);
@@ -221,23 +212,27 @@ public class InformationDisplay
                 ChatColor.GREEN + value;
     }
 
-    private void spawnPassengers(ArmorStand infoStand)
+    private void spawnPassengers(ArmorStand infoStand, List<Entity> displays)
     {
         Entity nameTag = spawnPassenger(infoStand, "player_name");
         infoStand.addPassenger(nameTag);
+        displays.add(nameTag);
 
         Entity stateTag = spawnPassenger(infoStand, "state");
         nameTag.addPassenger(stateTag);
+        displays.add(stateTag);
 
         Entity timeElapsedTag = spawnPassenger(infoStand, "times_elapsed");
         stateTag.addPassenger(timeElapsedTag);
+        displays.add(timeElapsedTag);
 
         Entity remainingTimeTag = spawnPassenger(infoStand, "remaining_time");
         timeElapsedTag.addPassenger(remainingTimeTag);
+        displays.add(remainingTimeTag);
 
         Entity timeDisplayTag = spawnPassenger(infoStand, "time_display");
         remainingTimeTag.addPassenger(timeDisplayTag);
-
+        displays.add(timeDisplayTag);
     }
 
     private ArmorStand spawnPassenger(ArmorStand infoStand, String name)
@@ -261,6 +256,8 @@ public class InformationDisplay
         @Getter
         private final ArmorStand informationArmorStand;
 
+        private List<Entity> displays;
+
         private Player toiletPlayer;
 
         private int timesElapsed;
@@ -278,6 +275,7 @@ public class InformationDisplay
             this.toilet = toilet;
             this.informationArmorStand = (ArmorStand) Bukkit.getEntity(UUID.fromString(toilet.getToiletInfoBaseArmorStandUUID()));
             this.toiletPlayer = null;
+            this.displays = new ArrayList<>();
         }
 
         private enum ToiletState
