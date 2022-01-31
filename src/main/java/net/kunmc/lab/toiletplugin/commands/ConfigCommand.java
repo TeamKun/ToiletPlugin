@@ -158,7 +158,7 @@ public class ConfigCommand extends CommandBase
                 .map(Component::text)
                 .map(textComponent -> textComponent
                         .clickEvent(ClickEvent.suggestCommand("/toilet config " +
-                                textComponent.content().substring(1, textComponent.content().indexOf(" "))
+                                textComponent.content().substring(2, textComponent.content().indexOf(" "))
                                 + " "))
                         .hoverEvent(HoverEvent.showText(Component.text(ChatColor.AQUA + "クリックして設定を使用します。")))
                 )
