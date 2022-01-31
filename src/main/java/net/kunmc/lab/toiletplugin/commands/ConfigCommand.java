@@ -3,13 +3,19 @@ package net.kunmc.lab.toiletplugin.commands;
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.config.ConfigManager;
 import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import javax.naming.SizeLimitExceededException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ConfigCommand extends CommandBase
@@ -21,13 +27,62 @@ public class ConfigCommand extends CommandBase
         this.config = config;
     }
 
+    private static String getArgument(String configName, ConfigManager.GeneratedConfig config)
+    {
+        if (config.getDefine().toggle())
+            return null;
+
+        StringBuilder sb = new StringBuilder("<").append(configName).append(":").append(config.getField().getType().getSimpleName());
+
+        double min = config.getDefine().min();
+        double max = config.getDefine().max();
+        if (min != -1)
+        {
+            String a;
+            if (min % 1 == 0)
+                a = String.valueOf((int) min);
+            else
+                a = String.valueOf(min);
+            sb.append(a).append("~");
+        }
+        if (max != -1)
+        {
+            String a;
+            if (max % 1 == 0)
+                a = String.valueOf((int) max);
+            else
+                a = String.valueOf(max);
+            sb.append(a);
+        }
+        sb.append(">");
+        return sb.toString();
+    }
+
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
+        if (args.length == 0)
+        {
+            showPagedHelp(sender, 1);
+            return;
+        }
+
         if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 1, 2))
             return;
 
         String configName = args[0];
+
+        if (configName.equals("help"))
+        {
+            Integer page;
+            if (args.length == 2 && (page = CommandFeedBackUtils.parseInteger(sender, args[1], 1)) != null)
+            {
+                showPagedHelp(sender, page);
+                return;
+            }
+            showPagedHelp(sender, 1);
+            return;
+        }
 
         if (!this.config.isConfigExist(configName))
         {
@@ -75,6 +130,61 @@ public class ConfigCommand extends CommandBase
 
     }
 
+    private void showPagedHelp(CommandSender sender, int page)
+    {
+        AtomicInteger maxLength = new AtomicInteger(0);
+        HashMap<String, ConfigManager.GeneratedConfig> helps = config.getMap();
+
+        int maxPage = helps.size() / 10 + 1;
+
+        if (page > maxPage)
+        {
+            sender.sendMessage(ChatColor.RED + "E: 存在しないページです。");
+            return;
+        }
+
+        helps.forEach((s, s2) -> maxLength.set(Math.max(maxLength.get(), s.length())));
+
+        sender.sendMessage(ChatColor.GOLD + "-----=====     ToiletPlugin (" + page + "/" + maxPage + ")  =====-----");
+
+        helps.entrySet().stream()
+                .skip((page - 1) * 10L)
+                .limit(10)
+                .map(entry -> ChatColor.AQUA + entry.getKey() +
+                        StringUtils.repeat(" ", maxLength.get() - entry.getKey().length()) +
+                        "  -  " +
+                        ChatColor.DARK_AQUA + entry.getValue().getDefine().helpMessage() + "\n" +
+                        "    " + ChatColor.AQUA + getArgument(entry.getKey(), entry.getValue()))
+                .map(Component::text)
+                .map(textComponent -> textComponent
+                        .clickEvent(ClickEvent.suggestCommand("/toilet config " +
+                                textComponent.content().substring(1, textComponent.content().indexOf(" "))
+                                + " "))
+                        .hoverEvent(HoverEvent.showText(Component.text(ChatColor.AQUA + "クリックして設定を使用します。")))
+                )
+                .forEach(sender::sendMessage);
+
+        TextComponent footer = of(ChatColor.GOLD + "-----=====");
+
+        if (page > 1)
+            footer = footer.append(of(ChatColor.GOLD + " [" + ChatColor.RED + "<<" + ChatColor.GOLD + "]")
+                    .clickEvent(ClickEvent.runCommand("/toilet config help " + (page - 1)))
+                    .hoverEvent(HoverEvent.showText(of(ChatColor.AQUA + "クリックして前のページに戻る"))));
+        else
+            footer = footer.append(of("     "));
+
+        footer = footer.append(of(ChatColor.GOLD + " ToiletPlugin "));
+
+        if (page < maxPage)
+            footer = footer.append(of(ChatColor.GOLD + "[" + ChatColor.GREEN + ">>" + ChatColor.GOLD + "] ")
+                    .clickEvent(ClickEvent.runCommand("/toilet config help " + (page + 1)))
+                    .hoverEvent(HoverEvent.showText(of(ChatColor.AQUA + "クリックして次のページに進む"))));
+        else
+            footer = footer.append(of("    "));
+
+        sender.sendMessage(footer.append(of(ChatColor.GOLD + "=====-----")));
+    }
+
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
@@ -89,35 +199,7 @@ public class ConfigCommand extends CommandBase
                 String configName = args[0];
                 if (!this.config.isConfigExist(configName))
                     return Collections.singletonList("存在しないコンフィグ名です。");
-                ConfigManager.GeneratedConfig config = this.config.getConfig(configName);
-
-                if (config.getDefine().toggle())
-                    return null;
-
-                StringBuilder sb = new StringBuilder("<").append(configName).append(":").append(config.getField().getType().getSimpleName());
-
-                double min = config.getDefine().min();
-                double max = config.getDefine().max();
-                if (min != -1)
-                {
-                    String a;
-                    if (min % 1 == 0)
-                        a = String.valueOf((int) min);
-                    else
-                        a = String.valueOf(min);
-                    sb.append(a).append("~");
-                }
-                if (max != -1)
-                {
-                    String a;
-                    if (max % 1 == 0)
-                        a = String.valueOf((int) max);
-                    else
-                        a = String.valueOf(max);
-                    sb.append(a);
-                }
-                sb.append(">");
-                return Collections.singletonList(sb.toString());
+                return Collections.singletonList(getArgument(configName, this.config.getConfig(configName)));
             default:
                 return null;
         }

@@ -13,6 +13,7 @@ public class ConfigManager
 {
     private final Object config;
     private final Class<?> configClass;
+    @Getter
     private final HashMap<String, GeneratedConfig> map;
 
     public ConfigManager(Object config)
