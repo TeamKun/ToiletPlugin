@@ -2,7 +2,6 @@ package net.kunmc.lab.toiletplugin;
 
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.game.GameMain;
-import net.kunmc.lab.toiletplugin.toiletobject.ToiletRegister;
 import net.kunmc.lab.toiletplugin.toiletobject.generate.ModelManager;
 import net.kunmc.lab.toiletplugin.toiletobject.generate.ToiletGenerator;
 import net.kunmc.lab.toiletplugin.toiletobject.generate.ToolManager;
@@ -33,8 +32,6 @@ public final class ToiletPlugin extends JavaPlugin
     @Getter
     private final ModelManager modelManager;
     @Getter
-    private final ToiletRegister toilets;
-    @Getter
     private final GameMain game;
 
     public ToiletPlugin() throws IOException
@@ -43,7 +40,6 @@ public final class ToiletPlugin extends JavaPlugin
 
         modelManager = new ModelManager();
 
-        toilets = new ToiletRegister(new File(getDataFolder(), "toilets.json"));
         game = new GameMain(this);
         plugin = this;
     }
@@ -63,7 +59,7 @@ public final class ToiletPlugin extends JavaPlugin
                 .forEach(world -> modelManager.scan(new File(world.getWorldFolder(), "generated")));
 
         Bukkit.getPluginManager().registerEvents(new ToolManager(), this);
-        Bukkit.getPluginManager().registerEvents(new ToiletGenerator(this.toilets), this);
+        Bukkit.getPluginManager().registerEvents(new ToiletGenerator(this.game.getToiletManager()), this);
 
         game.setup();
 
@@ -138,7 +134,7 @@ public final class ToiletPlugin extends JavaPlugin
     {
         try
         {
-            this.toilets.save();
+            this.game.getToiletManager().save();
             this.game.saveConfig();
         }
         catch (IOException e)

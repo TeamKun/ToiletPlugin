@@ -3,8 +3,8 @@ package net.kunmc.lab.toiletplugin.toiletobject.generate;
 import com.github.shynixn.structureblocklib.api.bukkit.StructureBlockLibApi;
 import com.github.shynixn.structureblocklib.api.enumeration.StructureRotation;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
+import net.kunmc.lab.toiletplugin.game.toilet.ToiletManager;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
-import net.kunmc.lab.toiletplugin.toiletobject.ToiletRegister;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -27,9 +27,9 @@ import java.util.Set;
 
 public class ToiletGenerator implements Listener
 {
-    private final ToiletRegister register;
+    private final ToiletManager register;
 
-    public ToiletGenerator(ToiletRegister register)
+    public ToiletGenerator(ToiletManager register)
     {
         this.register = register;
     }
@@ -106,7 +106,7 @@ public class ToiletGenerator implements Listener
                     return tags.contains("toilet") && !tags.contains("registered_toilet");
                 })
                 .forEach(armorStand -> {
-                    Toilet toilet = ToiletPlugin.getPlugin().getToilets().detect(armorStand, direction);
+                    Toilet toilet = ToiletPlugin.getPlugin().getGame().getToiletManager().detectToilet(armorStand, direction);
                     if (toilet == null)
                     {
                         placer.sendMessage(ChatColor.RED + "E: トイレの検出に失敗しました。");
@@ -142,7 +142,7 @@ public class ToiletGenerator implements Listener
                     );
 
                     String name = toilet.getName();
-                    ToiletPlugin.getPlugin().getToilets().registerToilet(name, toilet);
+                    ToiletPlugin.getPlugin().getGame().getToiletManager().registerToilet(name, toilet);
                     ToiletPlugin.getPlugin().getGame().getToiletManager().getLogic().getToiletInformationDisplay().addToilet(toilet);
 
                     patchArmorStand(armorStand, name, direction);

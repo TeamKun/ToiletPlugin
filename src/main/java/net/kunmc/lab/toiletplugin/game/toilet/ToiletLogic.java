@@ -60,7 +60,7 @@ public class ToiletLogic extends BukkitRunnable implements Listener
             if (!armorStand.getScoreboardTags().contains("info_toilet"))
                 return;
 
-            Toilet toilet = this.game.getRegister().getToilet(armorStand);
+            Toilet toilet = this.game.getToiletManager().getToilet(armorStand);
 
             if (toilet == null)
                 return;

@@ -24,13 +24,13 @@ public class RemoveCommand extends CommandBase
 
         String toiletName = args[0];
 
-        if (!ToiletPlugin.getPlugin().getToilets().containsToilet(toiletName))
+        if (!ToiletPlugin.getPlugin().getGame().getToiletManager().containsToilet(toiletName))
         {
             sender.sendMessage(ChatColor.RED + "E: トイレが見つかりませんでした。");
             return;
         }
 
-        Toilet removedToilet = ToiletPlugin.getPlugin().getToilets().unregisterToilet(toiletName);
+        Toilet removedToilet = ToiletPlugin.getPlugin().getGame().getToiletManager().unregisterToilet(toiletName);
 
         try
         {
@@ -47,7 +47,7 @@ public class RemoveCommand extends CommandBase
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
-        return ToiletPlugin.getPlugin().getToilets().getToiletNames();
+        return ToiletPlugin.getPlugin().getGame().getToiletManager().getToiletNames();
     }
 
     @Override

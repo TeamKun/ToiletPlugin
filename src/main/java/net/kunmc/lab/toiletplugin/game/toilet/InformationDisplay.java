@@ -44,7 +44,7 @@ public class InformationDisplay
 
     public void init()
     {
-        game.getRegister().getToiletList().forEach(toilet -> this.toilets.put(toilet.getName(), new ToiletDisplay(toilet)));
+        game.getToiletManager().getToiletList().forEach(toilet -> this.toilets.put(toilet.getName(), new ToiletDisplay(toilet)));
     }
 
     public void removeToilet(ToiletDisplay toilet)

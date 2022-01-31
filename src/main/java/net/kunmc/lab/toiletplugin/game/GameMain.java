@@ -5,7 +5,6 @@ import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.game.toilet.ToiletManager;
-import net.kunmc.lab.toiletplugin.toiletobject.ToiletRegister;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -29,8 +28,6 @@ public class GameMain
     @Getter
     private final File configFile;
 
-    @Getter
-    private final ToiletRegister register;
     private final ToiletPlugin plugin;
 
     @Getter
@@ -41,7 +38,6 @@ public class GameMain
     public GameMain(ToiletPlugin plugin)
     {
         this.plugin = plugin;
-        this.register = plugin.getToilets();
         this.players = new ArrayList<>();
         this.spectators = new ArrayList<>();
 
@@ -49,7 +45,7 @@ public class GameMain
         this.gameConfig = loadConfig(configFile);
 
         this.questManager = new QuestManager(this);
-        this.toiletManager = new ToiletManager(this);
+        this.toiletManager = new ToiletManager(this, new File(plugin.getDataFolder(), "toilets.json"));
     }
 
     private static GameConfig loadConfig(File file)
