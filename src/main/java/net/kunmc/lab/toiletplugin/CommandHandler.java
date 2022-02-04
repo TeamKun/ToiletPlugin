@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin;
 
 import net.kunmc.lab.toiletplugin.commands.ConfigCommand;
+import net.kunmc.lab.toiletplugin.commands.DebugCommand;
 import net.kunmc.lab.toiletplugin.commands.HelpCommand;
 import net.kunmc.lab.toiletplugin.commands.QuestCommand;
 import net.kunmc.lab.toiletplugin.commands.ReloadModelCommand;
@@ -40,6 +41,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter
         commands.put("reloadmodel", new ReloadModelCommand());
         commands.put("config", new ConfigCommand(new ConfigManager(game.getGameConfig())));
         commands.put("quest", new QuestCommand(game));
+        commands.put("debug", new DebugCommand(game));
     }
 
     @Override
