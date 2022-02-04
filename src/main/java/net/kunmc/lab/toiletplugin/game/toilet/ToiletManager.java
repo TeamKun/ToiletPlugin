@@ -57,7 +57,6 @@ public class ToiletManager
 
         Bukkit.getPluginManager().registerEvents(this.logic, ToiletPlugin.getPlugin());
         this.logic.init();
-        this.logic.runTaskTimer(ToiletPlugin.getPlugin(), 0, 2);
     }
 
     public Toilet detectToilet(ArmorStand stand, BlockFace direction)

@@ -13,16 +13,15 @@ import org.bukkit.block.data.type.Door;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
 
-public class ToiletLogic extends BukkitRunnable implements Listener
+public class ToiletLogic implements Listener
 {
     private final GameMain game;
     @Getter
     private final InformationDisplay toiletInformationDisplay;
     private final QuestManager questManager;
     private final ToiletManager toiletManager;
-    private int count = 0;
+    private final int count = 0;
 
     public ToiletLogic(GameMain game, ToiletManager toiletManager)
     {
@@ -37,17 +36,13 @@ public class ToiletLogic extends BukkitRunnable implements Listener
         this.toiletInformationDisplay.init();
     }
 
-    @Override
-    public void run()
+    public void onTwoTick(int tick)
     {
-        count += 2;
-        // Detect player join to toilet.
         this.questManager.getQuestingPlayer().forEach(this::checkCollision);
-        if (count < 20)
-            return;
-        count = 0;
+    }
 
-        // Onsec
+    public void onSecond()
+    {
         this.toiletInformationDisplay.update();
     }
 

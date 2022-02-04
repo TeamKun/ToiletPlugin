@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameMain
+public class GameMain extends BukkitRunnable
 {
     @Getter
     private final List<Player> players;
@@ -34,6 +35,8 @@ public class GameMain
     private final ToiletManager toiletManager;
     @Getter
     private final QuestManager questManager;
+
+    private int tickCount;
 
     public GameMain(ToiletPlugin plugin)
     {
@@ -87,6 +90,8 @@ public class GameMain
 
         plugin.getServer().getOnlinePlayers().stream().parallel()
                 .forEach(this::updatePlayer);
+
+        this.runTaskTimer(plugin, 0L, 1L);
     }
 
     public void updatePlayer(Player player)
@@ -141,5 +146,19 @@ public class GameMain
         if (!removed)
             return;
         player.sendMessage(ChatColor.RED + "スペクテイターではなくなりました！");
+    }
+
+    @Override
+    public void run()
+    {
+        tickCount++;
+
+        if (tickCount % 20 == 0)
+        {
+            toiletManager.getLogic().onSecond();
+            tickCount = 0;
+        }
+        else if (tickCount % 2 == 0)
+            toiletManager.getLogic().onTwoTick(2);
     }
 }
