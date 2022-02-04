@@ -1,5 +1,6 @@
 package net.kunmc.lab.toiletplugin.toiletobject;
 
+import com.google.gson.annotations.Expose;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,15 +11,22 @@ import java.io.Serializable;
 @Data
 public class Toilet implements Serializable
 {
+    @Expose
     private final String name;
 
+    @Expose
     private final BlockFace direction;
 
+    @Expose
     private final LocationPojo armorStandLocation;
+    @Expose
     private final LocationPojo scytheLocation;
+    @Expose
     private final LocationPojo doorLocation;
 
+    @Expose
     private final String armorStandUUID;
+    @Expose
     private final String toiletInfoBaseArmorStandUUID;
 
     public Toilet(String name, BlockFace direction, LocationPojo armorStandLocation, LocationPojo scytheLocation, LocationPojo doorLocation, String armorStandUUID, String toiletInfoBaseArmorStandUUID)
@@ -46,9 +54,13 @@ public class Toilet implements Serializable
     @Data
     public static class LocationPojo
     {
+        @Expose
         private final String worldName;
+        @Expose
         private final int x;
+        @Expose
         private final int y;
+        @Expose
         private final int z;
 
         public static LocationPojo fromLocation(Location loc)

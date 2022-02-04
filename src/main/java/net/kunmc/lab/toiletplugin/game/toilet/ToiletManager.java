@@ -2,6 +2,7 @@ package net.kunmc.lab.toiletplugin.game.toilet;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
@@ -184,9 +185,10 @@ public class ToiletManager
 
     public void saveToFile(File file) throws IOException
     {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         try (FileOutputStream fos = new FileOutputStream(file))
         {
+
             fos.write(gson.toJson(toilets).getBytes());
         }
     }
@@ -196,7 +198,9 @@ public class ToiletManager
         if (!file.exists())
             return;
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
 
         toilets.putAll(gson.fromJson(new String(Files.readAllBytes(file.toPath())), new TypeToken<HashMap<String, Toilet>>()
         {
