@@ -54,6 +54,8 @@ public class OnGroundToilet extends Toilet
         this.state = state;
         if (state == ToiletState.OPEN)
             this.purge();
+        else
+            setDoor(true);
     }
 
     public void purge()
@@ -62,13 +64,17 @@ public class OnGroundToilet extends Toilet
         this.timesElapsed = 0;
         this.cooldownMax = 0;
         this.toiletPlayer = null;
+        setDoor(false);
+    }
 
+    private void setDoor(boolean open)
+    {
         Block doorBlock = this.getDoorLocation().toLocation().getBlock();
 
         if (!(doorBlock.getBlockData() instanceof Door))
             return;
         Door door = (Door) doorBlock.getBlockData();
-        door.setOpen(true);
+        door.setOpen(open);
         doorBlock.setBlockData(door, true);
     }
 
