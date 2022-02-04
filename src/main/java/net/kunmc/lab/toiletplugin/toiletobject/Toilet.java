@@ -21,6 +21,28 @@ public class Toilet implements Serializable
     private final String armorStandUUID;
     private final String toiletInfoBaseArmorStandUUID;
 
+    public Toilet(String name, BlockFace direction, LocationPojo armorStandLocation, LocationPojo scytheLocation, LocationPojo doorLocation, String armorStandUUID, String toiletInfoBaseArmorStandUUID)
+    {
+        this.name = name;
+        this.direction = direction;
+        this.armorStandLocation = armorStandLocation;
+        this.scytheLocation = scytheLocation;
+        this.doorLocation = doorLocation;
+        this.armorStandUUID = armorStandUUID;
+        this.toiletInfoBaseArmorStandUUID = toiletInfoBaseArmorStandUUID;
+    }
+
+    public Toilet(Toilet toilet)
+    {
+        this.name = toilet.getName();
+        this.direction = toilet.getDirection();
+        this.armorStandLocation = toilet.getArmorStandLocation();
+        this.scytheLocation = toilet.getScytheLocation();
+        this.doorLocation = toilet.getDoorLocation();
+        this.armorStandUUID = toilet.getArmorStandUUID();
+        this.toiletInfoBaseArmorStandUUID = toilet.getToiletInfoBaseArmorStandUUID();
+    }
+
     @Data
     public static class LocationPojo
     {

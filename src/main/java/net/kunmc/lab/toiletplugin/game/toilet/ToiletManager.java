@@ -31,9 +31,8 @@ public class ToiletManager
     @Getter
     private final ToiletLogic logic;
 
-    private final HashMap<String, Toilet> toilets;
     @Getter
-    private final HashMap<String, OnGroundToilet> loadedToilets;
+    private final HashMap<String, OnGroundToilet> toilets;
     @Getter
     private final File file;
 
@@ -42,7 +41,6 @@ public class ToiletManager
         this.game = game;
         this.file = file;
         this.toilets = new HashMap<>();
-        this.loadedToilets = new HashMap<>();
         this.logic = new ToiletLogic(game, this);
     }
 
@@ -107,15 +105,14 @@ public class ToiletManager
         return null;
     }
 
-    public Toilet getToilet(String name)
+    public OnGroundToilet getToilet(String name)
     {
         return toilets.get(name);
     }
 
-    public void registerToilet(String name, Toilet toilet)
+    public void registerToilet(String name, OnGroundToilet toilet)
     {
         toilets.put(name, toilet);
-        loadedToilets.put(name, new OnGroundToilet(toilet));
     }
 
     public void save() throws IOException
@@ -123,9 +120,12 @@ public class ToiletManager
         this.saveToFile(file);
     }
 
-    public Toilet unregisterToilet(String name)
+    public OnGroundToilet unregisterToilet(String name)
     {
-        return toilets.remove(name);
+        OnGroundToilet toilet = toilets.remove(name);
+        toilet.killEntities();
+
+        return toilet;
     }
 
     public List<Toilet> getToiletList()
@@ -133,7 +133,7 @@ public class ToiletManager
         return new ArrayList<>(toilets.values());
     }
 
-    public Location[] getToilets()
+    public Location[] getToiletLocations()
     {
         return this.toilets.values().stream()
                 .map(Toilet::getArmorStandLocation)
@@ -151,7 +151,7 @@ public class ToiletManager
         return this.toilets.containsKey(name);
     }
 
-    public Toilet getToilet(Location anyLoc)
+    public OnGroundToilet getToilet(Location anyLoc)
     {
         return this.toilets.values().stream()
                 .filter(toilet -> {
@@ -171,7 +171,7 @@ public class ToiletManager
                 .orElse(null);
     }
 
-    public Toilet getToilet(Entity entity)
+    public OnGroundToilet getToilet(Entity entity)
     {
         return this.toilets.values().stream()
                 .filter(toilet -> {

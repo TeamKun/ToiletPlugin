@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class OnGroundToilet
+public class OnGroundToilet extends Toilet
 {
     private final Toilet toilet;
     private final ArmorStand informationArmorStand;
@@ -32,6 +32,7 @@ public class OnGroundToilet
 
     public OnGroundToilet(Toilet toilet)
     {
+        super(toilet);
         this.state = ToiletState.OPEN;
         this.cooldownMax = 0;
         this.timesElapsed = 0;
@@ -39,6 +40,11 @@ public class OnGroundToilet
         this.informationArmorStand = (ArmorStand) Bukkit.getEntity(UUID.fromString(toilet.getToiletInfoBaseArmorStandUUID()));
         this.toiletPlayer = null;
         this.displays = new ArrayList<>();
+    }
+
+    public void killEntities()
+    {
+        displays.forEach(Entity::remove);
     }
 
 }

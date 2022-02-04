@@ -3,6 +3,7 @@ package net.kunmc.lab.toiletplugin.toiletobject.generate;
 import com.github.shynixn.structureblocklib.api.bukkit.StructureBlockLibApi;
 import com.github.shynixn.structureblocklib.api.enumeration.StructureRotation;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
+import net.kunmc.lab.toiletplugin.game.toilet.OnGroundToilet;
 import net.kunmc.lab.toiletplugin.game.toilet.ToiletManager;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
@@ -136,13 +137,13 @@ public class ToiletGenerator implements Listener
 
                     Toilet.LocationPojo toiletLoc = new Toilet.LocationPojo(doorLoc.getWorldName(), doorLoc.getX(), doorLoc.getY(), doorLoc.getZ());
 
-                    toilet = new Toilet(toilet.getName(), toilet.getDirection(),
+                    toilet = new OnGroundToilet(new Toilet(toilet.getName(), toilet.getDirection(),
                             toilet.getArmorStandLocation(), toilet.getScytheLocation(), toiletLoc,
                             toilet.getArmorStandUUID(), infoArmorStandEntity.getUniqueId().toString()
-                    );
+                    ));
 
                     String name = toilet.getName();
-                    ToiletPlugin.getPlugin().getGame().getToiletManager().registerToilet(name, toilet);
+                    ToiletPlugin.getPlugin().getGame().getToiletManager().registerToilet(name, (OnGroundToilet) toilet);
 
                     patchArmorStand(armorStand, name, direction);
                     patchArmorStand(infoArmorStandEntity, name, direction);

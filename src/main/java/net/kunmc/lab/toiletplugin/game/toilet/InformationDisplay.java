@@ -25,7 +25,7 @@ public class InformationDisplay
     public InformationDisplay(GameMain game, ToiletManager toiletManager)
     {
         this.game = game;
-        this.toilets = toiletManager.getLoadedToilets();
+        this.toilets = toiletManager.getToilets();
     }
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -37,7 +37,7 @@ public class InformationDisplay
 
     public void removeToilet(OnGroundToilet toilet)
     {
-        toilet.getDisplays().forEach(Entity::remove);
+        toilet.killEntities();
         this.toilets.remove(toilet.getToilet().getName());
     }
 
