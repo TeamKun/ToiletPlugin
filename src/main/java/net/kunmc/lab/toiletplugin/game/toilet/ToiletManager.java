@@ -33,14 +33,17 @@ public class ToiletManager
 
     private final HashMap<String, Toilet> toilets;
     @Getter
+    private final HashMap<String, OnGroundToilet> loadedToilets;
+    @Getter
     private final File file;
 
     public ToiletManager(GameMain game, File file)
     {
         this.game = game;
-        this.logic = new ToiletLogic(game, this);
         this.file = file;
         this.toilets = new HashMap<>();
+        this.loadedToilets = new HashMap<>();
+        this.logic = new ToiletLogic(game, this);
     }
 
     public void init()
@@ -112,6 +115,7 @@ public class ToiletManager
     public void registerToilet(String name, Toilet toilet)
     {
         toilets.put(name, toilet);
+        loadedToilets.put(name, new OnGroundToilet(toilet));
     }
 
     public void save() throws IOException

@@ -21,14 +21,13 @@ public class ToiletLogic implements Listener
     private final InformationDisplay toiletInformationDisplay;
     private final QuestManager questManager;
     private final ToiletManager toiletManager;
-    private final int count = 0;
 
     public ToiletLogic(GameMain game, ToiletManager toiletManager)
     {
         this.game = game;
         this.questManager = this.game.getQuestManager();
         this.toiletManager = toiletManager;
-        this.toiletInformationDisplay = new InformationDisplay(game);
+        this.toiletInformationDisplay = new InformationDisplay(game, toiletManager);
     }
 
     public void init()

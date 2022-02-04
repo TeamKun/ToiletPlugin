@@ -1,10 +1,6 @@
 package net.kunmc.lab.toiletplugin.game.toilet;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.kunmc.lab.toiletplugin.game.GameMain;
-import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -13,11 +9,9 @@ import org.bukkit.entity.Player;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class InformationDisplay
 {
@@ -26,30 +20,24 @@ public class InformationDisplay
             ChatColor.WHITE + ChatColor.BOLD.toString() + "TOILET!!"
     };
     private final GameMain game;
-    private final HashMap<String, ToiletDisplay> toilets;
+    private final HashMap<String, OnGroundToilet> toilets;
 
-    public InformationDisplay(GameMain game)
+    public InformationDisplay(GameMain game, ToiletManager toiletManager)
     {
         this.game = game;
-        this.toilets = new HashMap<>();
+        this.toilets = toiletManager.getLoadedToilets();
     }
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    public void addToilet(Toilet toilet)
-    {
-        this.toilets.put(toilet.getName(), new ToiletDisplay(toilet));
-    }
-
-
     public void init()
     {
-        game.getToiletManager().getToiletList().forEach(toilet -> this.toilets.put(toilet.getName(), new ToiletDisplay(toilet)));
+        game.getToiletManager().getToiletList().forEach(toilet -> this.toilets.put(toilet.getName(), new OnGroundToilet(toilet)));
     }
 
-    public void removeToilet(ToiletDisplay toilet)
+    public void removeToilet(OnGroundToilet toilet)
     {
-        toilet.displays.forEach(Entity::remove);
+        toilet.getDisplays().forEach(Entity::remove);
         this.toilets.remove(toilet.getToilet().getName());
     }
 
@@ -58,9 +46,9 @@ public class InformationDisplay
         if (!toilets.containsKey(toiletName))
             return;
 
-        ToiletDisplay display = toilets.get(toiletName);
+        OnGroundToilet display = toilets.get(toiletName);
         display.setToiletPlayer(player);
-        display.setState(ToiletDisplay.ToiletState.PLAYER_USING);
+        display.setState(ToiletState.PLAYER_USING);
     }
 
     public void playerQuitToilet(String toiletName)
@@ -68,10 +56,10 @@ public class InformationDisplay
         if (!toilets.containsKey(toiletName))
             return;
 
-        ToiletDisplay display = toilets.get(toiletName);
+        OnGroundToilet display = toilets.get(toiletName);
         display.setToiletPlayer(null);
         display.setTimesElapsed(0);
-        display.setState(ToiletDisplay.ToiletState.OPEN);
+        display.setState(ToiletState.OPEN);
     }
 
     public void update()
@@ -87,7 +75,7 @@ public class InformationDisplay
         }
     }
 
-    public void updateToilet(ToiletDisplay toilet)
+    public void updateToilet(OnGroundToilet toilet)
     {
         if (toilet.getInformationArmorStand() == null || toilet.getInformationArmorStand().isDead())
         {
@@ -109,20 +97,20 @@ public class InformationDisplay
         writeToiletInfoPassengers(toilet);
     }
 
-    private void writeToiletInfoPassengers(ToiletDisplay display)
+    private void writeToiletInfoPassengers(OnGroundToilet display)
     {
         List<Entity> passengers = display.getInformationArmorStand().getPassengers();
 
         if (passengers.isEmpty())
-            spawnPassengers(display.getInformationArmorStand(), display.displays);
+            spawnPassengers(display.getInformationArmorStand(), display.getDisplays());
 
         batchPassenger(display.getInformationArmorStand(), display);
         batchPassenger(display.getInformationArmorStand().getPassengers().get(0), display);
     }
 
-    private void batchPassenger(Entity ae, ToiletDisplay display)
+    private void batchPassenger(Entity ae, OnGroundToilet display)
     {
-        ToiletDisplay.ToiletState state = display.getState();
+        ToiletState state = display.getState();
 
         if (!(ae instanceof ArmorStand))
             return;
@@ -143,7 +131,7 @@ public class InformationDisplay
                             entity.setCustomNameVisible(false);
                         break loop;
                     case "info_state":
-                        entity.setCustomName(customName("状態", state.getName()));
+                        entity.setCustomName(customName("状態", state.getDisplayName()));
                         break loop;
                     case "info_times_elapsed":
                         if (display.getTimesElapsed() == 0)
@@ -247,52 +235,4 @@ public class InformationDisplay
         return stand;
     }
 
-    @Getter
-    @Setter
-    private static class ToiletDisplay
-    {
-        @Getter
-        private final Toilet toilet;
-        @Getter
-        private final ArmorStand informationArmorStand;
-
-        private List<Entity> displays;
-
-        private Player toiletPlayer;
-
-        private int timesElapsed;
-        private int cooldownMax;
-
-        private int displayNonce;
-
-        private ToiletState state;
-
-        public ToiletDisplay(Toilet toilet)
-        {
-            this.state = ToiletState.OPEN;
-            this.cooldownMax = 0;
-            this.timesElapsed = 0;
-            this.toilet = toilet;
-            this.informationArmorStand = (ArmorStand) Bukkit.getEntity(UUID.fromString(toilet.getToiletInfoBaseArmorStandUUID()));
-            this.toiletPlayer = null;
-            this.displays = new ArrayList<>();
-        }
-
-        private enum ToiletState
-        {
-            OPEN("使用可能"),
-            PLAYER_USING("使用中"),
-            PLAYER_COOLDOWN("クールダウン中"),
-            TOILET_COOLDOWN("クールダウン中");
-
-            @Getter
-            private final String name;
-
-            ToiletState(String name)
-            {
-                this.name = name;
-            }
-
-        }
-    }
 }

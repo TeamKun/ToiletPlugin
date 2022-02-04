@@ -143,7 +143,6 @@ public class ToiletGenerator implements Listener
 
                     String name = toilet.getName();
                     ToiletPlugin.getPlugin().getGame().getToiletManager().registerToilet(name, toilet);
-                    ToiletPlugin.getPlugin().getGame().getToiletManager().getLogic().getToiletInformationDisplay().addToilet(toilet);
 
                     patchArmorStand(armorStand, name, direction);
                     patchArmorStand(infoArmorStandEntity, name, direction);
