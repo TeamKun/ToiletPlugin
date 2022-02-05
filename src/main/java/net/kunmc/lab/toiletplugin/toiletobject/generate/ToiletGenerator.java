@@ -38,7 +38,7 @@ public class ToiletGenerator implements Listener
     private static TextComponent copy(String column, String text)
     {
         return Component.text(ChatColor.GREEN + column + ": " + ChatColor.WHITE + text)
-                .clickEvent(ClickEvent.copyToClipboard(text))
+                .clickEvent(ClickEvent.copyToClipboard(text.replace(",", " ")))
                 .hoverEvent(HoverEvent.showText(Component.text(ChatColor.GREEN + "クリックしてコピー")));
     }
 
