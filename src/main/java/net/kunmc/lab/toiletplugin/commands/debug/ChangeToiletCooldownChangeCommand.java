@@ -21,18 +21,27 @@ public class ChangeToiletCooldownChangeCommand extends CommandBase
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
-        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 2, 2))
+        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 2, 3))
             return;
 
         String toiletName = args[0];
-        Integer seconds;
-        if ((seconds = CommandFeedBackUtils.parseInteger(sender, args[1], 1)) == null)
+        Integer max;
+        if ((max = CommandFeedBackUtils.parseInteger(sender, args[1], 1)) == null)
+            return;
+
+        Integer seconds = null;
+        if (args.length == 3 && (seconds = CommandFeedBackUtils.parseInteger(sender, args[2], 1, max)) == null)
             return;
 
         OnGroundToilet toilet = game.getToiletManager().getToilet(toiletName);
 
-        toilet.setCooldownMax(seconds);
+        toilet.setCooldownMax(max);
         sender.sendMessage("Cooldown max is now " + seconds + " sec.");
+        if (seconds != null)
+        {
+            toilet.setCooldown(seconds);
+            sender.sendMessage("Cooldown is now " + seconds + " sec.");
+        }
     }
 
     @Override
@@ -55,7 +64,8 @@ public class ChangeToiletCooldownChangeCommand extends CommandBase
     {
         return new String[]{
                 required("toiletName", "toilet"),
-                required("seconds", "int:seconds")
+                required("maxSeconds", "int:seconds"),
+                required("remainingTime", "int:seconds"),
         };
     }
 }
