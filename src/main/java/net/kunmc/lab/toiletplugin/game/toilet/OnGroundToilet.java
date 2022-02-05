@@ -27,6 +27,7 @@ public class OnGroundToilet extends Toilet
 
     private int timesElapsed;
     private int cooldownMax;
+    private int cooldown;
 
     private int displayNonce;
 
@@ -37,6 +38,7 @@ public class OnGroundToilet extends Toilet
         super(toilet);
         this.state = ToiletState.OPEN;
         this.cooldownMax = 0;
+        this.cooldown = 0;
         this.timesElapsed = 0;
         this.toilet = toilet;
         this.informationArmorStand = (ArmorStand) Bukkit.getEntity(UUID.fromString(toilet.getToiletInfoBaseArmorStandUUID()));
