@@ -7,6 +7,7 @@ import net.kunmc.lab.toiletplugin.game.toilet.ToiletState;
 import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,11 @@ public class ChangeToiletStateCommand extends CommandBase
         toilet.setState(state);
 
         sender.sendMessage("State is now " + state.name());
+
+        if (state == ToiletState.OPEN)
+            return;
+
+        toilet.setToiletPlayer((Player) sender);
     }
 
     @Override
