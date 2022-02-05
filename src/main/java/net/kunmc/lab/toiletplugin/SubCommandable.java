@@ -26,7 +26,7 @@ public abstract class SubCommandable extends CommandBase
     {
         if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 1))
         {
-            Bukkit.dispatchCommand(sender, "/toilet help " + getName());
+            Bukkit.dispatchCommand(sender, "toilet help " + getName());
             return;
         }
 
@@ -35,7 +35,7 @@ public abstract class SubCommandable extends CommandBase
         if (!commands.containsKey(args[0]))
         {
             sender.sendMessage(ChatColor.RED + "E: サブコマンドが見つかりませんでした:  " + args[0]);
-            Bukkit.dispatchCommand(sender, "/toilet help " + getName());
+            Bukkit.dispatchCommand(sender, "toilet help " + getName());
             return;
         }
 
