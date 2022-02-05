@@ -21,7 +21,7 @@ public class OnGroundToilet extends Toilet
     private final Toilet toilet;
     private final ArmorStand informationArmorStand;
 
-    private List<Entity> displays;
+    private List<ArmorStand> displays;
 
     private Player toiletPlayer;
 

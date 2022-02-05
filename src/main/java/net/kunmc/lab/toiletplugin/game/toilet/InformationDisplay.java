@@ -3,12 +3,12 @@ package net.kunmc.lab.toiletplugin.game.toilet;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +21,14 @@ public class InformationDisplay
     };
     private final GameMain game;
     private final HashMap<String, OnGroundToilet> toilets;
+
+    private static final String[] availableDisplays = {
+            "player_name",
+            "state",
+            "times_elapsed",
+            "remaining_time",
+            "time_display"
+    };
 
     public InformationDisplay(GameMain game, ToiletManager toiletManager)
     {
@@ -102,93 +110,86 @@ public class InformationDisplay
 
     private void writeToiletInfoPassengers(OnGroundToilet display)
     {
-        List<Entity> passengers = display.getInformationArmorStand().getPassengers();
+        List<ArmorStand> displays = display.getDisplays();
 
-        if (passengers.isEmpty())
-            spawnPassengers(display.getInformationArmorStand(), display.getDisplays());
+        if (displays.isEmpty() || displays.size() != availableDisplays.length)
+        {
+            displays.forEach(ArmorStand::remove);
+            displays.clear();
+            displays.addAll(spawnPassengers(display.getInformationArmorStand()));
+        }
 
-        batchPassenger(display.getInformationArmorStand(), display);
-        batchPassenger(display.getInformationArmorStand().getPassengers().get(0), display);
+        batchPassenger(displays, display);
     }
 
-    private void batchPassenger(Entity ae, OnGroundToilet display)
+    private void batchPassenger(List<ArmorStand> entities, OnGroundToilet display)
     {
         ToiletState state = display.getState();
+        int displayCount = 0;
 
-        if (!(ae instanceof ArmorStand))
-            return;
+        entities.forEach(e -> e.setCustomNameVisible(false));
 
-        ae.getPassengers().forEach(entity -> {
-            ArmorStand armorStand = (ArmorStand) entity;
-            loop:
-            for (String name : entity.getScoreboardTags())
-                switch (name)
-                {
-                    case "info_player_name":
-                        if (display.getToiletPlayer() != null)
-                        {
-                            entity.setCustomNameVisible(true);
-                            entity.setCustomName(customName("使用者", display.getToiletPlayer().getName()));
-                        }
+        for (String name : availableDisplays)
+        {
+            ArmorStand armorStand = entities.get(displayCount);
+
+            switch (name)
+            {
+                case "player_name":
+                    if (display.getToiletPlayer() != null)
+                    {
+                        armorStand.setCustomNameVisible(true);
+                        armorStand.setCustomName(customName("使用者", display.getToiletPlayer().getName()));
+                        displayCount++;
+                    }
+                    break;
+                case "state":
+                    armorStand.setCustomNameVisible(true);
+                    armorStand.setCustomName(customName("状態", state.getDisplayName()));
+                    displayCount++;
+                    break;
+                case "times_elapsed":
+                    if (display.getTimesElapsed() == 0)
+                        break;
+                    armorStand.setCustomNameVisible(true);
+                    armorStand.setCustomName(customName("経過時間", formatDateTime(display.getTimesElapsed())));
+                    displayCount++;
+                    break;
+                case "remaining_time":
+                    if (display.getCooldownMax() == 0)
+                        break;
+
+                    int remainingTime = display.getCooldownMax() - display.getTimesElapsed();
+
+                    if (remainingTime <= 0)
+                        break;
+
+                    armorStand.setCustomNameVisible(true);
+                    armorStand.setCustomName(customName("残り時間", formatDateTime(remainingTime)));
+                    displayCount++;
+                    break;
+                case "time_display":
+                    if (display.getCooldownMax() == 0 || display.getCooldown() == 0)
+                        break;
+                    // Progress bar
+                    int remainingTimeDisplay = display.getCooldownMax() - display.getTimesElapsed();
+                    int maxTimeDisplay = display.getCooldownMax() / 10;
+                    int progress = 10 - (int) ((double) remainingTimeDisplay / (double) maxTimeDisplay);
+
+                    StringBuilder builder = new StringBuilder("[");
+                    for (int i = 0; i < 10; i++)
+                        if (i < progress)
+                            builder.append(ChatColor.GREEN).append(" |");
                         else
-                            entity.setCustomNameVisible(false);
-                        break loop;
-                    case "info_state":
-                        entity.setCustomName(customName("状態", state.getDisplayName()));
-                        break loop;
-                    case "info_times_elapsed":
-                        if (display.getTimesElapsed() == 0)
-                        {
-                            armorStand.setCustomNameVisible(false);
-                            break loop;
-                        }
+                            builder.append(ChatColor.RED).append(" |");
+                    builder.append(ChatColor.WHITE).append(" ]");
+                    armorStand.setCustomNameVisible(true);
+                    armorStand.setCustomName(builder.toString());
+                    displayCount++;
+                    break;
+            }
+        }
 
-                        armorStand.setCustomNameVisible(true);
-                        entity.setCustomName(customName("経過時間", formatDateTime(display.getTimesElapsed())));
-                        break loop;
-                    case "info_remaining_time":
-                        if (display.getCooldownMax() == 0)
-                        {
-                            armorStand.setCustomNameVisible(false);
-                            break loop;
-                        }
-
-                        int remainingTime = display.getCooldownMax() - display.getTimesElapsed();
-
-                        if (remainingTime <= 0)
-                        {
-                            armorStand.setCustomNameVisible(false);
-                            break loop;
-                        }
-
-                        armorStand.setCustomNameVisible(true);
-                        entity.setCustomName(customName("残り時間", formatDateTime(remainingTime)));
-                        break loop;
-                    case "info_time_display":
-                        if (display.getCooldownMax() == 0)
-                        {
-                            armorStand.setCustomNameVisible(false);
-                            break loop;
-                        }
-
-                        // Progress bar
-                        int remainingTimeDisplay = display.getCooldownMax() - display.getTimesElapsed();
-                        int maxTimeDisplay = display.getCooldownMax() / 10;
-                        int progress = (int) (((double) remainingTimeDisplay / (double) maxTimeDisplay) * 10);
-
-                        StringBuilder builder = new StringBuilder("[");
-                        for (int i = 0; i < 10; i++)
-                            if (i < progress)
-                                builder.append(ChatColor.RED).append("|");
-                            else
-                                builder.append(ChatColor.GREEN).append("|");
-                        builder.append(ChatColor.GREEN).append("]");
-                        entity.setCustomName(customName("残り時間", builder.toString()));
-                        break loop;
-                }
-
-            batchPassenger(entity, display);
-        });
     }
 
     private String formatDateTime(int seconds)
@@ -203,35 +204,39 @@ public class InformationDisplay
                 ChatColor.GREEN + value;
     }
 
-    private void spawnPassengers(ArmorStand infoStand, List<Entity> displays)
+    private List<ArmorStand> spawnPassengers(ArmorStand infoStand)
     {
-        Entity nameTag = spawnPassenger(infoStand, "player_name");
+        List<ArmorStand> displays = new ArrayList<>();
+
+        ArmorStand nameTag = spawnPassenger(infoStand);
         infoStand.addPassenger(nameTag);
         displays.add(nameTag);
 
-        Entity stateTag = spawnPassenger(infoStand, "state");
+        ArmorStand stateTag = spawnPassenger(infoStand);
         nameTag.addPassenger(stateTag);
         displays.add(stateTag);
 
-        Entity timeElapsedTag = spawnPassenger(infoStand, "times_elapsed");
+        ArmorStand timeElapsedTag = spawnPassenger(infoStand);
         stateTag.addPassenger(timeElapsedTag);
         displays.add(timeElapsedTag);
 
-        Entity remainingTimeTag = spawnPassenger(infoStand, "remaining_time");
+        ArmorStand remainingTimeTag = spawnPassenger(infoStand);
         timeElapsedTag.addPassenger(remainingTimeTag);
         displays.add(remainingTimeTag);
 
-        Entity timeDisplayTag = spawnPassenger(infoStand, "time_display");
+        ArmorStand timeDisplayTag = spawnPassenger(infoStand);
         remainingTimeTag.addPassenger(timeDisplayTag);
         displays.add(timeDisplayTag);
+
+        return displays;
     }
 
-    private ArmorStand spawnPassenger(ArmorStand infoStand, String name)
+    private ArmorStand spawnPassenger(ArmorStand infoStand)
     {
         ArmorStand stand = infoStand.getWorld().spawn(infoStand.getLocation(), ArmorStand.class);
-        stand.setCustomNameVisible(true);
+        stand.setCustomNameVisible(false);
         stand.addScoreboardTag("registered_toilet");
-        stand.addScoreboardTag("info_" + name);
+        stand.addScoreboardTag("info_toilet");
         stand.setGravity(false);
         stand.setVisible(false);
         stand.setSmall(true);
