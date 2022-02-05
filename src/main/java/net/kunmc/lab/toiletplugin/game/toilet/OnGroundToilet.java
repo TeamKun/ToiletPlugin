@@ -42,6 +42,26 @@ public class OnGroundToilet extends Toilet
         this.informationArmorStand = (ArmorStand) Bukkit.getEntity(UUID.fromString(toilet.getToiletInfoBaseArmorStandUUID()));
         this.toiletPlayer = null;
         this.displays = new ArrayList<>();
+
+        if (this.informationArmorStand == null)
+            return;
+
+        this.displays.addAll(recordPassengerDisplays(this.informationArmorStand.getPassengers()));
+    }
+
+    private static List<ArmorStand> recordPassengerDisplays(List<Entity> passengers)
+    {
+        List<ArmorStand> accumulationDisplays = new ArrayList<>();
+        passengers.forEach(entity ->
+        {
+            if (!(entity instanceof ArmorStand))
+                return;
+            if (entity.getScoreboardTags().contains("registered_toilet"))
+                accumulationDisplays.add((ArmorStand) entity);
+            accumulationDisplays.addAll(recordPassengerDisplays(entity.getPassengers()));
+        });
+
+        return accumulationDisplays;
     }
 
     public void killEntities()
