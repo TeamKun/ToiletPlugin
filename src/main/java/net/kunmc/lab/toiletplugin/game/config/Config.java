@@ -18,4 +18,6 @@ public @interface Config
     double min() default -1;
 
     double max() default -1;
+
+    String[] enums() default {};
 }

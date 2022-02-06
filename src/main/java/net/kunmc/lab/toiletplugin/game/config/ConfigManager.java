@@ -6,6 +6,7 @@ import lombok.Getter;
 import javax.naming.SizeLimitExceededException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,9 +28,7 @@ public class ConfigManager
     private void generateMap()
     {
         List<GeneratedConfig> configs = getConfigs();
-        configs.forEach(config -> {
-            map.put(config.getDefine().name().equals("") ? config.getField().getName(): config.getDefine().name(), config);
-        });
+        configs.forEach(config -> map.put(config.getDefine().name().equals("") ? config.getField().getName(): config.getDefine().name(), config));
     }
 
     public boolean isConfigExist(String name)
@@ -58,12 +57,19 @@ public class ConfigManager
 
     public void checkValid(String name, String value)
             throws NoSuchFieldException, SizeLimitExceededException, NegativeArraySizeException,
-            NumberFormatException
+            IllegalArgumentException, ClassNotFoundException
     {
         if (!map.containsKey(name))
             throw new NoSuchFieldException("No config has found with name: " + name);
 
         GeneratedConfig config = map.get(name);
+
+        if (config.getDefine().enums().length != 0)
+        {
+            List<String> enums = new ArrayList<>(Arrays.asList(config.getDefine().enums()));
+            if (!enums.contains(value))
+                throw new ClassNotFoundException("The value is not in the enum list");
+        }
 
         double min = config.getDefine().min();
         double max = config.getDefine().max();
@@ -99,11 +105,16 @@ public class ConfigManager
             if (max != -1 && value.length() > max)
                 throw new SizeLimitExceededException("The value is greater than the max value: " + name);
         }
+        else if (config.getField().getType() == Boolean.class || config.getField().getType() == boolean.class)
+        {
+            if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false"))
+                throw new IllegalArgumentException("The value is not a boolean: " + name);
+        }
     }
 
     public boolean setValue(String name, String value)
             throws NoSuchFieldException, SizeLimitExceededException, NegativeArraySizeException,
-            NumberFormatException
+            NumberFormatException, IllegalAccessException, ClassNotFoundException
     {
         checkValid(name, value);
 
@@ -116,6 +127,8 @@ public class ConfigManager
             config.setValue(Double.parseDouble(value));
         else if (config.getField().getType() == String.class)
             config.setValue(value);
+        else if (config.getField().getType() == Boolean.class || config.getField().getType() == boolean.class)
+            config.setValue(Boolean.parseBoolean(value));
         else
             return false;
         return true;

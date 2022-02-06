@@ -12,6 +12,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import javax.naming.SizeLimitExceededException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -131,7 +133,11 @@ public class ConfigCommand extends CommandBase
         {
             sender.sendMessage(ChatColor.RED + "E: " + value + " は有効な真偽値ではありません。");
         }
-
+        catch (ClassNotFoundException e)
+        {
+            sender.sendMessage(ChatColor.RED + "E: " + value + " は有効な値ではありません。使用可: " +
+                    String.join(", ", config.getDefine().enums()));
+        }
     }
 
     private void showPagedHelp(CommandSender sender, int page)
@@ -203,7 +209,15 @@ public class ConfigCommand extends CommandBase
                 String configName = args[0];
                 if (!this.config.isConfigExist(configName))
                     return Collections.singletonList("存在しないコンフィグ名です。");
-                return Collections.singletonList(getArgument(configName, this.config.getConfig(configName)));
+
+                ConfigManager.GeneratedConfig config = this.config.getConfig(configName);
+
+                List<String> result = new ArrayList<>();
+                result.add(getArgument(configName, config));
+                result.addAll(Arrays.asList(config.getDefine().enums()));
+                if (config.getField().getType() == boolean.class || config.getField().getType() == Boolean.class)
+                    result.addAll(Arrays.asList("true", "false"));
+                return result;
             default:
                 return null;
         }
