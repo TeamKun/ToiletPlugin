@@ -12,6 +12,7 @@ import java.util.List;
 
 public class ConfigManager
 {
+    @Getter
     private final Object config;
     private final Class<?> configClass;
     @Getter

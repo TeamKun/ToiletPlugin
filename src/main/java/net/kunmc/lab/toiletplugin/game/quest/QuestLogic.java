@@ -1,5 +1,6 @@
 package net.kunmc.lab.toiletplugin.game.quest;
 
+import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import org.bukkit.Bukkit;
@@ -42,6 +43,12 @@ public class QuestLogic implements Listener
             return;
 
         Bukkit.broadcastMessage(ChatColor.RED + player.getName() + " は便意に耐えられず死んでしまった！");
-        this.questManager.reSchedule(player);
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerPostRespawnEvent event)
+    {
+        if (this.game.getConfig().isAutoRescheduleOnRespawn())
+            this.questManager.reSchedule(event.getPlayer());
     }
 }

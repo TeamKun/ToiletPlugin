@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin.commands;
 
 import net.kunmc.lab.toiletplugin.CommandBase;
+import net.kunmc.lab.toiletplugin.game.GameConfig;
 import net.kunmc.lab.toiletplugin.game.config.ConfigManager;
 import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
 import net.kyori.adventure.text.Component;
@@ -112,6 +113,13 @@ public class ConfigCommand extends CommandBase
         {
             this.config.setValue(configName, value);
             sender.sendMessage(ChatColor.GREEN + "S: " + configName + "を" + value + "に設定しました。");
+            String[] errors = ((GameConfig) this.config.getConfig()).checkConfig();
+            if (errors.length > 0)
+            {
+                sender.sendMessage(ChatColor.RED + "E: 設定にエラーを検出しました。");
+                for (String error : errors)
+                    sender.sendMessage(ChatColor.RED + "E: " + error);
+            }
         }
         catch (SizeLimitExceededException e)
         {

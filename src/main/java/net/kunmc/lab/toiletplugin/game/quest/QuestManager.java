@@ -8,7 +8,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
-import java.util.Random;
 
 public class QuestManager extends BukkitRunnable
 {
@@ -41,13 +40,16 @@ public class QuestManager extends BukkitRunnable
             return -1;
 
         this.scheduledPlayer.remove(player);
-        this.questingPlayer.put(player, 30);
+
+        int questTime = this.game.getConfig().generateQuestTime();
+
+        this.questingPlayer.put(player, questTime);
 
         player.sendTitle(ChatColor.RED + "緊急クエスト発生：トイレに向かう",
                 ChatColor.YELLOW + "使えるトイレを探して中に入ろう！", 5, 40, 5
         );
 
-        return 30;
+        return questTime;
     }
 
     public boolean cancel(Player player, boolean isNever)
@@ -74,9 +76,11 @@ public class QuestManager extends BukkitRunnable
 
     public int reSchedule(Player player)
     {
+        int scheduleTime = this.game.getConfig().generateScheduleTime();
+
         this.questingPlayer.remove(player);
-        this.scheduledPlayer.put(player, 30);
-        return 30;
+        this.scheduledPlayer.put(player, scheduleTime);
+        return scheduleTime;
     }
 
     public int changeScheduledTime(Player player, int time)
@@ -93,7 +97,7 @@ public class QuestManager extends BukkitRunnable
 
     public int changeScheduledTime(Player player)
     {
-        return this.changeScheduledTime(player, new Random().nextInt(170) + 10);
+        return this.changeScheduledTime(player, this.game.getConfig().generateScheduleTime());
     }
 
     public Integer getScheduledTime(Player player)
@@ -104,6 +108,12 @@ public class QuestManager extends BukkitRunnable
     public Integer getQuestTime(Player player)
     {
         return this.questingPlayer.get(player);
+    }
+
+    public void onPlayerSuccessQuest(Player player)
+    {
+        if (this.game.getConfig().isAutoRescheduleOnSuccess())
+            this.reSchedule(player);
     }
 
     @Override

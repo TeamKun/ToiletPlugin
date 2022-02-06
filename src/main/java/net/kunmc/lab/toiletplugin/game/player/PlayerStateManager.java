@@ -98,7 +98,10 @@ public class PlayerStateManager implements Listener
     {
         this.removeSpectator(player);
         players.add(player);
-        this.getQuestScheduledPlayer().put(player, 30);
+
+        int scheduleTime = this.game.getConfig().generateScheduleTime();
+        if (this.game.getConfig().isAutoScheduleOnJoin())
+            this.getQuestScheduledPlayer().put(player, scheduleTime);
         player.sendMessage(ChatColor.GREEN + "ゲームに参加しました！");
     }
 
