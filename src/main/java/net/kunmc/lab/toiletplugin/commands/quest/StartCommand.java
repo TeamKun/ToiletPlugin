@@ -7,8 +7,11 @@ import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,19 +30,36 @@ public class StartCommand extends CommandBase
         if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 1))
             return;
 
-        Player player = Bukkit.getPlayer(args[0]);
-        if (player == null)
+        List<Player> players = new ArrayList<>();
+
+        Player argPlayer = Bukkit.getPlayer(args[0]);
+        if (argPlayer == null)
         {
-            sender.sendMessage(ChatColor.RED + "E: プレイヤーが見つかりませんでした。");
-            return;
+            List<Entity> entities = Bukkit.selectEntities(sender, args[0]);
+
+            entities.stream()
+                    .filter(entity -> entity instanceof Player)
+                    .map(entity -> (Player) entity)
+                    .forEach(players::add);
+
+            if (players.isEmpty())
+            {
+                sender.sendMessage(ChatColor.RED + "E: プレイヤーが見つかりませんでした。");
+                return;
+            }
         }
-
-        boolean result = game.getQuestManager().start(player);
-
-        if (result)
-            sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストを開始しました。");
         else
-            sender.sendMessage(ChatColor.RED + "E: " + player.getName() + "のクエストを開始できませんでした。");
+            players.add(argPlayer);
+
+        players.forEach(player -> {
+
+            boolean result = game.getQuestManager().start(player);
+
+            if (result)
+                sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストを開始しました。");
+            else
+                sender.sendMessage(ChatColor.RED + "E: " + player.getName() + "のクエストを開始できませんでした。");
+        });
     }
 
     @Override
@@ -47,20 +67,25 @@ public class StartCommand extends CommandBase
     {
         if (args.length != 1)
             return null;
-        return game.getPlayers().stream().parallel().map(Player::getName).collect(Collectors.toList());
+
+        List<String> playerNames = game.getPlayers().stream().parallel().map(Player::getName).collect(Collectors.toList());
+
+        playerNames.addAll(Arrays.asList("@a", "@p", "@r", "@s"));
+
+        return playerNames;
     }
 
     @Override
     public TextComponent getHelpOneLine()
     {
-        return of("プレイヤのクエストを時間を早めて開始します。");
+        return of("プレイヤのクエストを強制開始します。");
     }
 
     @Override
     public String[] getArguments()
     {
         return new String[]{
-                required("name", "player")
+                required("name|selector", "player")
         };
     }
 }
