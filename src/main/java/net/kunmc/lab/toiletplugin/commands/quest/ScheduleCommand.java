@@ -49,7 +49,7 @@ public class ScheduleCommand extends CommandBase
         int result = game.getQuestManager().changeScheduledTime(player, scheduleTime);
 
         if (result != -1)
-            sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエスト時間は" + result + "秒後に開始されます。");
+            sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストは" + result + "秒後に開始されます。");
         else
         {
             if (checkQuesting(sender, player))
