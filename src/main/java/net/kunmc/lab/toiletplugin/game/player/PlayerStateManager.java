@@ -109,7 +109,7 @@ public class PlayerStateManager implements Listener
     {
         this.removePlayer(player);
         spectators.add(player);
-        player.sendMessage(ChatColor.GOLD + "スペクテイターになりました！");
+        player.sendMessage(ChatColor.GREEN + "スペクテイターになりました！");
     }
 
     public void removePlayer(Player player)
