@@ -68,7 +68,8 @@ public class StartCommand extends CommandBase
         if (args.length != 1)
             return null;
 
-        List<String> playerNames = game.getPlayers().stream().parallel().map(Player::getName).collect(Collectors.toList());
+        List<String> playerNames = game.getPlayerStateManager().getPlayers().stream().parallel()
+                .map(Player::getName).collect(Collectors.toList());
 
         playerNames.addAll(Arrays.asList("@a", "@p", "@r", "@s"));
 

@@ -72,7 +72,8 @@ public class WaitCommand extends CommandBase
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
         if (args.length == 1)
-            return game.getPlayers().stream().parallel().map(Player::getName).collect(Collectors.toList());
+            return game.getPlayerStateManager().getPlayers().stream().parallel()
+                    .map(Player::getName).collect(Collectors.toList());
         if (args.length == 2)
             return Collections.singletonList("[time:int:0~]");
         return null;

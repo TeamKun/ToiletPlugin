@@ -60,7 +60,7 @@ public class StatusCommand extends CommandBase
         QuestManager questManager = game.getQuestManager();
 
         players.forEach(player -> {
-            if (!game.getPlayers().contains(player))
+            if (!game.getPlayerStateManager().isPlaying(player))
                 sender.sendMessage(ChatColor.GREEN + player.getName() + "：参加していません。");
             else if (questManager.isQuesting(player))
                 sender.sendMessage(ChatColor.GREEN + player.getName() + "：クエスト中 残り" +
@@ -79,7 +79,8 @@ public class StatusCommand extends CommandBase
         if (args.length != 1)
             return null;
 
-        List<String> playerNames = game.getPlayers().stream().parallel().map(Player::getName).collect(Collectors.toList());
+        List<String> playerNames = game.getPlayerStateManager().getPlayers().stream().parallel()
+                .map(Player::getName).collect(Collectors.toList());
 
         playerNames.addAll(Arrays.asList("@a", "@p", "@r", "@s"));
 

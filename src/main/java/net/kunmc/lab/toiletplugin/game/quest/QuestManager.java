@@ -36,7 +36,7 @@ public class QuestManager extends BukkitRunnable
 
     public int start(Player player)
     {
-        if (!this.game.getPlayers().contains(player))
+        if (!this.game.getPlayerStateManager().isPlaying(player))
             return -1;
 
         if (this.questingPlayer.containsKey(player))
@@ -83,7 +83,7 @@ public class QuestManager extends BukkitRunnable
 
     public int changeWaitingTime(Player player, int time)
     {
-        if (!this.game.getPlayers().contains(player))
+        if (!this.game.getPlayerStateManager().isPlaying(player))
             return -1;
 
         if (this.questingPlayer.containsKey(player))

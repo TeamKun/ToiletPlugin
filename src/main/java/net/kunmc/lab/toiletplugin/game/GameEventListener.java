@@ -18,18 +18,18 @@ public class GameEventListener implements Listener
     @EventHandler
     public void onGameModeChange(PlayerGameModeChangeEvent e)
     {
-        this.game.updatePlayer(e.getPlayer(), e.getNewGameMode());
+        this.game.getPlayerStateManager().updatePlayer(e.getPlayer(), e.getNewGameMode());
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e)
     {
-        this.game.updatePlayer(e.getPlayer());
+        this.game.getPlayerStateManager().updatePlayer(e.getPlayer());
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e)
     {
-        this.game.updatePlayer(e.getPlayer());
+        this.game.getPlayerStateManager().updatePlayer(e.getPlayer());
     }
 }
