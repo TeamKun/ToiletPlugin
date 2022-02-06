@@ -171,22 +171,22 @@ public class InformationDisplay
                 case "time_display":
                     if (display.getCooldownMax() == 0 || display.getCooldown() == 0)
                         break;
-                    // Progress bar
-                    int remainingTimeDisplay = display.getCooldownMax() - display.getTimesElapsed();
-                    int maxTimeDisplay = display.getCooldownMax() / 10;
-                    int progress = 10 - (int) ((double) remainingTimeDisplay / (double) maxTimeDisplay);
+                    StringBuilder bar = new StringBuilder("[");
 
-                    StringBuilder builder = new StringBuilder("[");
-                    for (int i = 0; i < 10; i++)
-                        if (i < progress)
-                            builder.append(ChatColor.GREEN).append(" |");
+                    int progress = ((100 * display.getCooldown()) / display.getCooldownMax()) / 10;
+                    for (int i = 10; i > 0; i--)
+                    {
+                        if (i <= progress)
+                            bar.append(ChatColor.RED).append("░");
                         else
-                            builder.append(ChatColor.RED).append(" |");
-                    builder.append(ChatColor.WHITE).append(" ]");
+                            bar.append(ChatColor.GREEN).append("█");
+                    }
+
+                    bar.append(ChatColor.RESET).append("]");
+
                     armorStand.setCustomNameVisible(true);
-                    armorStand.setCustomName(builder.toString());
+                    armorStand.setCustomName(bar.toString());
                     displayCount++;
-                    break;
             }
         }
 
