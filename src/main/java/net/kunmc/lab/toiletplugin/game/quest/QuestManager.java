@@ -5,44 +5,42 @@ import net.kunmc.lab.toiletplugin.game.GameMain;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 public class QuestManager
 {
     @Getter
-    private final List<Player> questingPlayer;
+    private final HashMap<Player, Integer> questingPlayer;
     private final HashMap<Player, Integer> waitingPlayer;
 
     private final GameMain game;
 
     public QuestManager(GameMain game)
     {
-        this.questingPlayer = new ArrayList<>();
+        this.questingPlayer = new HashMap<>();
         this.waitingPlayer = new HashMap<>();
         this.game = game;
     }
 
-    public boolean start(Player player)
+    public int start(Player player)
     {
         if (!this.game.getPlayers().contains(player))
-            return false;
+            return -1;
 
-        if (this.questingPlayer.contains(player))
-            return false;
+        if (this.questingPlayer.containsKey(player))
+            return -1;
 
         this.waitingPlayer.remove(player);
-        this.questingPlayer.add(player);
+        this.questingPlayer.put(player, 30);
 
 
-        return true;
+        return 30;
     }
 
     public boolean cancel(Player player, boolean isNever)
     {
-        if (!this.questingPlayer.contains(player))
+        if (!this.questingPlayer.containsKey(player))
             return false;
 
         this.questingPlayer.remove(player);
@@ -54,22 +52,22 @@ public class QuestManager
 
     public boolean isQuesting(Player player)
     {
-        return this.questingPlayer.contains(player);
+        return this.questingPlayer.containsKey(player);
     }
 
-    public boolean changeWaitingTime(Player player, int time)
+    public int changeWaitingTime(Player player, int time)
     {
         if (!this.game.getPlayers().contains(player))
-            return false;
+            return -1;
 
-        if (this.questingPlayer.contains(player))
-            return false;
+        if (this.questingPlayer.containsKey(player))
+            return -1;
 
         this.waitingPlayer.put(player, time);
-        return true;
+        return time;
     }
 
-    public boolean changeWaitingTime(Player player)
+    public int changeWaitingTime(Player player)
     {
         return this.changeWaitingTime(player, new Random().nextInt(170) + 10);
     }

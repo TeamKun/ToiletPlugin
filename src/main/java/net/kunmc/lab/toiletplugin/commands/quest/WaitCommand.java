@@ -46,10 +46,10 @@ public class WaitCommand extends CommandBase
         if ((waitingTime = CommandFeedBackUtils.parseInteger(sender, args[1], -1)) == null)
             return;
 
-        boolean result = game.getQuestManager().changeWaitingTime(player, waitingTime);
+        int result = game.getQuestManager().changeWaitingTime(player, waitingTime);
 
-        if (result)
-            sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエスト時間は" + waitingTime + "秒後に開始されます。");
+        if (result != -1)
+            sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエスト時間は" + result + "秒後に開始されます。");
         else
         {
             if (checkQuesting(sender, player))

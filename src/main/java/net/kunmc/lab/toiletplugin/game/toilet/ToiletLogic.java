@@ -39,7 +39,7 @@ public class ToiletLogic implements Listener
 
     public void onTwoTick(int tick)
     {
-        this.questManager.getQuestingPlayer().forEach(this::checkCollision);
+        this.questManager.getQuestingPlayer().forEach((player, integer) -> this.checkPlayerInToilet(player));
     }
 
     public void onSecond()
@@ -47,7 +47,7 @@ public class ToiletLogic implements Listener
         this.toiletInformationDisplay.update();
     }
 
-    public void checkCollision(Player player)
+    public void checkPlayerInToilet(Player player)
     {
         player.getNearbyEntities(3.0D, 1.0D, 3.0D).forEach(entity -> {
             if (!(entity instanceof ArmorStand))

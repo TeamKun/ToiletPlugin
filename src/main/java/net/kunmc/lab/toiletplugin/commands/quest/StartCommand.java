@@ -53,10 +53,10 @@ public class StartCommand extends CommandBase
 
         players.forEach(player -> {
 
-            boolean result = game.getQuestManager().start(player);
+            int result = game.getQuestManager().start(player);
 
-            if (result)
-                sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストを開始しました。");
+            if (result != -1)
+                sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストを開始し、制限時間を" + result + "秒に設定しました。");
             else
                 sender.sendMessage(ChatColor.RED + "E: " + player.getName() + "のクエストを開始できませんでした。");
         });
