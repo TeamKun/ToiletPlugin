@@ -49,7 +49,7 @@ public class ToiletLogic implements Listener
         try
         {
             this.toiletManager.getToilets().forEach((key, toilet) -> {
-                if (toilet.getToiletPlayer() != null)
+                if (toilet.getState() != ToiletState.OPEN)
                     toilet.setTimesElapsed(toilet.getTimesElapsed() + 1);
                 if (toilet.getCooldownMax() > 0 && toilet.getCooldown() > 0)
                     toilet.setCooldown(toilet.getCooldown() - 1);
