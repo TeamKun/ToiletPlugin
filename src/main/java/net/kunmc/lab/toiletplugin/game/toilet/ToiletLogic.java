@@ -97,9 +97,12 @@ public class ToiletLogic implements Listener
             if (!armorStand.getScoreboardTags().contains("info_toilet"))
                 return;
 
-            Toilet toilet = this.game.getToiletManager().getToilet(armorStand);
+            OnGroundToilet toilet = this.game.getToiletManager().getToilet(armorStand);
 
             if (toilet == null)
+                return;
+
+            if (toilet.getState() != ToiletState.OPEN)
                 return;
 
             Location backDoorLock = toilet.getDoorLocation().toLocation();
