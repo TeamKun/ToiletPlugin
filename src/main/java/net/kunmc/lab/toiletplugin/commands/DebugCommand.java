@@ -37,7 +37,7 @@ public class DebugCommand extends SubCommandable
     {
         HashMap<String, CommandBase> map = new HashMap<>();
         map.put("changeToiletState", new ChangeToiletStateCommand(game));
-        map.put("changeToiletCooldownMax", new ChangeToiletCooldownChangeCommand(game));
+        map.put("changeToiletCooldown", new ChangeToiletCooldownChangeCommand(game));
         return map;
     }
 }
