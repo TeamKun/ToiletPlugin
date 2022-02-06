@@ -47,6 +47,8 @@ public class RemoveCommand extends CommandBase
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
+        if (args.length != 1)
+            return null;
         return ToiletPlugin.getPlugin().getGame().getToiletManager().getToiletNames();
     }
 
@@ -59,6 +61,6 @@ public class RemoveCommand extends CommandBase
     @Override
     public String[] getArguments()
     {
-        return new String[]{required("トイレ名", "str")};
+        return new String[]{required("トイレ名", "string")};
     }
 }

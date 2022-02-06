@@ -92,6 +92,8 @@ public class HelpCommand extends CommandBase
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
+        if (args.length != 1)
+            return null;
         return Collections.singletonList("[ページ番号]");
     }
 

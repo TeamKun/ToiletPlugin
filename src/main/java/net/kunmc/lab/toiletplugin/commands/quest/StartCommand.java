@@ -45,9 +45,9 @@ public class StartCommand extends CommandBase
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
-        if (args.length == 1)
-            return game.getPlayers().stream().parallel().map(Player::getName).collect(Collectors.toList());
-        return null;
+        if (args.length != 1)
+            return null;
+        return game.getPlayers().stream().parallel().map(Player::getName).collect(Collectors.toList());
     }
 
     @Override

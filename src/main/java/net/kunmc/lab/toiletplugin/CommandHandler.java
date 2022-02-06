@@ -82,6 +82,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter
     {
         List<String> completes = new ArrayList<>();
 
+
         if (!sender.hasPermission("toilet.admin"))
             return new ArrayList<>();
 
@@ -91,9 +92,13 @@ public class CommandHandler implements CommandExecutor, TabCompleter
         else if (commands.containsKey(args[0]))
         {
             CommandBase commandBase = commands.get(args[0]);
+
+            String[] commandArguments = commandBase.getArguments();
             List<String> commandCompletes = commandBase.onTabComplete(sender, removeFirst(args));
             if (commandCompletes != null)
                 completes.addAll(commandCompletes);
+            if (commandArguments.length > args.length)
+                completes.add(ChatColor.stripColor(commandArguments[args.length - 1]));
         }
 
         ArrayList<String> asCopy = new ArrayList<>();

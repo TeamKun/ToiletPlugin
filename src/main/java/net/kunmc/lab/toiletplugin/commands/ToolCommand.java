@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ToolCommand extends CommandBase
@@ -43,10 +42,10 @@ public class ToolCommand extends CommandBase
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
         if (args.length != 1)
-            return new ArrayList<>();
+            return null;
         File file = new File(ToiletPlugin.getPlugin().getDataFolder(), "assets/toilet_models");
         if (!file.exists())
-            return new ArrayList<>();
+            return null;
         return ToiletPlugin.getPlugin().getModelManager().getNames();
     }
 
@@ -60,7 +59,7 @@ public class ToolCommand extends CommandBase
     public String[] getArguments()
     {
         return new String[]{
-                required("モデル名", "str")
+                required("モデル名", "string")
         };
     }
 }
