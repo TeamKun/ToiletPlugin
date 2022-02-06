@@ -119,9 +119,9 @@ public class ToiletGenerator implements Listener
                     int scanned_door_y = doorLoc.getY();
 
                     if (placer.getWorld().getBlockAt(doorLoc.getX(), scanned_door_y - 1, doorLoc.getZ()).getType() == Material.IRON_DOOR)
-                        scanned_door_y -= 2;
+                        scanned_door_y -= 3;
                     else
-                        scanned_door_y -= 1;
+                        scanned_door_y -= 2;
 
                     Location infoArmorStand = new Location(location.getWorld(), doorLoc.getX() + 0.5, scanned_door_y, doorLoc.getZ() + 0.5);
                     infoArmorStand = DirectionUtils.getDirLoc(infoArmorStand, 1, direction);
