@@ -36,6 +36,12 @@ public class ChangeToiletStateCommand extends CommandBase
 
         OnGroundToilet toilet = game.getToiletManager().getToilet(toiletName);
 
+        if (toilet == null)
+        {
+            sender.sendMessage("Toilet not found.");
+            return;
+        }
+
         if (!toiletStateNames.contains(stateName))
         {
             sender.sendMessage("Invalid state name.");
