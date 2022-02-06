@@ -88,9 +88,9 @@ public class PlayerStateManager implements Listener
         }
         else
         {
-            this.removePlayer(player);
             if (!spectators.contains(player))
                 this.addSpectator(player);
+            this.removePlayer(player);
         }
     }
 
