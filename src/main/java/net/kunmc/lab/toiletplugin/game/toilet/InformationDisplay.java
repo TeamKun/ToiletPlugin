@@ -156,13 +156,10 @@ public class InformationDisplay
                     displayCount++;
                     break;
                 case "remaining_time":
-                    if (display.getCooldownMax() == 0)
+                    if (display.getCooldownMax() == 0 || display.getCooldown() == 0)
                         break;
 
-                    int remainingTime = display.getCooldownMax() - display.getTimesElapsed();
-
-                    if (remainingTime <= 0)
-                        break;
+                    int remainingTime = display.getCooldownMax() - display.getCooldown();
 
                     armorStand.setCustomNameVisible(true);
                     armorStand.setCustomName(customName("残り時間", formatDateTime(remainingTime)));
