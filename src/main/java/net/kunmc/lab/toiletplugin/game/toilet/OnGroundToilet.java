@@ -89,7 +89,7 @@ public class OnGroundToilet extends Toilet
         setDoor(false);
     }
 
-    private void setDoor(boolean open)
+    public void setDoor(boolean open)
     {
         Block doorBlock = this.getDoorLocation().toLocation().getBlock();
 
@@ -98,6 +98,8 @@ public class OnGroundToilet extends Toilet
         Door door = (Door) doorBlock.getBlockData();
         door.setOpen(open);
         doorBlock.setBlockData(door, true);
+        doorBlock.getWorld().playSound(doorBlock.getLocation(), "block.iron_door.close", 1.0F, 1.0F);
+
     }
 
 }

@@ -16,6 +16,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
+import java.util.ConcurrentModificationException;
+
 public class ToiletLogic implements Listener
 {
     private final GameMain game;
@@ -44,7 +46,46 @@ public class ToiletLogic implements Listener
 
     public void onSecond()
     {
-        this.toiletInformationDisplay.update();
+        try
+        {
+            this.toiletManager.getToilets().forEach((key, toilet) -> {
+                if (toilet.getToiletPlayer() != null)
+                    toilet.setTimesElapsed(toilet.getTimesElapsed() + 1);
+                if (toilet.getCooldownMax() > 0 && toilet.getCooldown() > 0)
+                    toilet.setCooldown(toilet.getCooldown() - 1);
+
+                if (toilet.getCooldown() == 0)
+                    this.onCooldownFinished(toilet);
+
+                this.toiletInformationDisplay.updateToilet(toilet);
+            });
+        }
+        catch (ConcurrentModificationException ignored)
+        {
+        }
+    }
+
+    private void onCooldownFinished(OnGroundToilet toilet)
+    {
+        if (toilet.getState() == ToiletState.PLAYER_COOLDOWN)
+        {
+            if (!this.game.getConfig().isToiletCooldownEnable())
+            {
+                toilet.setState(ToiletState.OPEN);
+                return;
+            }
+
+            toilet.setState(ToiletState.TOILET_COOLDOWN);
+            toilet.setDoor(false);
+            int cooldown = this.game.getConfig().generateToiletCooldownTime();
+            toilet.setCooldownMax(cooldown);
+            toilet.setCooldown(cooldown);
+            toilet.setToiletPlayer(null);
+        }
+        else if (toilet.getState() == ToiletState.TOILET_COOLDOWN)
+        {
+            toilet.setState(ToiletState.OPEN);
+        }
     }
 
     public void checkPlayerInToilet(Player player)

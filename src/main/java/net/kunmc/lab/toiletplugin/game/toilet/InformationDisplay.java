@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,19 +69,6 @@ public class InformationDisplay
         display.setState(ToiletState.OPEN);
     }
 
-    public void update()
-    {
-        try
-        {
-            this.toilets.forEach((key, value) -> {
-                this.updateToilet(value);
-            });
-        }
-        catch (ConcurrentModificationException ignored)
-        {
-        }
-    }
-
     public void updateToilet(OnGroundToilet toilet)
     {
         if (toilet.getInformationArmorStand() == null || toilet.getInformationArmorStand().isDead())
@@ -90,11 +76,6 @@ public class InformationDisplay
             this.removeToilet(toilet);
             return;
         }
-
-        if (toilet.getToiletPlayer() != null)
-            toilet.setTimesElapsed(toilet.getTimesElapsed() + 1);
-        if (toilet.getCooldownMax() > 0 && toilet.getCooldown() > 0)
-            toilet.setCooldown(toilet.getCooldown() - 1);
 
         ArmorStand infoStand = toilet.getInformationArmorStand();
         if (infoStand == null)
