@@ -39,7 +39,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter
         commands.put("tool", new ToolCommand());
         commands.put("remove", new RemoveCommand());
         commands.put("reloadmodel", new ReloadModelCommand());
-        commands.put("config", new ConfigCommand(new ConfigManager(game.getGameConfig())));
+        commands.put("config", new ConfigCommand(new ConfigManager(game.getConfig())));
         commands.put("quest", new QuestCommand(game));
         commands.put("debug", new DebugCommand(game));
     }

@@ -15,7 +15,7 @@ import java.nio.file.Files;
 public class GameMain extends BukkitRunnable
 {
     @Getter
-    private final GameConfig gameConfig;
+    private final GameConfig config;
     @Getter
     private final File configFile;
 
@@ -34,7 +34,7 @@ public class GameMain extends BukkitRunnable
     {
         this.plugin = plugin;
         this.configFile = new File(plugin.getDataFolder(), "config_game.json");
-        this.gameConfig = loadConfig(configFile);
+        this.config = loadConfig(configFile);
 
         this.playerStateManager = new PlayerStateManager(this);
         this.questManager = new QuestManager(this);
@@ -65,7 +65,7 @@ public class GameMain extends BukkitRunnable
         Gson gson = new Gson();
         try
         {
-            Files.write(configFile.toPath(), gson.toJson(gameConfig).getBytes());
+            Files.write(configFile.toPath(), gson.toJson(config).getBytes());
         }
         catch (IOException e)
         {
