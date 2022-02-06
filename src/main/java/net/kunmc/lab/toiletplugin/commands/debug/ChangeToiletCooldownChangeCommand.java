@@ -34,6 +34,11 @@ public class ChangeToiletCooldownChangeCommand extends CommandBase
             return;
 
         OnGroundToilet toilet = game.getToiletManager().getToilet(toiletName);
+        if (toilet == null)
+        {
+            sender.sendMessage("Toilet not found.");
+            return;
+        }
 
         toilet.setCooldownMax(max);
         sender.sendMessage("Cooldown max is now " + seconds + " sec.");
