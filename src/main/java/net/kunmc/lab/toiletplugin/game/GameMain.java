@@ -37,9 +37,9 @@ public class GameMain extends BukkitRunnable
         this.configFile = new File(plugin.getDataFolder(), "config_game.json");
         this.gameConfig = loadConfig(configFile);
 
+        this.playerStateManager = new PlayerStateManager(this);
         this.questManager = new QuestManager(this);
         this.toiletManager = new ToiletManager(this, new File(plugin.getDataFolder(), "toilets.json"));
-        this.playerStateManager = new PlayerStateManager(this);
     }
 
     private static GameConfig loadConfig(File file)

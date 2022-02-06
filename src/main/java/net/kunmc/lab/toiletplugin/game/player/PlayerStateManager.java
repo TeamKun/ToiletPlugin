@@ -7,6 +7,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PlayerStateManager
@@ -15,6 +16,10 @@ public class PlayerStateManager
     private final List<Player> players;
     @Getter
     private final List<Player> spectators;
+    @Getter
+    private final HashMap<Player, Integer> questingPlayer;
+    @Getter
+    private final HashMap<Player, Integer> questScheduledPlayer;
 
     private final GameMain game;
 
@@ -22,6 +27,8 @@ public class PlayerStateManager
     {
         this.players = new ArrayList<>();
         this.spectators = new ArrayList<>();
+        this.questingPlayer = new HashMap<>();
+        this.questScheduledPlayer = new HashMap<>();
 
         this.game = game;
     }

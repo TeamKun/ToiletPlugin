@@ -1,6 +1,5 @@
 package net.kunmc.lab.toiletplugin.game.quest;
 
-import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import org.bukkit.ChatColor;
@@ -13,18 +12,17 @@ import java.util.Random;
 
 public class QuestManager extends BukkitRunnable
 {
-    @Getter
-    private final HashMap<Player, Integer> questingPlayer;
-    private final HashMap<Player, Integer> waitingPlayer;
-
     private final GameMain game;
     private final QuestLogic logic;
 
+    private final HashMap<Player, Integer> questingPlayer;
+    private final HashMap<Player, Integer> scheduledPlayer;
+
     public QuestManager(GameMain game)
     {
-        this.questingPlayer = new HashMap<>();
-        this.waitingPlayer = new HashMap<>();
         this.game = game;
+        this.questingPlayer = this.game.getPlayerStateManager().getQuestingPlayer();
+        this.scheduledPlayer = this.game.getPlayerStateManager().getQuestScheduledPlayer();
         this.logic = new QuestLogic(game, this);
     }
 
@@ -42,7 +40,7 @@ public class QuestManager extends BukkitRunnable
         if (this.questingPlayer.containsKey(player))
             return -1;
 
-        this.waitingPlayer.remove(player);
+        this.scheduledPlayer.remove(player);
         this.questingPlayer.put(player, 30);
 
         player.sendTitle(ChatColor.RED + "緊急クエスト発生：トイレに向かう",
@@ -71,13 +69,13 @@ public class QuestManager extends BukkitRunnable
 
     public boolean isWaiting(Player player)
     {
-        return this.waitingPlayer.containsKey(player);
+        return this.scheduledPlayer.containsKey(player);
     }
 
     public int reWait(Player player)
     {
         this.questingPlayer.remove(player);
-        this.waitingPlayer.put(player, 30);
+        this.scheduledPlayer.put(player, 30);
         return 30;
     }
 
@@ -89,7 +87,7 @@ public class QuestManager extends BukkitRunnable
         if (this.questingPlayer.containsKey(player))
             return -1;
 
-        this.waitingPlayer.put(player, time);
+        this.scheduledPlayer.put(player, time);
         return time;
     }
 
@@ -100,7 +98,7 @@ public class QuestManager extends BukkitRunnable
 
     public Integer getWaitingTime(Player player)
     {
-        return this.waitingPlayer.get(player);
+        return this.scheduledPlayer.get(player);
     }
 
     public Integer getQuestTime(Player player)
@@ -111,15 +109,15 @@ public class QuestManager extends BukkitRunnable
     @Override
     public void run()
     {
-        for (Player player : this.waitingPlayer.keySet())
+        for (Player player : this.scheduledPlayer.keySet())
         {
-            if (this.waitingPlayer.get(player) == 0)
+            if (this.scheduledPlayer.get(player) == 0)
             {
                 player.sendMessage(ChatColor.DARK_RED + "あなたは便意を感じている... ");
                 player.sendMessage(ChatColor.RED + "あなたは" + start(player) + "秒以内に排便をしないと死んでしまう！");
             }
             else
-                this.waitingPlayer.put(player, this.waitingPlayer.get(player) - 1);
+                this.scheduledPlayer.put(player, this.scheduledPlayer.get(player) - 1);
         }
 
         for (Player player : this.questingPlayer.keySet())

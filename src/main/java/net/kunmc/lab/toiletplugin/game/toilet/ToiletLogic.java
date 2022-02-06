@@ -2,7 +2,7 @@ package net.kunmc.lab.toiletplugin.game.toilet;
 
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.game.GameMain;
-import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
+import net.kunmc.lab.toiletplugin.game.player.PlayerStateManager;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
 import org.bukkit.Location;
@@ -21,13 +21,13 @@ public class ToiletLogic implements Listener
     private final GameMain game;
     @Getter
     private final InformationDisplay toiletInformationDisplay;
-    private final QuestManager questManager;
+    private final PlayerStateManager playerManager;
     private final ToiletManager toiletManager;
 
     public ToiletLogic(GameMain game, ToiletManager toiletManager)
     {
         this.game = game;
-        this.questManager = this.game.getQuestManager();
+        this.playerManager = this.game.getPlayerStateManager();
         this.toiletManager = toiletManager;
         this.toiletInformationDisplay = new InformationDisplay(game, toiletManager);
     }
@@ -39,7 +39,7 @@ public class ToiletLogic implements Listener
 
     public void onTwoTick(int tick)
     {
-        this.questManager.getQuestingPlayer().forEach((player, integer) -> this.checkPlayerInToilet(player));
+        this.playerManager.getQuestingPlayer().forEach((player, integer) -> this.checkPlayerInToilet(player));
     }
 
     public void onSecond()
