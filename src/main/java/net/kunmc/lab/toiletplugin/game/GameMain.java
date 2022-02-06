@@ -6,7 +6,6 @@ import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.player.PlayerStateManager;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.game.toilet.ToiletManager;
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -76,7 +75,7 @@ public class GameMain extends BukkitRunnable
 
     public void setup()
     {
-        Bukkit.getPluginManager().registerEvents(new GameEventListener(this), this.plugin);
+        this.playerStateManager.init();
         this.toiletManager.init();
         this.questManager.init();
 

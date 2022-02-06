@@ -1,16 +1,23 @@
 package net.kunmc.lab.toiletplugin.game.player;
 
 import lombok.Getter;
+import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PlayerStateManager
+public class PlayerStateManager implements Listener
 {
     @Getter
     private final List<Player> players;
@@ -31,6 +38,29 @@ public class PlayerStateManager
         this.questScheduledPlayer = new HashMap<>();
 
         this.game = game;
+    }
+
+    public void init()
+    {
+        Bukkit.getPluginManager().registerEvents(this, ToiletPlugin.getPlugin());
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e)
+    {
+        this.updatePlayer(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e)
+    {
+        this.updatePlayer(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onGameModeChange(PlayerGameModeChangeEvent e)
+    {
+        this.updatePlayer(e.getPlayer(), e.getNewGameMode());
     }
 
     public boolean isPlaying(Player player)
@@ -68,6 +98,7 @@ public class PlayerStateManager
     {
         this.removeSpectator(player);
         players.add(player);
+        this.getQuestScheduledPlayer().put(player, 30);
         player.sendMessage(ChatColor.GREEN + "ゲームに参加しました！");
     }
 
@@ -80,6 +111,7 @@ public class PlayerStateManager
 
     public void removePlayer(Player player)
     {
+        this.questScheduledPlayer.remove(player);
         this.game.getQuestManager().cancel(player, true);
         boolean removed = players.remove(player);
 
