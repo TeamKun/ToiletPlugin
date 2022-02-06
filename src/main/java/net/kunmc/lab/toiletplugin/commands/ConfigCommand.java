@@ -127,6 +127,10 @@ public class ConfigCommand extends CommandBase
         {
             sender.sendMessage(ChatColor.RED + "E: " + value + " は有効な数値ではありません。");
         }
+        catch (IllegalAccessException e)
+        {
+            sender.sendMessage(ChatColor.RED + "E: " + value + " は有効な真偽値ではありません。");
+        }
 
     }
 
