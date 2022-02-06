@@ -12,7 +12,9 @@ import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class ToiletLogic implements Listener
 {
@@ -94,5 +96,11 @@ public class ToiletLogic implements Listener
         this.toiletInformationDisplay.playerJoinToilet(player, toilet.getName());
 
         this.toiletManager.playerJoinToilet(player, toilet, informationDisplay);
+    }
+
+    @EventHandler
+    public void onEntityBreakBlock(EntityExplodeEvent e)
+    {
+        e.blockList().removeIf(block -> this.toiletManager.getToilet(block.getLocation()) != null);
     }
 }

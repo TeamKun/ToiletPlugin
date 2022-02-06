@@ -45,8 +45,6 @@ public class ToiletGenerator implements Listener
     @EventHandler
     public void onBreak(BlockBreakEvent e)
     {
-        if (e.getBlock().getType() != Material.CAULDRON && e.getBlock().getType() != Material.IRON_DOOR)
-            return;
         Toilet toilet = register.getToilet(e.getBlock().getLocation());
 
         if (toilet == null)

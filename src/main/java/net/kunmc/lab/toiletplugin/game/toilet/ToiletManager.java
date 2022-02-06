@@ -165,6 +165,7 @@ public class ToiletManager
                             ) && (
                                     doorLocation.getY() == anyLoc.getBlockY()
                                             || doorLocation.getY() == anyLoc.getBlockY() - 1
+                                            || doorLocation.getY() == anyLoc.getBlockY() - 2
                                             || doorLocation.getY() == anyLoc.getBlockY() + 1
                             )) || toilet.getScytheLocation().equals(Toilet.LocationPojo.fromLocation(anyLoc));
                 })
