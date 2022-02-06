@@ -65,9 +65,9 @@ public class StatusCommand extends CommandBase
             else if (questManager.isQuesting(player))
                 sender.sendMessage(ChatColor.GREEN + player.getName() + "：クエスト中 残り" +
                         questManager.getQuestTime(player) + "秒で死亡。");
-            else if (questManager.isWaiting(player))
+            else if (questManager.isScheduled(player))
                 sender.sendMessage(ChatColor.GREEN + player.getName() + "：待機中 残り" +
-                        questManager.getWaitingTime(player) + "秒で開始。");
+                        questManager.getScheduledTime(player) + "秒で開始。");
             else
                 sender.sendMessage(ChatColor.GREEN + player.getName() + "：参加中 クエスト予約/開始なし。");
         });

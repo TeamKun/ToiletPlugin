@@ -12,11 +12,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WaitCommand extends CommandBase
+public class ScheduleCommand extends CommandBase
 {
     private final GameMain game;
 
-    public WaitCommand(GameMain game)
+    public ScheduleCommand(GameMain game)
     {
         this.game = game;
     }
@@ -33,20 +33,20 @@ public class WaitCommand extends CommandBase
 
         if (args.length == 1)
         {
-            Integer waitingTime = game.getQuestManager().getWaitingTime(player);
-            if (waitingTime == null)
+            Integer scheduleTime = game.getQuestManager().getScheduledTime(player);
+            if (scheduleTime == null)
                 checkQuesting(sender, player);
             else
-                sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストは" + waitingTime + "秒後に開始されます。");
+                sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストは" + scheduleTime + "秒後に開始されます。");
 
             return;
         }
 
-        Integer waitingTime;
-        if ((waitingTime = CommandFeedBackUtils.parseInteger(sender, args[1], -1)) == null)
+        Integer scheduleTime;
+        if ((scheduleTime = CommandFeedBackUtils.parseInteger(sender, args[1], -1)) == null)
             return;
 
-        int result = game.getQuestManager().changeWaitingTime(player, waitingTime);
+        int result = game.getQuestManager().changeScheduledTime(player, scheduleTime);
 
         if (result != -1)
             sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエスト時間は" + result + "秒後に開始されます。");

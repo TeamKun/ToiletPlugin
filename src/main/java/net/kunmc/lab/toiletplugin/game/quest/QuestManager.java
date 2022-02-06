@@ -58,7 +58,7 @@ public class QuestManager extends BukkitRunnable
         this.questingPlayer.remove(player);
         player.sendMessage(ChatColor.GREEN + "あなたのクエストがキャンセルされました。");
         if (!isNever)
-            this.changeWaitingTime(player);
+            this.changeScheduledTime(player);
         return true;
     }
 
@@ -67,19 +67,19 @@ public class QuestManager extends BukkitRunnable
         return this.questingPlayer.containsKey(player);
     }
 
-    public boolean isWaiting(Player player)
+    public boolean isScheduled(Player player)
     {
         return this.scheduledPlayer.containsKey(player);
     }
 
-    public int reWait(Player player)
+    public int reSchedule(Player player)
     {
         this.questingPlayer.remove(player);
         this.scheduledPlayer.put(player, 30);
         return 30;
     }
 
-    public int changeWaitingTime(Player player, int time)
+    public int changeScheduledTime(Player player, int time)
     {
         if (!this.game.getPlayerStateManager().isPlaying(player))
             return -1;
@@ -91,12 +91,12 @@ public class QuestManager extends BukkitRunnable
         return time;
     }
 
-    public int changeWaitingTime(Player player)
+    public int changeScheduledTime(Player player)
     {
-        return this.changeWaitingTime(player, new Random().nextInt(170) + 10);
+        return this.changeScheduledTime(player, new Random().nextInt(170) + 10);
     }
 
-    public Integer getWaitingTime(Player player)
+    public Integer getScheduledTime(Player player)
     {
         return this.scheduledPlayer.get(player);
     }

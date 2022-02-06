@@ -42,6 +42,6 @@ public class QuestLogic implements Listener
             return;
 
         Bukkit.broadcastMessage(ChatColor.RED + player.getName() + " は便意に耐えられず死んでしまった！");
-        this.questManager.reWait(player);
+        this.questManager.reSchedule(player);
     }
 }
