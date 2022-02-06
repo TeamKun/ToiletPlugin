@@ -3,6 +3,7 @@ package net.kunmc.lab.toiletplugin.commands;
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.SubCommandable;
 import net.kunmc.lab.toiletplugin.commands.quest.StartCommand;
+import net.kunmc.lab.toiletplugin.commands.quest.StatusCommand;
 import net.kunmc.lab.toiletplugin.commands.quest.WaitCommand;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kyori.adventure.text.TextComponent;
@@ -38,6 +39,7 @@ public class QuestCommand extends SubCommandable
         HashMap<String, CommandBase> subCommands = new HashMap<>();
         subCommands.put("start", new StartCommand(game));
         subCommands.put("wait", new WaitCommand(game));
+        subCommands.put("status", new StatusCommand(game));
         return subCommands;
     }
 }

@@ -1,26 +1,37 @@
 package net.kunmc.lab.toiletplugin.game.quest;
 
 import lombok.Getter;
+import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Random;
 
-public class QuestManager
+public class QuestManager extends BukkitRunnable
 {
     @Getter
     private final HashMap<Player, Integer> questingPlayer;
     private final HashMap<Player, Integer> waitingPlayer;
 
     private final GameMain game;
+    private final QuestLogic logic;
 
     public QuestManager(GameMain game)
     {
         this.questingPlayer = new HashMap<>();
         this.waitingPlayer = new HashMap<>();
         this.game = game;
+        this.logic = new QuestLogic(game, this);
+    }
+
+    public void init()
+    {
+        this.logic.init();
+        this.runTaskTimer(ToiletPlugin.getPlugin(), 0, 20);
     }
 
     public int start(Player player)
@@ -34,6 +45,9 @@ public class QuestManager
         this.waitingPlayer.remove(player);
         this.questingPlayer.put(player, 30);
 
+        player.sendTitle(ChatColor.RED + "緊急クエスト発生：トイレに向かう",
+                ChatColor.YELLOW + "使えるトイレを探して中に入ろう！", 5, 40, 5
+        );
 
         return 30;
     }
@@ -53,6 +67,18 @@ public class QuestManager
     public boolean isQuesting(Player player)
     {
         return this.questingPlayer.containsKey(player);
+    }
+
+    public boolean isWaiting(Player player)
+    {
+        return this.waitingPlayer.containsKey(player);
+    }
+
+    public int reWait(Player player)
+    {
+        this.questingPlayer.remove(player);
+        this.waitingPlayer.put(player, 30);
+        return 30;
     }
 
     public int changeWaitingTime(Player player, int time)
@@ -77,4 +103,36 @@ public class QuestManager
         return this.waitingPlayer.get(player);
     }
 
+    public Integer getQuestTime(Player player)
+    {
+        return this.questingPlayer.get(player);
+    }
+
+    @Override
+    public void run()
+    {
+        for (Player player : this.waitingPlayer.keySet())
+        {
+            if (this.waitingPlayer.get(player) == 0)
+            {
+                player.sendMessage(ChatColor.DARK_RED + "あなたは便意を感じている... ");
+                player.sendMessage(ChatColor.RED + "あなたは" + start(player) + "秒以内に排便をしないと死んでしまう！");
+            }
+            else
+                this.waitingPlayer.put(player, this.waitingPlayer.get(player) - 1);
+        }
+
+        for (Player player : this.questingPlayer.keySet())
+        {
+            if (this.questingPlayer.get(player) == 0)
+            {
+                player.setKiller(null);
+                player.setLastDamageCause(new EntityDamageEvent(player, EntityDamageEvent.DamageCause.CUSTOM, 0.11235));
+                player.setHealth(0d);
+                this.questingPlayer.remove(player);
+            }
+            else
+                this.questingPlayer.put(player, this.questingPlayer.get(player) - 1);
+        }
+    }
 }

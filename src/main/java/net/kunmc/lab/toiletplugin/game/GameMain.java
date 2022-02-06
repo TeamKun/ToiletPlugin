@@ -87,6 +87,7 @@ public class GameMain extends BukkitRunnable
     {
         Bukkit.getPluginManager().registerEvents(new GameEventListener(this), this.plugin);
         this.toiletManager.init();
+        this.questManager.init();
 
         plugin.getServer().getOnlinePlayers().stream().parallel()
                 .forEach(this::updatePlayer);
