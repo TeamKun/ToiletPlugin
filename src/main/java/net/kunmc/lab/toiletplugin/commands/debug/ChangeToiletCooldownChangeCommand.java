@@ -3,11 +3,15 @@ package net.kunmc.lab.toiletplugin.commands.debug;
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.toilet.OnGroundToilet;
+import net.kunmc.lab.toiletplugin.game.toilet.ToiletState;
 import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChangeToiletCooldownChangeCommand extends CommandBase
 {
@@ -21,7 +25,7 @@ public class ChangeToiletCooldownChangeCommand extends CommandBase
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
-        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 2, 3))
+        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 2, 4))
             return;
 
         String toiletName = args[0];
@@ -30,8 +34,22 @@ public class ChangeToiletCooldownChangeCommand extends CommandBase
             return;
 
         Integer seconds = null;
-        if (args.length == 3 && (seconds = CommandFeedBackUtils.parseInteger(sender, args[2], 1, max)) == null)
+        if (args.length >= 3 && (seconds = CommandFeedBackUtils.parseInteger(sender, args[2], 1, max)) == null)
             return;
+
+        ToiletState state = null;
+        if (args.length >= 4)
+        {
+            try
+            {
+                state = ToiletState.valueOf(args[3].toUpperCase());
+            }
+            catch (Exception e)
+            {
+                sender.sendMessage("Invalid toilet state.");
+                return;
+            }
+        }
 
         OnGroundToilet toilet = game.getToiletManager().getToilet(toiletName);
         if (toilet == null)
@@ -39,13 +57,20 @@ public class ChangeToiletCooldownChangeCommand extends CommandBase
             sender.sendMessage("Toilet not found.");
             return;
         }
-
         toilet.setCooldownMax(max);
         sender.sendMessage("Cooldown max is now " + seconds + " sec.");
         if (seconds != null)
         {
             toilet.setCooldown(seconds);
             sender.sendMessage("Cooldown is now " + seconds + " sec.");
+        }
+
+        if (state != null)
+        {
+            if (state != ToiletState.OPEN)
+                toilet.setToiletPlayer((Player) sender);
+            toilet.setState(state);
+            sender.sendMessage("Toilet state is now " + state.name());
         }
     }
 
@@ -54,6 +79,10 @@ public class ChangeToiletCooldownChangeCommand extends CommandBase
     {
         if (args.length == 1)
             return game.getToiletManager().getToiletNames();
+        if (args.length == 4)
+            return Arrays.stream(ToiletState.values())
+                    .map(ToiletState::name)
+                    .filter(s -> s.startsWith(args[3])).collect(Collectors.toList());
 
         return null;
     }
