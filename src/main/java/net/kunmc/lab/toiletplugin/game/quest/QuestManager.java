@@ -52,16 +52,16 @@ public class QuestManager extends BukkitRunnable
         return questTime;
     }
 
-    public boolean cancel(Player player, boolean isNever)
+    public int cancel(Player player, boolean isNever)
     {
         if (!this.questingPlayer.containsKey(player))
-            return false;
+            return -1;
 
         this.questingPlayer.remove(player);
         player.sendMessage(ChatColor.GREEN + "あなたのクエストがキャンセルされました。");
         if (!isNever)
-            this.changeScheduledTime(player);
-        return true;
+            return this.changeScheduledTime(player);
+        return 0;
     }
 
     public boolean isQuesting(Player player)

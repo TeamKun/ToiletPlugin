@@ -2,6 +2,7 @@ package net.kunmc.lab.toiletplugin.commands;
 
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.SubCommandable;
+import net.kunmc.lab.toiletplugin.commands.quest.CancelCommand;
 import net.kunmc.lab.toiletplugin.commands.quest.ScheduleCommand;
 import net.kunmc.lab.toiletplugin.commands.quest.StartCommand;
 import net.kunmc.lab.toiletplugin.commands.quest.StatusCommand;
@@ -40,6 +41,7 @@ public class QuestCommand extends SubCommandable
         subCommands.put("start", new StartCommand(game));
         subCommands.put("schedule", new ScheduleCommand(game));
         subCommands.put("status", new StatusCommand(game));
+        subCommands.put("cancel", new CancelCommand(game));
         return subCommands;
     }
 }

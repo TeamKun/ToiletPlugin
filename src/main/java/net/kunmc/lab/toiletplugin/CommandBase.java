@@ -20,7 +20,7 @@ public abstract class CommandBase
 
     protected static String required(String argName, String typeName)
     {
-        return ChatColor.AQUA + "<" + argName + ": " + typeName + "> " + ChatColor.RESET;
+        return ChatColor.AQUA + "<" + argName + ":" + typeName + "> " + ChatColor.RESET;
     }
 
     protected static String required(String argName, int min, int max)
@@ -30,12 +30,22 @@ public abstract class CommandBase
 
     protected static String optional(String argName, String typeName)
     {
-        return ChatColor.DARK_AQUA + "[" + argName + ": " + typeName + "] " + ChatColor.RESET;
+        return ChatColor.DARK_AQUA + "[" + argName + ":" + typeName + "] " + ChatColor.RESET;
+    }
+
+    protected static String optional(String argName, String typeName, String defaultValue)
+    {
+        return ChatColor.DARK_AQUA + "[" + argName + ":" + typeName + "@" + defaultValue + "] " + ChatColor.RESET;
     }
 
     protected static String optional(String argName, int min, int max)
     {
         return ChatColor.DARK_AQUA + "[" + argName + ":int:" + min + "～" + max + "] " + ChatColor.RESET;
+    }
+
+    protected static String optional(String argName, int min, int max, String defaultValue)
+    {
+        return ChatColor.DARK_AQUA + "[" + argName + ":int:" + min + "～" + max + "@" + defaultValue + "] " + ChatColor.RESET;
     }
 
     protected static TextComponent suggestCommand(String text, String command)
