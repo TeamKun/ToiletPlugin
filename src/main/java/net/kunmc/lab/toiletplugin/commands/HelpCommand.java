@@ -1,9 +1,7 @@
 package net.kunmc.lab.toiletplugin.commands;
 
-import lombok.AllArgsConstructor;
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.SubCommandable;
-import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -13,15 +11,28 @@ import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
 public class HelpCommand extends CommandBase
 {
-    private HashMap<String, CommandBase> commands;
+    private final HashMap<String, CommandBase> commands;
+
+    private final List<String> subCommands;
+
+    public HelpCommand(HashMap<String, CommandBase> commands)
+    {
+        this.commands = commands;
+        this.subCommands = commands.entrySet().stream().parallel()
+                .filter(entry -> entry.getValue() instanceof SubCommandable)
+                .map(Map.Entry::getKey)
+                .sorted()
+                .collect(Collectors.toList());
+    }
 
     @Override
     public void onCommand(CommandSender sender, String[] args)
@@ -40,9 +51,19 @@ public class HelpCommand extends CommandBase
 
         int page_max = commands.size() / 5 + 1;
 
-        Integer page = 1;
-        if (args.length > 0 && (page = CommandFeedBackUtils.parseInteger(sender, args[0], 1, page_max)) == null)
+        int page = 1;
+        try
+        {
+            if (args.length > 2)
+                page = Integer.parseInt(args[1]);
+            else if (args.length > 0)
+                page = Integer.parseInt(args[0]);
+        }
+        catch (NumberFormatException e)
+        {
+            sender.sendMessage(ChatColor.RED + "ページ番号が不正です。");
             return;
+        }
 
         sender.sendMessage(ChatColor.GOLD + "-----=====    ToiletPlugin (" + page + "/" + page_max + ")  =====-----");
 
@@ -92,9 +113,22 @@ public class HelpCommand extends CommandBase
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
-        if (args.length != 1)
-            return null;
-        return Collections.singletonList("[ページ番号]");
+        List<String> result = new ArrayList<>(this.subCommands);
+
+        if (args.length == 1)
+        {
+            result.add("[ページ番号|サブコマンド]");
+            return result;
+        }
+        else if (args.length == 2)
+        {
+            if (!this.commands.containsKey(args[0]))
+                return Collections.singletonList("E:存在しないサブコマンドです。ページ番号を指定している場合は第二引数は必要ありません。");
+
+            return Collections.singletonList("[ページ番号]");
+        }
+
+        return null;
     }
 
     @Override
@@ -106,6 +140,9 @@ public class HelpCommand extends CommandBase
     @Override
     public String[] getArguments()
     {
-        return new String[0];
+        return new String[]{
+                "[ページ番号|サブコマンド]",
+                "[ページ番号]"
+        };
     }
 }
