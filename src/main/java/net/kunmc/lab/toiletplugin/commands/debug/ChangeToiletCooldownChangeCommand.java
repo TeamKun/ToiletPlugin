@@ -4,7 +4,7 @@ import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.toilet.OnGroundToilet;
 import net.kunmc.lab.toiletplugin.game.toilet.ToiletState;
-import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
+import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,16 +25,16 @@ public class ChangeToiletCooldownChangeCommand extends CommandBase
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
-        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 2, 4))
+        if (CommandUtils.invalidLengthMessage(sender, args, 2, 4))
             return;
 
         String toiletName = args[0];
         Integer max;
-        if ((max = CommandFeedBackUtils.parseInteger(sender, args[1], 1)) == null)
+        if ((max = CommandUtils.parseInteger(sender, args[1], 1)) == null)
             return;
 
         Integer seconds = null;
-        if (args.length >= 3 && (seconds = CommandFeedBackUtils.parseInteger(sender, args[2], 1, max)) == null)
+        if (args.length >= 3 && (seconds = CommandUtils.parseInteger(sender, args[2], 1, max)) == null)
             return;
 
         ToiletState state = null;

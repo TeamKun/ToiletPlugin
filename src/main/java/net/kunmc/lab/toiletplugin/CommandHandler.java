@@ -9,7 +9,7 @@ import net.kunmc.lab.toiletplugin.commands.RemoveCommand;
 import net.kunmc.lab.toiletplugin.commands.ToolCommand;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.config.ConfigManager;
-import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
+import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,10 +47,10 @@ public class CommandHandler implements CommandExecutor, TabCompleter
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args)
     {
-        if (CommandFeedBackUtils.unPermMessage(sender, "toilet.admin"))
+        if (CommandUtils.unPermMessage(sender, "toilet.admin"))
             return true;
 
-        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 1))
+        if (CommandUtils.invalidLengthMessage(sender, args, 1))
         {
             helpInstance.onCommand(sender, removeFirst(new String[0]));
             return true;

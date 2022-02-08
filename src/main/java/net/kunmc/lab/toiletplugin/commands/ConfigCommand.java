@@ -3,7 +3,7 @@ package net.kunmc.lab.toiletplugin.commands;
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameConfig;
 import net.kunmc.lab.toiletplugin.game.config.ConfigManager;
-import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
+import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -70,7 +70,7 @@ public class ConfigCommand extends CommandBase
             return;
         }
 
-        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 1, 2))
+        if (CommandUtils.invalidLengthMessage(sender, args, 1, 2))
             return;
 
         String configName = args[0];
@@ -78,7 +78,7 @@ public class ConfigCommand extends CommandBase
         if (configName.equals("help"))
         {
             Integer page;
-            if (args.length == 2 && (page = CommandFeedBackUtils.parseInteger(sender, args[1], 1)) != null)
+            if (args.length == 2 && (page = CommandUtils.parseInteger(sender, args[1], 1)) != null)
             {
                 showPagedHelp(sender, page);
                 return;

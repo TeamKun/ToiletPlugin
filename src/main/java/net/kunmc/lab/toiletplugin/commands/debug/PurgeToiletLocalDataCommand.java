@@ -3,7 +3,7 @@ package net.kunmc.lab.toiletplugin.commands.debug;
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.toilet.OnGroundToilet;
-import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
+import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
 
@@ -21,7 +21,7 @@ public class PurgeToiletLocalDataCommand extends CommandBase
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
-        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 1, 1))
+        if (CommandUtils.invalidLengthMessage(sender, args, 1, 1))
             return;
 
         String toiletName = args[0];

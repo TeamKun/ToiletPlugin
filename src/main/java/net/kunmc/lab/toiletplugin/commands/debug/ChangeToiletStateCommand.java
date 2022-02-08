@@ -4,7 +4,7 @@ import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.toilet.OnGroundToilet;
 import net.kunmc.lab.toiletplugin.game.toilet.ToiletState;
-import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
+import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ public class ChangeToiletStateCommand extends CommandBase
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
-        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 2, 2))
+        if (CommandUtils.invalidLengthMessage(sender, args, 2, 2))
             return;
 
         String toiletName = args[0];

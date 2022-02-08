@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CommandFeedBackUtils
+public class CommandUtils
 {
     public static boolean unPermMessage(@NotNull CommandSender sender, String perm)
     {

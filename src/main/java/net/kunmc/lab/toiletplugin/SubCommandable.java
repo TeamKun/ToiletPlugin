@@ -1,6 +1,6 @@
 package net.kunmc.lab.toiletplugin;
 
-import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
+import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -24,7 +24,7 @@ public abstract class SubCommandable extends CommandBase
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
-        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 1))
+        if (CommandUtils.invalidLengthMessage(sender, args, 1))
         {
             Bukkit.dispatchCommand(sender, "toilet help " + getName());
             return;

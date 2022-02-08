@@ -2,7 +2,7 @@ package net.kunmc.lab.toiletplugin.commands.quest;
 
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameMain;
-import net.kunmc.lab.toiletplugin.utils.CommandFeedBackUtils;
+import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -24,11 +24,11 @@ public class ScheduleCommand extends CommandBase
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
-        if (CommandFeedBackUtils.invalidLengthMessage(sender, args, 1, 2))
+        if (CommandUtils.invalidLengthMessage(sender, args, 1, 2))
             return;
 
         Player player;
-        if ((player = CommandFeedBackUtils.getPlayer(sender, args[0])) == null)
+        if ((player = CommandUtils.getPlayer(sender, args[0])) == null)
             return;
 
         if (args.length == 1)
@@ -43,7 +43,7 @@ public class ScheduleCommand extends CommandBase
         }
 
         Integer scheduleTime;
-        if ((scheduleTime = CommandFeedBackUtils.parseInteger(sender, args[1], -1)) == null)
+        if ((scheduleTime = CommandUtils.parseInteger(sender, args[1], -1)) == null)
             return;
 
         int result = game.getQuestManager().changeScheduledTime(player, scheduleTime);
