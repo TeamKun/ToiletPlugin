@@ -2,6 +2,7 @@ package net.kunmc.lab.toiletplugin.commands.quest;
 
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameMain;
+import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;
@@ -32,6 +33,13 @@ public class StartCommand extends CommandBase
         if (players == null)
             return;
 
+        players.removeIf(player -> {
+            GamePlayer gamePlayer = game.getPlayerStateManager().getPlayer(player);
+            if (!gamePlayer.isPlaying())
+                return true;
+            return gamePlayer.isQuesting();
+        });
+
         players.forEach(player -> {
 
             int result = game.getQuestManager().start(player);
@@ -52,7 +60,11 @@ public class StartCommand extends CommandBase
             return null;
 
         List<String> playerNames = game.getPlayerStateManager().getPlayers().stream().parallel()
-                .map(Player::getName).collect(Collectors.toList());
+                .filter(GamePlayer::isPlaying)
+                .filter(GamePlayer::isQuesting)
+                .map(GamePlayer::getPlayer)
+                .map(Player::getName)
+                .collect(Collectors.toList());
 
         playerNames.addAll(Arrays.asList("@a", "@p", "@r", "@s"));
 

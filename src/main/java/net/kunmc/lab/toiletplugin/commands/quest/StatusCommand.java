@@ -2,6 +2,7 @@ package net.kunmc.lab.toiletplugin.commands.quest;
 
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameMain;
+import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kyori.adventure.text.TextComponent;
@@ -58,7 +59,9 @@ public class StatusCommand extends CommandBase
             return null;
 
         List<String> playerNames = game.getPlayerStateManager().getPlayers().stream().parallel()
-                .map(Player::getName).collect(Collectors.toList());
+                .map(GamePlayer::getPlayer)
+                .map(Player::getName)
+                .collect(Collectors.toList());
 
         playerNames.addAll(Arrays.asList("@a", "@p", "@r", "@s"));
 

@@ -6,6 +6,9 @@ import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.player.PlayerStateManager;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.game.toilet.ToiletManager;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -80,7 +83,8 @@ public class GameMain extends BukkitRunnable
         this.questManager.init();
 
         plugin.getServer().getOnlinePlayers().stream().parallel()
-                .forEach(this.playerStateManager::updatePlayer);
+                .forEach(player ->
+                        Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(player, (Component) null)));
 
         this.runTaskTimer(plugin, 0L, 1L);
     }

@@ -41,7 +41,7 @@ public class ToiletLogic implements Listener
 
     public void onTwoTick(int tick)
     {
-        this.playerManager.getQuestingPlayer().forEach((player, integer) -> this.checkPlayerInToilet(player));
+        this.playerManager.getGamePlayers().forEach((player, integer) -> this.checkPlayerInToilet(player));
     }
 
     public void onSecond()

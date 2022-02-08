@@ -41,6 +41,7 @@ public final class ToiletPlugin extends JavaPlugin
         modelManager = new ModelManager();
 
         game = new GameMain(this);
+
         plugin = this;
     }
 

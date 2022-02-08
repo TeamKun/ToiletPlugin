@@ -2,6 +2,7 @@ package net.kunmc.lab.toiletplugin.commands.quest;
 
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameMain;
+import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;
@@ -31,6 +32,12 @@ public class ScheduleCommand extends CommandBase
         if ((players = CommandUtils.getPlayer(sender, args[0])) == null)
             return;
 
+        players.removeIf(player -> {
+            GamePlayer gamePlayer = game.getPlayerStateManager().getPlayer(player);
+            if (!gamePlayer.isPlaying())
+                return true;
+            return gamePlayer.isQuesting();
+        });
 
         if (args.length == 1)
         {
@@ -52,7 +59,6 @@ public class ScheduleCommand extends CommandBase
 
 
         players.forEach(player -> {
-
             int result = game.getQuestManager().changeScheduledTime(player, scheduleTime);
 
             if (result != -1)
@@ -83,7 +89,11 @@ public class ScheduleCommand extends CommandBase
     {
         if (args.length == 1)
             return game.getPlayerStateManager().getPlayers().stream().parallel()
-                    .map(Player::getName).collect(Collectors.toList());
+                    .filter(GamePlayer::isPlaying)
+                    .filter(GamePlayer::isQuesting)
+                    .map(GamePlayer::getPlayer)
+                    .map(Player::getName)
+                    .collect(Collectors.toList());
         if (args.length == 2)
             return Collections.singletonList("[time:int:0~]");
         return null;

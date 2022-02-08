@@ -40,7 +40,17 @@ public class CommandUtils
         Player argPlayer = Bukkit.getPlayer(query);
         if (argPlayer == null)
         {
-            List<Entity> entities = Bukkit.selectEntities(sender, query);
+            List<Entity> entities;
+            try
+            {
+
+                entities = Bukkit.selectEntities(sender, query);
+            }
+            catch (IllegalArgumentException e)
+            {
+                sender.sendMessage(ChatColor.RED + "E: 無効なセレクタを使用しました。");
+                return null;
+            }
 
             entities.stream()
                     .filter(entity -> entity instanceof Player)
