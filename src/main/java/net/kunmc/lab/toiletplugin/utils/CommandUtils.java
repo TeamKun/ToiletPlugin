@@ -1,10 +1,15 @@
 package net.kunmc.lab.toiletplugin.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommandUtils
 {
@@ -29,15 +34,28 @@ public class CommandUtils
         return false;
     }
 
-    public static Player getPlayer(CommandSender sender, String query)
+    public static List<Player> getPlayer(CommandSender sender, String query)
     {
-        Player player = sender.getServer().getPlayer(query);
-        if (player == null)
+        List<Player> players = new ArrayList<>();
+        Player argPlayer = Bukkit.getPlayer(query);
+        if (argPlayer == null)
         {
-            sender.sendMessage(ChatColor.RED + "E: プレイヤーが見つかりません: " + query);
-            return null;
+            List<Entity> entities = Bukkit.selectEntities(sender, query);
+
+            entities.stream()
+                    .filter(entity -> entity instanceof Player)
+                    .map(entity -> (Player) entity)
+                    .forEach(players::add);
+
+            if (players.isEmpty())
+            {
+                sender.sendMessage(ChatColor.RED + "E: プレイヤーが見つかりませんでした。");
+                return null;
+            }
         }
-        return player;
+        else
+            players.add(argPlayer);
+        return players;
     }
 
     public static boolean checkPlayer(@NotNull CommandSender sender)

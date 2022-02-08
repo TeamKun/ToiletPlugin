@@ -27,18 +27,22 @@ public class ScheduleCommand extends CommandBase
         if (CommandUtils.invalidLengthMessage(sender, args, 1, 2))
             return;
 
-        Player player;
-        if ((player = CommandUtils.getPlayer(sender, args[0])) == null)
+        List<Player> players;
+        if ((players = CommandUtils.getPlayer(sender, args[0])) == null)
             return;
+
 
         if (args.length == 1)
         {
-            Integer scheduleTime = game.getQuestManager().getScheduledTime(player);
-            if (scheduleTime == null)
-                checkQuesting(sender, player);
-            else
-                sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストは" + scheduleTime + "秒後に開始されます。");
+            players.forEach(player -> {
+                Integer scheduleTime = game.getQuestManager().getScheduledTime(player);
+                if (scheduleTime == null)
+                    checkQuesting(sender, player);
+                else
+                    sender.sendMessage(ChatColor.BLUE + "I: " + player.getName() + "のクエストは" + scheduleTime + "秒後に開始されます。");
+            });
 
+            sender.sendMessage(ChatColor.GREEN + "S: " + players.size() + "人のプレイヤに対して操作を実行しました。");
             return;
         }
 
@@ -46,16 +50,22 @@ public class ScheduleCommand extends CommandBase
         if ((scheduleTime = CommandUtils.parseInteger(sender, args[1], -1)) == null)
             return;
 
-        int result = game.getQuestManager().changeScheduledTime(player, scheduleTime);
 
-        if (result != -1)
-            sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストは" + result + "秒後に開始されます。");
-        else
-        {
-            if (checkQuesting(sender, player))
-                return;
-            sender.sendMessage(ChatColor.RED + "E: " + player.getName() + "のクエストを開始できませんでした。");
-        }
+        players.forEach(player -> {
+
+            int result = game.getQuestManager().changeScheduledTime(player, scheduleTime);
+
+            if (result != -1)
+                sender.sendMessage(ChatColor.GREEN + "I: " + player.getName() + "のクエストは" + result + "秒後に開始されます。");
+            else
+            {
+                if (checkQuesting(sender, player))
+                    return;
+                sender.sendMessage(ChatColor.RED + "E: " + player.getName() + "のクエストを開始できませんでした。");
+            }
+        });
+
+        sender.sendMessage(ChatColor.GREEN + "S: " + players.size() + "人に対して操作を実行しました。");
     }
 
     public boolean checkQuesting(CommandSender sender, Player player)

@@ -5,13 +5,10 @@ import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,31 +28,10 @@ public class StatusCommand extends CommandBase
         if (CommandUtils.invalidLengthMessage(sender, args, 0, 1))
             return;
 
-        List<Player> players = new ArrayList<>();
+        List<Player> players = CommandUtils.getPlayer(sender, args.length == 0 ? "@a": args[0]);
 
-        String arg = "@a";
-
-        if (args.length != 0)
-            arg = args[0];
-
-        Player argPlayer = Bukkit.getPlayer(arg);
-        if (argPlayer == null)
-        {
-            List<Entity> entities = Bukkit.selectEntities(sender, arg);
-
-            entities.stream()
-                    .filter(entity -> entity instanceof Player)
-                    .map(entity -> (Player) entity)
-                    .forEach(players::add);
-
-            if (players.isEmpty())
-            {
-                sender.sendMessage(ChatColor.RED + "E: プレイヤーが見つかりませんでした。");
-                return;
-            }
-        }
-        else
-            players.add(argPlayer);
+        if (players == null)
+            return;
 
         QuestManager questManager = game.getQuestManager();
 
@@ -71,6 +47,8 @@ public class StatusCommand extends CommandBase
             else
                 sender.sendMessage(ChatColor.GREEN + player.getName() + "：参加中 クエスト予約/開始なし。");
         });
+
+        sender.sendMessage(ChatColor.GREEN + "S: " + players.size() + "人に対して操作を実行しました。");
     }
 
     @Override

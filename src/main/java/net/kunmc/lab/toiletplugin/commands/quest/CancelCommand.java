@@ -4,13 +4,10 @@ import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,26 +27,10 @@ public class CancelCommand extends CommandBase
         if (CommandUtils.invalidLengthMessage(sender, args, 1))
             return;
 
-        List<Player> players = new ArrayList<>();
+        List<Player> players = CommandUtils.getPlayer(sender, args.length == 0 ? "@a": args[0]);
 
-        Player argPlayer = Bukkit.getPlayer(args[0]);
-        if (argPlayer == null)
-        {
-            List<Entity> entities = Bukkit.selectEntities(sender, args[0]);
-
-            entities.stream()
-                    .filter(entity -> entity instanceof Player)
-                    .map(entity -> (Player) entity)
-                    .forEach(players::add);
-
-            if (players.isEmpty())
-            {
-                sender.sendMessage(ChatColor.RED + "E: プレイヤーが見つかりませんでした。");
-                return;
-            }
-        }
-        else
-            players.add(argPlayer);
+        if (players == null)
+            return;
 
         boolean noReschedule = args.length <= 1 || Boolean.parseBoolean(args[1]);
 
@@ -59,12 +40,14 @@ public class CancelCommand extends CommandBase
 
             if (result != -1)
                 if (result == 0)
-                    sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストを停止しました。");
+                    sender.sendMessage(ChatColor.GREEN + "I: " + player.getName() + "のクエストを停止しました。");
                 else
-                    sender.sendMessage(ChatColor.GREEN + "S: " + player.getName() + "のクエストを停止し, " + result + " 秒後に再スケジュールしました。");
+                    sender.sendMessage(ChatColor.GREEN + "I: " + player.getName() + "のクエストを停止し, " + result + " 秒後に再スケジュールしました。");
             else
                 sender.sendMessage(ChatColor.RED + "E: " + player.getName() + "のクエストを停止できませんでした。");
         });
+
+        sender.sendMessage(ChatColor.GREEN + "S: " + players.size() + "人に対して操作を実行しました。");
     }
 
     @Override

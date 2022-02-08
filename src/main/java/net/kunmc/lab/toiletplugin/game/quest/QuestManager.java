@@ -83,6 +83,13 @@ public class QuestManager extends BukkitRunnable
         return scheduleTime;
     }
 
+    public boolean unSchedule(Player player)
+    {
+        if (!this.questingPlayer.containsKey(player))
+            return false;
+        return this.scheduledPlayer.remove(player) != null;
+    }
+
     public int changeScheduledTime(Player player, int time)
     {
         if (!this.game.getPlayerStateManager().isPlaying(player))
