@@ -85,7 +85,7 @@ public class QuestManager extends BukkitRunnable
 
     public boolean unSchedule(Player player)
     {
-        if (!this.questingPlayer.containsKey(player))
+        if (this.questingPlayer.containsKey(player))
             return false;
         return this.scheduledPlayer.remove(player) != null;
     }
