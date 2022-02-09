@@ -2,7 +2,8 @@ package net.kunmc.lab.toiletplugin.game.player;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.kunmc.lab.toiletplugin.game.quest.QuestProgress;
+import net.kunmc.lab.toiletplugin.game.GameMain;
+import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -10,6 +11,8 @@ public class GamePlayer
 {
     @Getter
     private final Player player;
+    @Getter
+    private final PlayerHUD display;
 
     @Getter
     @Setter
@@ -21,12 +24,13 @@ public class GamePlayer
     @Setter
     private int time;
     @Getter
-    private QuestProgress questProgress;
+    private QuestPhase questPhase;
 
-    public GamePlayer(Player player)
+    public GamePlayer(Player player, GameMain game)
     {
         this.player = player;
-        this.questProgress = QuestProgress.NONE;
+        this.display = new PlayerHUD(this, game);
+        this.questPhase = QuestPhase.NONE;
         this.maxTimeLimit = -1;
         this.time = -1;
     }
@@ -37,21 +41,21 @@ public class GamePlayer
         this.time = maxTimeLimit;
     }
 
-    public void setQuestProgress(QuestProgress state, int time)
+    public void setQuestPhase(QuestPhase state, int time)
     {
-        this.questProgress = state;
+        this.questPhase = state;
         setMaxTimeLimit(time);
     }
 
     public boolean isQuesting()
     {
-        return this.questProgress != QuestProgress.NONE &&
-                this.questProgress != QuestProgress.SCHEDULED;
+        return this.questPhase != QuestPhase.NONE &&
+                this.questPhase != QuestPhase.SCHEDULED;
     }
 
     public boolean isScheduled()
     {
-        return this.questProgress != QuestProgress.SCHEDULED;
+        return this.questPhase != QuestPhase.SCHEDULED;
     }
 
     public boolean isPlaying()
@@ -68,7 +72,7 @@ public class GamePlayer
     {
         this.maxTimeLimit = 0;
         this.time = 0;
-        this.questProgress = QuestProgress.NONE;
+        this.questPhase = QuestPhase.NONE;
     }
 
     // Logic
@@ -85,7 +89,7 @@ public class GamePlayer
                     this.player.sendMessage(ChatColor.RED + "ゲームから退出しました！");
                 this.player.sendMessage(ChatColor.GREEN + "観戦モードになりました！");
 
-                this.questProgress = QuestProgress.NONE;
+                this.questPhase = QuestPhase.NONE;
                 break;
         }
 

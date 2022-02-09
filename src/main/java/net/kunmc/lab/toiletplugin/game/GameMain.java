@@ -3,7 +3,7 @@ package net.kunmc.lab.toiletplugin.game;
 import com.google.gson.Gson;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
-import net.kunmc.lab.toiletplugin.game.player.PlayerStateManager;
+import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.game.toilet.ToiletManager;
 import net.kyori.adventure.text.Component;
@@ -29,7 +29,7 @@ public class GameMain extends BukkitRunnable
     @Getter
     private final QuestManager questManager;
     @Getter
-    private final PlayerStateManager playerStateManager;
+    private final PlayerManager playerStateManager;
 
     private int tickCount;
 
@@ -39,7 +39,7 @@ public class GameMain extends BukkitRunnable
         this.configFile = new File(plugin.getDataFolder(), "config_game.json");
         this.config = loadConfig(configFile);
 
-        this.playerStateManager = new PlayerStateManager(this);
+        this.playerStateManager = new PlayerManager(this);
         this.questManager = new QuestManager(this);
         this.toiletManager = new ToiletManager(this, new File(plugin.getDataFolder(), "toilets.json"));
     }

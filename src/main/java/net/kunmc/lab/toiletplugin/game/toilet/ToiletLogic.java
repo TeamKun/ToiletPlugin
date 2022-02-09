@@ -3,7 +3,7 @@ package net.kunmc.lab.toiletplugin.game.toilet;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
-import net.kunmc.lab.toiletplugin.game.player.PlayerStateManager;
+import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
 import org.bukkit.Location;
@@ -24,7 +24,7 @@ public class ToiletLogic implements Listener
     private final GameMain game;
     @Getter
     private final InformationDisplay toiletInformationDisplay;
-    private final PlayerStateManager playerManager;
+    private final PlayerManager playerManager;
     private final ToiletManager toiletManager;
 
     public ToiletLogic(GameMain game, ToiletManager toiletManager)

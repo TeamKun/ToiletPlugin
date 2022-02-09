@@ -3,7 +3,7 @@ package net.kunmc.lab.toiletplugin.game.player;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
-import net.kunmc.lab.toiletplugin.game.quest.QuestProgress;
+import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -12,19 +12,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PlayerStateManager implements Listener
+public class PlayerManager extends BukkitRunnable implements Listener
 {
     @Getter
     private final HashMap<Player, GamePlayer> gamePlayers;
 
     private final GameMain game;
 
-    public PlayerStateManager(GameMain game)
+    public PlayerManager(GameMain game)
     {
         this.gamePlayers = new HashMap<>();
         this.game = game;
@@ -43,12 +44,13 @@ public class PlayerStateManager implements Listener
     public void init()
     {
         Bukkit.getPluginManager().registerEvents(this, ToiletPlugin.getPlugin());
+        this.runTaskTimerAsynchronously(ToiletPlugin.getPlugin(), 0, 10);
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e)
     {
-        this.gamePlayers.put(e.getPlayer(), new GamePlayer(e.getPlayer()));
+        this.gamePlayers.put(e.getPlayer(), new GamePlayer(e.getPlayer(), game));
 
         this.updatePlayer(e.getPlayer());
     }
@@ -89,7 +91,7 @@ public class PlayerStateManager implements Listener
             gamePlayer.setPlayState(PlayState.PLAYING);
 
             if (this.game.getConfig().isAutoScheduleOnJoin())
-                gamePlayer.setQuestProgress(QuestProgress.SCHEDULED, this.game.getConfig().generateScheduleTime());
+                gamePlayer.setQuestPhase(QuestPhase.SCHEDULED, this.game.getConfig().generateScheduleTime());
         }
         else
         {
@@ -102,5 +104,13 @@ public class PlayerStateManager implements Listener
             gamePlayer.purge();
             gamePlayer.setPlayState(PlayState.SPECTATING);
         }
+    }
+
+    @Override
+    public void run()
+    {
+        this.gamePlayers.forEach((player, gamePlayer) -> {
+            gamePlayer.getDisplay().updateScreen();
+        });
     }
 }

@@ -3,7 +3,7 @@ package net.kunmc.lab.toiletplugin.game.quest;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
-import net.kunmc.lab.toiletplugin.game.player.PlayerStateManager;
+import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -13,7 +13,7 @@ public class QuestManager extends BukkitRunnable
 {
     private final GameMain game;
     private final QuestLogic logic;
-    private final PlayerStateManager stateManager;
+    private final PlayerManager stateManager;
 
     public QuestManager(GameMain game)
     {
@@ -41,16 +41,21 @@ public class QuestManager extends BukkitRunnable
 
         int questTime = this.game.getConfig().generateQuestTime();
 
-        info.setQuestProgress(QuestProgress.STARTED, questTime);
+        this.startQuestPhase(QuestPhase.STARTED, questTime, info);
 
         player.sendMessage(ChatColor.DARK_RED + "あなたは便意を感じている... ");
         player.sendMessage(ChatColor.RED + "あなたは" + questTime + "秒以内に排便をしないと死んでしまう！");
 
-        player.sendTitle(ChatColor.RED + "緊急クエスト発生：トイレに向かう",
-                ChatColor.YELLOW + "使えるトイレを探して中に入ろう！", 5, 40, 5
-        );
 
         return questTime;
+    }
+
+    private void startQuestPhase(QuestPhase phase, int time, GamePlayer gamePlayer)
+    {
+        gamePlayer.setQuestPhase(QuestPhase.STARTED, time);
+
+        gamePlayer.getDisplay().questStarted();
+
     }
 
     public int cancel(Player player, boolean isNever)
@@ -60,11 +65,13 @@ public class QuestManager extends BukkitRunnable
         if (!info.isQuesting())
             return -1;
 
-        info.setQuestProgress(QuestProgress.NONE, 0);
+        info.setQuestPhase(QuestPhase.NONE, 0);
 
         player.sendMessage(ChatColor.GREEN + "あなたのクエストがキャンセルされました。");
         if (!isNever)
             return this.changeScheduledTime(player);
+
+        info.getDisplay().onQuestCancelled();
         return 0;
     }
 
@@ -75,14 +82,14 @@ public class QuestManager extends BukkitRunnable
 
     public boolean isScheduled(Player player)
     {
-        return this.stateManager.getPlayer(player).getQuestProgress() == QuestProgress.SCHEDULED;
+        return this.stateManager.getPlayer(player).getQuestPhase() == QuestPhase.SCHEDULED;
     }
 
     public int reSchedule(Player player)
     {
         GamePlayer info = this.stateManager.getPlayer(player);
 
-        if (info.getQuestProgress() != QuestProgress.SCHEDULED)
+        if (info.getQuestPhase() != QuestPhase.SCHEDULED)
             return -1;
 
         int scheduleTime = this.game.getConfig().generateScheduleTime();
@@ -94,9 +101,9 @@ public class QuestManager extends BukkitRunnable
     public boolean unSchedule(Player player)
     {
         GamePlayer info = this.stateManager.getPlayer(player);
-        if (info.getQuestProgress() != QuestProgress.SCHEDULED)
+        if (info.getQuestPhase() != QuestPhase.SCHEDULED)
             return false;
-        info.setQuestProgress(QuestProgress.NONE, 0);
+        info.setQuestPhase(QuestPhase.NONE, 0);
         return true;
     }
 
@@ -109,7 +116,7 @@ public class QuestManager extends BukkitRunnable
         if (info.isQuesting())
             return -1;
 
-        info.setQuestProgress(QuestProgress.SCHEDULED, time);
+        info.setQuestPhase(QuestPhase.SCHEDULED, time);
         return time;
     }
 
@@ -146,7 +153,7 @@ public class QuestManager extends BukkitRunnable
         player.setKiller(null);
         player.setLastDamageCause(new EntityDamageEvent(player, EntityDamageEvent.DamageCause.CUSTOM, 0.11235));
         player.setHealth(0d);
-        gamePlayer.setQuestProgress(QuestProgress.NONE, 0);
+        gamePlayer.setQuestPhase(QuestPhase.NONE, 0);
     }
 
     @Override
@@ -158,7 +165,7 @@ public class QuestManager extends BukkitRunnable
             if (!info.isPlaying())
                 return;
 
-            if (info.getQuestProgress() == QuestProgress.NONE)
+            if (info.getQuestPhase() == QuestPhase.NONE)
                 return;
 
             if (info.getTime() == 0)
