@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class GamePlayer
@@ -94,5 +95,15 @@ public class GamePlayer
         }
 
         this.state = state;
+    }
+
+    public void playSound(GameSound sound)
+    {
+        sound.play(this.player);
+    }
+
+    public void playSound(GameSound sound, Location location)
+    {
+        sound.play(this.player, location);
     }
 }

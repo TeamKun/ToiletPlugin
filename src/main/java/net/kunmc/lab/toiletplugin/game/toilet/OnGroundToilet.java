@@ -2,6 +2,7 @@ package net.kunmc.lab.toiletplugin.game.toilet;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.kunmc.lab.toiletplugin.game.player.GameSound;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -98,8 +99,10 @@ public class OnGroundToilet extends Toilet
         Door door = (Door) doorBlock.getBlockData();
         door.setOpen(open);
         doorBlock.setBlockData(door, true);
-        doorBlock.getWorld().playSound(doorBlock.getLocation(), "block.iron_door.close", 1.0F, 1.0F);
-
+        if (!open)
+            GameSound.IRON_DOOR_OPEN.play(doorBlock.getLocation());
+        else
+            GameSound.IRON_DOOR_CLOSE.play(doorBlock.getLocation());
     }
 
 }
