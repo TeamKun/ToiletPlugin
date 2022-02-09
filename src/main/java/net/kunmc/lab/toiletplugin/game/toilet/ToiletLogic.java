@@ -2,6 +2,7 @@ package net.kunmc.lab.toiletplugin.game.toilet;
 
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.game.GameMain;
+import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerStateManager;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
@@ -41,7 +42,12 @@ public class ToiletLogic implements Listener
 
     public void onTwoTick(int tick)
     {
-        this.playerManager.getGamePlayers().forEach((player, integer) -> this.checkPlayerInToilet(player));
+        this.playerManager.getGamePlayers()
+                .values()
+                .stream()
+                .filter(GamePlayer::isQuesting)
+                .map(GamePlayer::getPlayer)
+                .forEach(this::checkPlayerInToilet);
     }
 
     public void onSecond()
