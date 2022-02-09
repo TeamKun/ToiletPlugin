@@ -2,7 +2,7 @@ package net.kunmc.lab.toiletplugin.game.toilet;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.kunmc.lab.toiletplugin.game.player.GameSound;
+import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;

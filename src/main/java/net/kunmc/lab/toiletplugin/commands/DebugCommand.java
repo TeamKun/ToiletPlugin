@@ -41,7 +41,7 @@ public class DebugCommand extends SubCommandable
         map.put("changeToiletState", new ChangeToiletStateCommand(game));
         map.put("changeToiletCooldown", new ChangeToiletCooldownChangeCommand(game));
         map.put("purgeToiletLocalData", new PurgeToiletLocalDataCommand(game));
-        map.put("playSound", new PlaySoundCommand(game));
+        map.put("playSound", new PlaySoundCommand());
         return map;
     }
 }

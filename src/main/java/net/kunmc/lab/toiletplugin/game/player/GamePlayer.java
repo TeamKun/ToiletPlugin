@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
+import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

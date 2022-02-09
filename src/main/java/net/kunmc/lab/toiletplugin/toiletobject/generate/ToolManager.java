@@ -1,7 +1,7 @@
 package net.kunmc.lab.toiletplugin.toiletobject.generate;
 
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
-import net.kunmc.lab.toiletplugin.game.player.GameSound;
+import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
