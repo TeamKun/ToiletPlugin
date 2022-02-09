@@ -55,9 +55,13 @@ public abstract class SubCommandable extends CommandBase
         else if (commands.containsKey(args[0]))
         {
             CommandBase commandBase = commands.get(args[0]);
+
+            String[] commandArguments = commandBase.getArguments();
             List<String> commandCompletes = commandBase.onTabComplete(sender, removeFirst(args));
             if (commandCompletes != null)
                 completes.addAll(commandCompletes);
+            if (commandArguments.length > args.length)
+                completes.add(ChatColor.stripColor(commandArguments[args.length - 1]));
         }
 
         return completes;
