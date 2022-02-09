@@ -5,6 +5,7 @@ import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
+import net.kunmc.lab.toiletplugin.game.sound.SoundArea;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
 import org.bukkit.Location;
@@ -140,7 +141,7 @@ public class ToiletLogic implements Listener
 
     public void playerJoinToilet(Player player, Toilet toilet, Door door, Block doorBlock, ArmorStand informationDisplay)
     {
-        GameSound.IRON_DOOR_CLOSE.play(player);
+        GameSound.IRON_DOOR_CLOSE.play(player, SoundArea.NEAR_10);
         door.setOpen(true);
         doorBlock.setBlockData(door, true);
 

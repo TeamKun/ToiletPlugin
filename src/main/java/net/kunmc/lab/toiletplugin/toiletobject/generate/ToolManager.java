@@ -2,6 +2,7 @@ package net.kunmc.lab.toiletplugin.toiletobject.generate;
 
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
+import net.kunmc.lab.toiletplugin.game.sound.SoundArea;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -135,7 +136,7 @@ public class ToolManager implements Listener
         chest.getBlockInventory().clear();
         chest.getBlock().setType(Material.AIR);
 
-        GameSound.TOILET_GENERATE.play(e.getPlayer());
+        GameSound.TOILET_GENERATE.play(e.getPlayer(), SoundArea.NEAR_5);
 
         Location generateLoc = e.getClickedBlock().getLocation();
         generateLoc.setY(generateLoc.getY() - 1);
