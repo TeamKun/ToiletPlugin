@@ -12,8 +12,8 @@ import javax.naming.OperationNotSupportedException;
 public enum GameSound
 {
     TOILET_GENERATE("block.anvil.destroy", Sound.Source.BLOCK, 1.0F, 1.0F),
-    IRON_DOOR_OPEN("block.door_open", Sound.Source.BLOCK, 1.0F, 1.0F),
-    IRON_DOOR_CLOSE("block.door_close", Sound.Source.BLOCK, 1.0F, 1.0F),
+    IRON_DOOR_OPEN("block.iron_door.open", Sound.Source.BLOCK, 1.0F, 1.0F),
+    IRON_DOOR_CLOSE("block.iron_door.close", Sound.Source.BLOCK, 1.0F, 1.0F),
     QUEST_START("entity.player.levelup", Sound.Source.MASTER, 1.0F, 0.3F),
     QUEST_COMPLETE("block.end_portal.spawn", Sound.Source.MASTER, 0.6F, 0.6F),
     QUEST_FAILURE("entity.player.hurt_on_fire", Sound.Source.MASTER, 1.0F, 1.0F),
