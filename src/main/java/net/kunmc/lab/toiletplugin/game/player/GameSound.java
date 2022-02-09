@@ -39,9 +39,19 @@ public enum GameSound
         player.playSound(player.getLocation(), this.name, this.volume, this.pitch);
     }
 
+    public void play(Player player, float volume, float pitch)
+    {
+        player.playSound(player.getLocation(), this.name, volume, pitch);
+    }
+
     public void play(GamePlayer player)
     {
         player.getPlayer().playSound(player.getPlayer().getLocation(), this.name, this.volume, this.pitch);
+    }
+
+    public void play(GamePlayer player, float volume, float pitch)
+    {
+        player.getPlayer().playSound(player.getPlayer().getLocation(), this.name, volume, pitch);
     }
 
     public void play(Player player, Location location)
@@ -49,9 +59,19 @@ public enum GameSound
         player.playSound(location, this.name, this.volume, this.pitch);
     }
 
+    public void play(Player player, Location location, float volume, float pitch)
+    {
+        player.playSound(location, this.name, volume, pitch);
+    }
+
     public void play(GamePlayer player, Location location)
     {
         player.getPlayer().playSound(location, this.name, this.volume, this.pitch);
+    }
+
+    public void play(GamePlayer player, Location location, float volume, float pitch)
+    {
+        player.getPlayer().playSound(location, this.name, volume, pitch);
     }
 
     public void play(World world, Location location)
@@ -59,8 +79,18 @@ public enum GameSound
         world.playSound(location, this.name, this.volume, this.pitch);
     }
 
+    public void play(World world, Location location, float volume, float pitch)
+    {
+        world.playSound(location, this.name, volume, pitch);
+    }
+
     public void play(Location location)
     {
         location.getWorld().playSound(location, this.name, this.volume, this.pitch);
+    }
+
+    public void play(Location location, float volume, float pitch)
+    {
+        location.getWorld().playSound(location, this.name, volume, pitch);
     }
 }

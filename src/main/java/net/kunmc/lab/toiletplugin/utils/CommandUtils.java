@@ -90,13 +90,8 @@ public class CommandUtils
         try
         {
             int num = Integer.parseInt(arg);
-            if (num < min || (max != -1 && num > max))
-            {
-                sender.sendMessage(ChatColor.RED + "E: 引数の値が不正です: 必要: " +
-                        (max == -1 ? min: min + "〜" + max) +
-                        " 提供: " + num);
+            if (checkValidNumber(sender, num, min, max))
                 return null;
-            }
             return num;
         }
         catch (NumberFormatException e)
@@ -108,9 +103,39 @@ public class CommandUtils
         }
     }
 
+    public static boolean checkValidNumber(@NotNull CommandSender sender, Number number, Number min, Number max)
+    {
+        if (number.doubleValue() < min.doubleValue() || (max != null && number.doubleValue() > max.doubleValue()))
+        {
+            sender.sendMessage(ChatColor.RED + "E: 引数の値が不正です: 必要: " +
+                    (max == null ? min: min + "〜" + max) +
+                    " 提供: " + number);
+            return true;
+        }
+
+        return false;
+    }
+
     public static @Nullable Integer parseInteger(@NotNull CommandSender sender, @NotNull String arg, int min)
     {
         return parseInteger(sender, arg, min, -1);
     }
 
+    public static Float parseFloat(@NotNull CommandSender sender, @NotNull String arg, float min, float max)
+    {
+        try
+        {
+            float num = Float.parseFloat(arg);
+            if (checkValidNumber(sender, num, min, max))
+                return null;
+            return num;
+        }
+        catch (NumberFormatException e)
+        {
+            sender.sendMessage(ChatColor.RED + "引数が数値ではありません: 必要: " +
+                    (max == -1 ? min: min + "〜" + max) +
+                    " 提供: " + arg);
+            return null;
+        }
+    }
 }
