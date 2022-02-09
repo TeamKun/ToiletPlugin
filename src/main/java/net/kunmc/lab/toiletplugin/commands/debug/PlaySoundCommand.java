@@ -44,17 +44,18 @@ public class PlaySoundCommand extends CommandBase
             return;
         }
 
-        Float pitch = 1.0F;
         Float volume = 1.0F;
+        Float pitch = 1.0F;
 
         if (args.length >= 3)
-            if ((pitch = CommandUtils.parseFloat(sender, args[4], 1.0f, 2.0f)) == null)
+            if ((volume = CommandUtils.parseFloat(sender, args[2], 0.0f, 1.0f)) == null)
                 return;
         if (args.length >= 4)
-            if ((volume = CommandUtils.parseFloat(sender, args[3], 0.0f, 1.0f)) == null)
+            if ((pitch = CommandUtils.parseFloat(sender, args[3], 0.0f, 2.0f)) == null)
                 return;
 
-        sound.play((Player) sender, area, pitch, volume);
+        sound.play((Player) sender, area, volume, pitch);
+        sender.sendMessage("Sound played.");
     }
 
     @Override
@@ -83,8 +84,8 @@ public class PlaySoundCommand extends CommandBase
         return new String[]{
                 required("sound", "GameSound"),
                 required("area", "SoundArea"),
+                optional("volume", "float"),
                 optional("pitch", "float"),
-                optional("volume", "float")
         };
     }
 }
