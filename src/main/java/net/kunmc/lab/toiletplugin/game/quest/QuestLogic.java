@@ -2,9 +2,9 @@ package net.kunmc.lab.toiletplugin.game.quest;
 
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
+import net.kunmc.lab.toiletplugin.events.PlayerToiletJoinEvent;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
-import net.kunmc.lab.toiletplugin.game.toilet.events.PlayerToiletJoinEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

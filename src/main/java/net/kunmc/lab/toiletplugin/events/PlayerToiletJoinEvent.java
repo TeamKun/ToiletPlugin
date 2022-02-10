@@ -1,4 +1,4 @@
-package net.kunmc.lab.toiletplugin.game.toilet.events;
+package net.kunmc.lab.toiletplugin.events;
 
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.toilet.OnGroundToilet;

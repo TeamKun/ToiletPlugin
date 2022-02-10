@@ -1,13 +1,13 @@
 package net.kunmc.lab.toiletplugin.game.toilet;
 
 import lombok.Getter;
+import net.kunmc.lab.toiletplugin.events.PlayerToiletJoinEvent;
+import net.kunmc.lab.toiletplugin.events.PlayerToiletQuitEvent;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.game.sound.SoundArea;
-import net.kunmc.lab.toiletplugin.game.toilet.events.PlayerToiletJoinEvent;
-import net.kunmc.lab.toiletplugin.game.toilet.events.PlayerToiletQuitEvent;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
