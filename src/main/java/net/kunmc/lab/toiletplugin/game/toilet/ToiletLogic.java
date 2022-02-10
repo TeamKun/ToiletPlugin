@@ -6,7 +6,10 @@ import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.game.sound.SoundArea;
+import net.kunmc.lab.toiletplugin.game.toilet.events.PlayerToiletJoinEvent;
+import net.kunmc.lab.toiletplugin.game.toilet.events.PlayerToiletQuitEvent;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -166,14 +169,15 @@ public class ToiletLogic implements Listener
 
         this.playerManager.getPlayer(player).setToilet(toilet);
 
-        this.toiletManager.playerJoinToilet(player, toilet, informationDisplay);
+        Bukkit.getPluginManager().callEvent(
+                new PlayerToiletJoinEvent(this.game.getPlayerStateManager().getPlayer(player), toilet));
     }
 
     public void playerLeftToilet(Player player, OnGroundToilet toilet)
     {
-        this.toiletManager.playerLeftToilet(player, toilet);
-
         this.playerManager.getPlayer(player).setToilet(null);
+        Bukkit.getPluginManager().callEvent(
+                new PlayerToiletQuitEvent(this.game.getPlayerStateManager().getPlayer(player), toilet));
     }
 
     @EventHandler

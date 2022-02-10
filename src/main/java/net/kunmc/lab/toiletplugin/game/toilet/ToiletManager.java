@@ -14,7 +14,6 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -206,15 +205,5 @@ public class ToiletManager
         toilets.putAll(gson.fromJson(new String(Files.readAllBytes(file.toPath())), new TypeToken<HashMap<String, Toilet>>()
         {
         }.getType()));
-    }
-
-    public void playerJoinToilet(Player player, Toilet toilet, ArmorStand informationDisplay)
-    {
-
-    }
-
-    public void playerLeftToilet(Player player, OnGroundToilet toilet)
-    {
-
     }
 }
