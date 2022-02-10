@@ -212,4 +212,9 @@ public class ToiletManager
     {
 
     }
+
+    public void playerLeftToilet(Player player, OnGroundToilet toilet)
+    {
+
+    }
 }

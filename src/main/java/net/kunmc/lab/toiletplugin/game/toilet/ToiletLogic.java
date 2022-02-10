@@ -6,7 +6,6 @@ import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.game.sound.SoundArea;
-import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 
 public class ToiletLogic implements Listener
 {
@@ -29,12 +29,15 @@ public class ToiletLogic implements Listener
     private final PlayerManager playerManager;
     private final ToiletManager toiletManager;
 
+    private HashMap<Player, OnGroundToilet> foundOnPreviousTick;
+
     public ToiletLogic(GameMain game, ToiletManager toiletManager)
     {
         this.game = game;
         this.playerManager = this.game.getPlayerStateManager();
         this.toiletManager = toiletManager;
         this.toiletInformationDisplay = new InformationDisplay(game, toiletManager);
+        this.foundOnPreviousTick = new HashMap<>();
     }
 
     public void init()
@@ -84,7 +87,7 @@ public class ToiletLogic implements Listener
             }
 
             toilet.setState(ToiletState.TOILET_COOLDOWN);
-            toilet.setDoor(false);
+            toilet.setDoorOpen(false);
             int cooldown = this.game.getConfig().generateToiletCooldownTime();
             toilet.setCooldownMax(cooldown);
             toilet.setCooldown(cooldown);
@@ -98,6 +101,8 @@ public class ToiletLogic implements Listener
 
     public void checkPlayerInToilet(Player player)
     {
+        HashMap<Player, OnGroundToilet> found = new HashMap<>();
+
         player.getNearbyEntities(3.0D, 1.0D, 3.0D).forEach(entity -> {
             if (!(entity instanceof ArmorStand))
                 return;
@@ -135,11 +140,23 @@ public class ToiletLogic implements Listener
                     || player.getLocation().getBlockZ() != backDoorLock.getBlockZ())
                 return;
 
+            found.put(player, toilet);
             this.playerJoinToilet(player, toilet, door, toiletBlock, armorStand);
         });
+
+        if (this.foundOnPreviousTick.size() > found.size())
+        {
+            this.foundOnPreviousTick.entrySet().stream()
+                    .filter(p -> !found.containsKey(p.getKey()))
+                    .forEach(playerOnGroundToiletEntry -> {
+                        this.playerLeftToilet(playerOnGroundToiletEntry.getKey(), playerOnGroundToiletEntry.getValue());
+                    });
+        }
+
+        this.foundOnPreviousTick = found;
     }
 
-    public void playerJoinToilet(Player player, Toilet toilet, Door door, Block doorBlock, ArmorStand informationDisplay)
+    public void playerJoinToilet(Player player, OnGroundToilet toilet, Door door, Block doorBlock, ArmorStand informationDisplay)
     {
         GameSound.IRON_DOOR_CLOSE.play(player, SoundArea.NEAR_10);
         door.setOpen(true);
@@ -147,7 +164,16 @@ public class ToiletLogic implements Listener
 
         this.toiletInformationDisplay.playerJoinToilet(player, toilet.getName());
 
+        this.playerManager.getPlayer(player).setToilet(toilet);
+
         this.toiletManager.playerJoinToilet(player, toilet, informationDisplay);
+    }
+
+    public void playerLeftToilet(Player player, OnGroundToilet toilet)
+    {
+        this.toiletManager.playerLeftToilet(player, toilet);
+
+        this.playerManager.getPlayer(player).setToilet(null);
     }
 
     @EventHandler
