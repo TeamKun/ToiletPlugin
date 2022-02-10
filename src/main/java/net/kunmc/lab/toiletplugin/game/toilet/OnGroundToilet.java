@@ -30,10 +30,10 @@ public class OnGroundToilet extends Toilet
     private int timesElapsed;
     private int cooldownMax;
     private int cooldown;
-
     private int displayNonce;
 
     private ToiletState state;
+
 
     public OnGroundToilet(Toilet toilet)
     {
@@ -79,7 +79,7 @@ public class OnGroundToilet extends Toilet
         if (state == ToiletState.OPEN)
             this.purge();
         else
-            setDoor(true);
+            setDoorOpen(true);
     }
 
     public void purge()
@@ -88,10 +88,10 @@ public class OnGroundToilet extends Toilet
         this.timesElapsed = 0;
         this.cooldownMax = 0;
         this.toiletPlayer = null;
-        setDoor(false);
+        setDoorOpen(false);
     }
 
-    public void setDoor(boolean open)
+    public void setDoorOpen(boolean open)
     {
         Block doorBlock = this.getDoorLocation().toLocation().getBlock();
 

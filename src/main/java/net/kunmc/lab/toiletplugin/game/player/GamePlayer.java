@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
+import net.kunmc.lab.toiletplugin.game.toilet.OnGroundToilet;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -28,6 +29,10 @@ public class GamePlayer
     @Getter
     private QuestPhase questPhase;
 
+    @Getter
+    @Setter
+    private OnGroundToilet toilet;
+
     public GamePlayer(Player player, GameMain game)
     {
         this.player = player;
@@ -35,6 +40,7 @@ public class GamePlayer
         this.questPhase = QuestPhase.NONE;
         this.maxTimeLimit = -1;
         this.time = -1;
+        this.toilet = null;
     }
 
     public void setMaxTimeLimit(int maxTimeLimit)
