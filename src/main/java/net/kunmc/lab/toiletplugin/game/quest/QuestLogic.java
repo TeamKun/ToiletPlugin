@@ -3,6 +3,8 @@ package net.kunmc.lab.toiletplugin.game.quest;
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
+import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
+import net.kunmc.lab.toiletplugin.game.toilet.events.PlayerToiletJoinEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -50,5 +52,16 @@ public class QuestLogic implements Listener
     {
         if (this.game.getConfig().isAutoRescheduleOnRespawn())
             this.questManager.reSchedule(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerJoinToilet(PlayerToiletJoinEvent event)
+    {
+        GamePlayer player = event.getGamePlayer();
+
+        if (player.getQuestPhase() != QuestPhase.STARTED)
+            return;
+
+        player.setQuestPhase(QuestPhase.TOILET_JOINED);
     }
 }

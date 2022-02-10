@@ -53,6 +53,13 @@ public class GamePlayer
     {
         this.questPhase = state;
         setMaxTimeLimit(time);
+        display.showQuestTitle(state);
+    }
+
+    public void setQuestPhase(QuestPhase state)
+    {
+        this.questPhase = state;
+        display.showQuestTitle(state);
     }
 
     public boolean isQuesting()
