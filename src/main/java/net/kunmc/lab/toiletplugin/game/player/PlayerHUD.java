@@ -66,7 +66,7 @@ public class PlayerHUD
 
             Title title = Title.title(
                     Component.text(titleStr),
-                    Component.text(quest.getSubTitle() == null ? "": quest.getSubTitle()),
+                    Component.text(quest.getSubTitle() == null ? "": ChatColor.YELLOW + quest.getSubTitle()),
                     Title.Times.of(
                             Duration.ofMillis(500),
                             Duration.ofSeconds(3),
