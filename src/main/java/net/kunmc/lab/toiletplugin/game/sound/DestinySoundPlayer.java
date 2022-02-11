@@ -31,6 +31,8 @@ public class DestinySoundPlayer extends BukkitRunnable
     @Override
     public void run()
     {
+        if (!plugin.getGame().getConfig().isQuestingOppressiveSoundEnable())
+            return;
         if (tick > 100)
             tick = 0;
         tick += 10;

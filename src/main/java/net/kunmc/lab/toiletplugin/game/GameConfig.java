@@ -45,6 +45,9 @@ public class GameConfig
     @Config(helpMessage = "クエスト完了時のクエストの自動リスケジュール")
     boolean autoRescheduleOnSuccess = true;
 
+    @Config(helpMessage = "クエスト中の低音の再生")
+    boolean questingOppressiveSoundEnable = true;
+
     public int generateQuestTime()
     {
         return RANDOM.nextInt(maxQuestTime - minQuestTime) + minQuestTime;
