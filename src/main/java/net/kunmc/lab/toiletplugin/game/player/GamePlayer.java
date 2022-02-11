@@ -60,7 +60,10 @@ public class GamePlayer
         this.questPhase = state;
 
         if (this.questPhase == QuestPhase.NONE || this.questPhase == QuestPhase.SCHEDULED)
+        {
+            player.stopSound(GameSound.QUESTING_OPPRESSIVE.getName());
             return;
+        }
 
         if (state == QuestPhase.STARTED)
             display.questStarted();

@@ -12,13 +12,17 @@ import javax.naming.OperationNotSupportedException;
 public enum GameSound
 {
     TOILET_GENERATE("block.anvil.destroy", Sound.Source.BLOCK, 1.0F, 1.0F),
+
     IRON_DOOR_OPEN("block.iron_door.open", Sound.Source.BLOCK, 1.0F, 1.0F),
     IRON_DOOR_CLOSE("block.iron_door.close", Sound.Source.BLOCK, 1.0F, 1.0F),
+
     QUEST_START("block.end_portal.spawn", Sound.Source.MASTER, 0.1F, 0.7F),
     QUEST_PHASE_COMPLETE("entity.player.levelup", Sound.Source.MASTER, 0.3F, 2.0F),
     QUEST_COMPLETE("entity.player.levelup", Sound.Source.MASTER, 0.5F, 0.3F),
     QUEST_FAILURE("entity.player.hurt_on_fire", Sound.Source.MASTER, 1.0F, 1.0F),
     QUEST_CANCEL("entity.player.levelup", Sound.Source.MASTER, 0.5F, 2.0F),
+
+    QUESTING_OPPRESSIVE("block.beacon.ambient", Sound.Source.MASTER, 0.5F, 1.0F),
 
     ;
     @Getter
@@ -52,6 +56,11 @@ public enum GameSound
     public void play(Player player, SoundArea area, float volume, float pitch)
     {
         this.play(player, player.getLocation(), area, volume, pitch);
+    }
+
+    public void play(Player player, Location location, float volume, float pitch)
+    {
+        this.play(player, location, SoundArea.SELF, volume, pitch);
     }
 
     public void play(Location location, SoundArea area, float volume, float pitch)

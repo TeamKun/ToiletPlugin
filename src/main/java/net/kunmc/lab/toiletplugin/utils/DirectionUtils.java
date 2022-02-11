@@ -23,6 +23,20 @@ public class DirectionUtils
         return loc;
     }
 
+    public static BlockFace getDirection(double yaw)
+    {
+        if (yaw < 0.0D)
+        {
+            yaw += 360.0D;
+        }
+
+
+        return yaw >= 45.0D && yaw < 135.0D ? BlockFace.WEST:
+                (yaw >= 135.0D && yaw < 225.0D ? BlockFace.NORTH:
+                        (yaw >= 225.0D && yaw < 315.0D ? BlockFace.EAST:
+                                BlockFace.SOUTH));
+    }
+
     public static BlockFace reverseDirection(BlockFace face)
     {
         switch (face)

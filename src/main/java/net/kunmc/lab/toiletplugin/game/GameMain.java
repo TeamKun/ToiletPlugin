@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
+import net.kunmc.lab.toiletplugin.game.sound.DestinySoundPlayer;
 import net.kunmc.lab.toiletplugin.game.toilet.ToiletManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -30,6 +31,8 @@ public class GameMain extends BukkitRunnable
     private final QuestManager questManager;
     @Getter
     private final PlayerManager playerStateManager;
+    @Getter
+    private final DestinySoundPlayer destinySoundPlayer;
 
     private int tickCount;
 
@@ -42,6 +45,7 @@ public class GameMain extends BukkitRunnable
         this.playerStateManager = new PlayerManager(this);
         this.questManager = new QuestManager(this);
         this.toiletManager = new ToiletManager(this, new File(plugin.getDataFolder(), "toilets.json"));
+        this.destinySoundPlayer = new DestinySoundPlayer(plugin, this.playerStateManager);
     }
 
     private static GameConfig loadConfig(File file)
@@ -81,6 +85,7 @@ public class GameMain extends BukkitRunnable
         this.playerStateManager.init();
         this.toiletManager.init();
         this.questManager.init();
+        this.destinySoundPlayer.init();
 
         plugin.getServer().getOnlinePlayers().stream().parallel()
                 .forEach(player ->
