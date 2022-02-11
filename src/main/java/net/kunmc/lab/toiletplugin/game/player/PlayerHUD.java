@@ -119,7 +119,7 @@ public class PlayerHUD
             this.timeBossBar.setTitle(ChatColor.WHITE + ChatColor.BOLD.toString() + "残り時間: " + time + " 秒");
         else if (progress < 0.15)
         {
-            this.timeBossBar.setTitle(ChatColor.DARK_RED + ChatColor.BOLD.toString() + "残り時間: " + time +
+            this.timeBossBar.setTitle(ChatColor.DARK_RED + ChatColor.BOLD.toString() + "残り時間: " +
                     ChatColor.WHITE + ChatColor.BOLD + time + "秒");
         }
         else if (progress < 0.3)
