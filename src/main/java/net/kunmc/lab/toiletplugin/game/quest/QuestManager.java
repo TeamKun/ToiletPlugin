@@ -41,21 +41,13 @@ public class QuestManager extends BukkitRunnable
 
         int questTime = this.game.getConfig().generateQuestTime();
 
-        this.startQuestPhase(QuestPhase.STARTED, questTime, info);
+        info.setQuestPhase(QuestPhase.STARTED, questTime);
 
         player.sendMessage(ChatColor.DARK_RED + "あなたは便意を感じている... ");
         player.sendMessage(ChatColor.RED + "あなたは" + questTime + "秒以内に排便をしないと死んでしまう！");
 
 
         return questTime;
-    }
-
-    private void startQuestPhase(QuestPhase phase, int time, GamePlayer gamePlayer)
-    {
-        gamePlayer.setQuestPhase(QuestPhase.STARTED, time);
-
-        gamePlayer.getDisplay().questStarted();
-
     }
 
     public int cancel(Player player, boolean isNever)
