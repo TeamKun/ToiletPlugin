@@ -57,6 +57,12 @@ public class QuestManager extends BukkitRunnable
         if (!info.isQuesting())
             return -1;
 
+        if (info.getQuestPhase() == QuestPhase.TOILET_JOINED)
+        {
+            info.getToilet().purge();
+            info.setToilet(null);
+        }
+
         info.setQuestPhase(QuestPhase.NONE, 0);
 
         player.sendMessage(ChatColor.GREEN + "あなたのクエストがキャンセルされました。");

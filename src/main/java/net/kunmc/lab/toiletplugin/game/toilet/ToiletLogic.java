@@ -18,11 +18,13 @@ import org.bukkit.block.data.type.Door;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 
 public class ToiletLogic implements Listener
 {
@@ -32,15 +34,12 @@ public class ToiletLogic implements Listener
     private final PlayerManager playerManager;
     private final ToiletManager toiletManager;
 
-    private HashMap<Player, OnGroundToilet> foundOnPreviousTick;
-
     public ToiletLogic(GameMain game, ToiletManager toiletManager)
     {
         this.game = game;
         this.playerManager = this.game.getPlayerStateManager();
         this.toiletManager = toiletManager;
         this.toiletInformationDisplay = new InformationDisplay(game, toiletManager);
-        this.foundOnPreviousTick = new HashMap<>();
     }
 
     public void init()
@@ -104,8 +103,6 @@ public class ToiletLogic implements Listener
 
     public void checkPlayerInToilet(Player player)
     {
-        HashMap<Player, OnGroundToilet> found = new HashMap<>();
-
         player.getNearbyEntities(3.0D, 1.0D, 3.0D).forEach(entity -> {
             if (!(entity instanceof ArmorStand))
                 return;
@@ -142,21 +139,8 @@ public class ToiletLogic implements Listener
                     || player.getLocation().getBlockY() != backDoorLock.getBlockY()
                     || player.getLocation().getBlockZ() != backDoorLock.getBlockZ())
                 return;
-
-            found.put(player, toilet);
             this.playerJoinToilet(player, toilet, door, toiletBlock, armorStand);
         });
-
-        if (this.foundOnPreviousTick.size() > found.size())
-        {
-            this.foundOnPreviousTick.entrySet().stream()
-                    .filter(p -> !found.containsKey(p.getKey()))
-                    .forEach(playerOnGroundToiletEntry -> {
-                        this.playerLeftToilet(playerOnGroundToiletEntry.getKey(), playerOnGroundToiletEntry.getValue());
-                    });
-        }
-
-        this.foundOnPreviousTick = found;
     }
 
     public void playerJoinToilet(Player player, OnGroundToilet toilet, Door door, Block doorBlock, ArmorStand informationDisplay)
@@ -184,5 +168,33 @@ public class ToiletLogic implements Listener
     public void onEntityBreakBlock(EntityExplodeEvent e)
     {
         e.blockList().removeIf(block -> this.toiletManager.getToilet(block.getLocation()) != null);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerQuitEvent(PlayerQuitEvent event)
+    {
+        GamePlayer gamePlayer = this.playerManager.getPlayer(event.getPlayer());
+
+        if (gamePlayer == null)
+            return;
+
+        if (gamePlayer.getToilet() != null)
+            return;
+
+        this.playerLeftToilet(gamePlayer.getPlayer(), gamePlayer.getToilet());
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent e)
+    {
+        GamePlayer gamePlayer = this.playerManager.getPlayer(e.getPlayer());
+
+        if (gamePlayer.getToilet() == null)
+            return;
+
+        if (e.getFrom().getWorld().equals(e.getTo().getWorld()))
+            this.playerLeftToilet(gamePlayer.getPlayer(), gamePlayer.getToilet());
+        else if (e.getFrom().distance(e.getTo()) >= 5)
+            this.playerLeftToilet(gamePlayer.getPlayer(), gamePlayer.getToilet());
     }
 }
