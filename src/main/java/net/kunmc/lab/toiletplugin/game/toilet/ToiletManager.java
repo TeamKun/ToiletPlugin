@@ -14,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,6 +59,16 @@ public class ToiletManager
 
         Bukkit.getPluginManager().registerEvents(this.logic, ToiletPlugin.getPlugin());
         this.logic.init();
+
+        new BukkitRunnable()
+        {
+            @Override
+            public void run()
+            {
+                toilets.values().forEach(OnGroundToilet::purge);
+            }
+        }.runTaskLater(ToiletPlugin.getPlugin(), 20);
+
     }
 
     public Toilet detectToilet(ArmorStand stand, BlockFace direction)
