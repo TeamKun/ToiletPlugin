@@ -4,6 +4,7 @@ import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
+import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -41,6 +42,7 @@ public class QuestManager extends BukkitRunnable
 
         int questTime = this.game.getConfig().generateQuestTime();
 
+        info.playSound(GameSound.QUEST_START);
         info.setQuestPhase(QuestPhase.STARTED, questTime);
 
         player.sendMessage(ChatColor.DARK_RED + "あなたは便意を感じている... ");
@@ -68,6 +70,8 @@ public class QuestManager extends BukkitRunnable
         player.sendMessage(ChatColor.GREEN + "あなたのクエストがキャンセルされました。");
         if (!isNever)
             return this.changeScheduledTime(player);
+
+        info.playSound(GameSound.QUEST_CANCEL);
 
         info.getDisplay().onQuestCancelled();
         return 0;

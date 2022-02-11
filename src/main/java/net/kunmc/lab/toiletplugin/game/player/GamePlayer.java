@@ -58,10 +58,18 @@ public class GamePlayer
     public void setQuestPhase(QuestPhase state)
     {
         this.questPhase = state;
+
+        if (this.questPhase == QuestPhase.NONE || this.questPhase == QuestPhase.SCHEDULED)
+            return;
+
         if (state == QuestPhase.STARTED)
             display.questStarted();
         else
+        {
             display.showQuestTitle(state);
+            if (state.isSubQuest())
+                this.playSound(GameSound.QUEST_PHASE_COMPLETE);
+        }
     }
 
     public boolean isQuesting()

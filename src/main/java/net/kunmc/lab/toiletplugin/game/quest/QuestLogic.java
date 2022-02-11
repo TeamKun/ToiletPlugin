@@ -5,6 +5,7 @@ import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.events.PlayerToiletJoinEvent;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
+import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -44,6 +45,7 @@ public class QuestLogic implements Listener
         if (dmgEvt.getDamage() != 0.11235)
             return;
 
+        game.getPlayerStateManager().getPlayer(player).playSound(GameSound.QUEST_FAILURE);
         Bukkit.broadcastMessage(ChatColor.RED + player.getName() + " は便意に耐えられず死んでしまった！");
     }
 
