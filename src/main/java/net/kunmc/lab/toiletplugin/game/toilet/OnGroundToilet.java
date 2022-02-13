@@ -106,4 +106,27 @@ public class OnGroundToilet extends Toilet
             GameSound.IRON_DOOR_CLOSE.play(doorBlock.getLocation(), SoundArea.NEAR_10);
     }
 
+    public boolean isCooldown()
+    {
+        return this.state == ToiletState.TOILET_COOLDOWN && this.cooldown > 0;
+    }
+
+    public void setCooldown(ToiletState state, int cooldown)
+    {
+        setCooldown(state, cooldown, cooldown);
+    }
+
+    public void setCooldown(ToiletState state, int max, int now)
+    {
+        if (state != ToiletState.TOILET_COOLDOWN && state != ToiletState.PLAYER_COOLDOWN)
+            throw new IllegalArgumentException("state must be TOILET_COOLDOWN or PLAYER_COOLDOWN");
+
+        this.setState(ToiletState.TOILET_COOLDOWN);
+        this.setDoorOpen(false);
+        this.setCooldownMax(max);
+        this.setCooldown(now);
+
+        if (state == ToiletState.TOILET_COOLDOWN)
+            this.setToiletPlayer(null);
+    }
 }

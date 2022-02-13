@@ -89,12 +89,8 @@ public class ToiletLogic implements Listener
                 return;
             }
 
-            toilet.setState(ToiletState.TOILET_COOLDOWN);
-            toilet.setDoorOpen(false);
             int cooldown = this.game.getConfig().generateToiletCooldownTime();
-            toilet.setCooldownMax(cooldown);
-            toilet.setCooldown(cooldown);
-            toilet.setToiletPlayer(null);
+            toilet.setCooldown(ToiletState.TOILET_COOLDOWN, cooldown);
         }
         else if (toilet.getState() == ToiletState.TOILET_COOLDOWN)
         {
@@ -160,7 +156,6 @@ public class ToiletLogic implements Listener
 
     public void playerLeftToilet(Player player, OnGroundToilet toilet)
     {
-        this.playerManager.getPlayer(player).getToilet().purge();
         this.playerManager.getPlayer(player).setToilet(null);
         Bukkit.getPluginManager().callEvent(
                 new PlayerToiletQuitEvent(this.game.getPlayerStateManager().getPlayer(player), toilet));
@@ -209,5 +204,24 @@ public class ToiletLogic implements Listener
             return;
 
         this.playerLeftToilet(gamePlayer.getPlayer(), gamePlayer.getToilet());
+    }
+
+    @EventHandler
+    public void onPlayerQuitToilet(PlayerToiletQuitEvent event)
+    {
+        OnGroundToilet toilet = event.getToilet();
+
+        if (!game.getConfig().isToiletCooldownEnable())
+        {
+            toilet.purge();
+            return;
+        }
+
+
+        if (toilet.isCooldown())
+            return;
+
+        int cooldown = game.getConfig().generateToiletCooldownTime();
+        toilet.setCooldown(ToiletState.TOILET_COOLDOWN, cooldown);
     }
 }

@@ -58,16 +58,6 @@ public class InformationDisplay
         display.setState(ToiletState.PLAYER_USING);
     }
 
-    public void playerQuitToilet(String toiletName)
-    {
-        if (!toilets.containsKey(toiletName))
-            return;
-
-        OnGroundToilet display = toilets.get(toiletName);
-        display.setToiletPlayer(null);
-        display.setTimesElapsed(0);
-        display.setState(ToiletState.OPEN);
-    }
 
     public void updateToilet(OnGroundToilet toilet)
     {
