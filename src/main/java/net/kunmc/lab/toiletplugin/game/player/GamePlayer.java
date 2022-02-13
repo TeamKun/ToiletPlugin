@@ -26,8 +26,16 @@ public class GamePlayer
     @Getter
     @Setter
     private int time;
+
     @Getter
     private QuestPhase questPhase;
+
+    @Getter
+    @Setter
+    private int nowPower;
+    @Getter
+    @Setter
+    private int nowCount;
 
     @Getter
     @Setter
@@ -41,6 +49,8 @@ public class GamePlayer
         this.maxTimeLimit = -1;
         this.time = -1;
         this.toilet = null;
+        this.nowCount = 0;
+        this.nowPower = 0;
     }
 
     public void setMaxTimeLimit(int maxTimeLimit)

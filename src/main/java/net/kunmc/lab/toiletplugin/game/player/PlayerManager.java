@@ -109,8 +109,38 @@ public class PlayerManager extends BukkitRunnable implements Listener
     @Override
     public void run()
     {
+        int gain = Math.toIntExact(Math.round((double) this.game.getConfig().getPowerGainOnSecAmount() / 2.0d));
+        int loss = Math.toIntExact(Math.round((double) this.game.getConfig().getPowerLossOnSecAmount() / 2.0d));
+
+        boolean burst = this.game.getConfig().isBurstOnPowerOver100();
+
         this.gamePlayers.forEach((player, gamePlayer) -> {
             gamePlayer.getDisplay().updateScreen();
+            if (gamePlayer.getQuestPhase() != QuestPhase.TOILET_JOINED)
+                return;
+            if (player.isSneaking())
+            {
+                if (gamePlayer.getNowPower() >= 100)
+                {
+                    onBurstAsSync(gamePlayer);
+                    return;
+                }
+                gamePlayer.setNowPower(Math.min(gamePlayer.getNowPower() + gain, 100));
+            }
+            else if (gamePlayer.getNowPower() > 0)
+                gamePlayer.setNowPower(Math.max(0, gamePlayer.getNowPower() - loss));
         });
+    }
+
+    private void onBurstAsSync(GamePlayer player)
+    {
+        new BukkitRunnable()
+        {
+            @Override
+            public void run()
+            {
+                game.getQuestManager().onBurst(player);
+            }
+        }.runTask(ToiletPlugin.getPlugin());
     }
 }

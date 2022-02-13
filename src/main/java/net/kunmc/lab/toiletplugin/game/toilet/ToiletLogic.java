@@ -21,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -159,6 +160,7 @@ public class ToiletLogic implements Listener
 
     public void playerLeftToilet(Player player, OnGroundToilet toilet)
     {
+        this.playerManager.getPlayer(player).getToilet().purge();
         this.playerManager.getPlayer(player).setToilet(null);
         Bukkit.getPluginManager().callEvent(
                 new PlayerToiletQuitEvent(this.game.getPlayerStateManager().getPlayer(player), toilet));
@@ -196,5 +198,16 @@ public class ToiletLogic implements Listener
             this.playerLeftToilet(gamePlayer.getPlayer(), gamePlayer.getToilet());
         else if (e.getFrom().distance(e.getTo()) >= 5)
             this.playerLeftToilet(gamePlayer.getPlayer(), gamePlayer.getToilet());
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onDeath(PlayerDeathEvent e)
+    {
+        GamePlayer gamePlayer = this.playerManager.getPlayer(e.getEntity());
+
+        if (gamePlayer.getToilet() == null)
+            return;
+
+        this.playerLeftToilet(gamePlayer.getPlayer(), gamePlayer.getToilet());
     }
 }

@@ -48,6 +48,15 @@ public class GameConfig
     @Config(helpMessage = "クエスト中の低音の再生")
     boolean questingOppressiveSoundEnable = true;
 
+    @Config(min = 1, max = 10, helpMessage = "1秒に与えるパワー(スニーク中)")
+    int powerGainOnSecAmount = 80;
+    @Config(min = 1, max = 20, helpMessage = "1秒に剥奪するパワー(スニークしていない)")
+    int powerLossOnSecAmount = 80;
+    @Config(min = 1, max = 100, helpMessage = "排便時の最小パワー")
+    int minDefecationAcceptPower = 80;
+    @Config(helpMessage = "パワーが100(最大)を超えたのバースト(爆発)有効化")
+    boolean burstOnPowerOver100 = true;
+
     public int generateQuestTime()
     {
         return RANDOM.nextInt(maxQuestTime - minQuestTime) + minQuestTime;

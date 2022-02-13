@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin.game.player;
 
 import lombok.Getter;
+import net.kunmc.lab.toiletplugin.game.GameConfig;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
@@ -26,6 +27,7 @@ public class PlayerHUD
     private final QuestManager questManager;
 
     private final BossBar timeBossBar;
+    private final BossBar powerBossbar;
 
     private boolean questRun;
 
@@ -37,6 +39,7 @@ public class PlayerHUD
         this.questManager = gameMain.getQuestManager();
 
         this.timeBossBar = this.createBossBar("残り時間");
+        this.powerBossbar = this.createBossBar("パワー");
 
         this.questRun = false;
     }
@@ -82,6 +85,11 @@ public class PlayerHUD
             this.updateActionBar();
             this.updateTimeBossBar();
             this.questRun = true;
+            if (this.player.getQuestPhase() == QuestPhase.TOILET_JOINED)
+            {
+                this.powerBossbar.setVisible(true);
+                this.updatePowerBossBar();
+            }
         }
         else if (this.questRun)
         {
@@ -91,10 +99,41 @@ public class PlayerHUD
 
     }
 
+    private void updatePowerBossBar()
+    {
+        GameConfig config = this.getGameMain().getConfig();
+        int max = 100;
+        int min = config.getMinDefecationAcceptPower();
+        int now = this.player.getNowPower();
+
+        double progress = (double) now / max;
+
+        this.powerBossbar.setProgress(progress);
+        if (now >= min)
+        {
+            this.powerBossbar.setColor(BarColor.GREEN);
+            this.powerBossbar.setTitle(ChatColor.GREEN + "パワー");
+        }
+        else if (now >= min / 2)
+        {
+            this.powerBossbar.setColor(BarColor.YELLOW);
+            this.powerBossbar.setTitle(ChatColor.YELLOW + "パワー");
+        }
+        else
+        {
+            this.powerBossbar.setColor(BarColor.RED);
+            this.powerBossbar.setTitle(ChatColor.RED + "パワー");
+        }
+
+    }
+
     private void clearBossBar()
     {
         this.timeBossBar.setVisible(false);
         this.timeBossBar.setProgress(1.0);
+
+        this.powerBossbar.setVisible(false);
+        this.powerBossbar.setProgress(1.0);
     }
 
     private void updateTimeBossBar()

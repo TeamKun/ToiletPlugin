@@ -5,6 +5,7 @@ import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -148,14 +149,38 @@ public class QuestManager extends BukkitRunnable
             this.reSchedule(player);
     }
 
-    public void onPlayerFailedQuest(GamePlayer gamePlayer)
+    private void questFailGeneral(GamePlayer gamePlayer)
     {
         Player player = gamePlayer.getPlayer();
+
+        if (gamePlayer.getToilet() != null)  // TODO: Refactor: playerLeftToilet
+            game.getToiletManager().getLogic().playerLeftToilet(gamePlayer.getPlayer(), gamePlayer.getToilet());
 
         player.setKiller(null);
         player.setLastDamageCause(new EntityDamageEvent(player, EntityDamageEvent.DamageCause.CUSTOM, 0.11235));
         player.setHealth(0d);
         gamePlayer.setQuestPhase(QuestPhase.NONE, 0);
+
+        gamePlayer.setNowPower(0);
+        gamePlayer.setNowCount(0);
+    }
+
+    @SuppressWarnings("deprecation")
+    public void onPlayerFailedQuest(GamePlayer gamePlayer)
+    {
+        this.questFailGeneral(gamePlayer);
+        Bukkit.broadcastMessage(ChatColor.RED + gamePlayer.getPlayer().getName() + " は便意に耐えられず死んでしまった！");
+    }
+
+    @SuppressWarnings("deprecation")
+    public void onBurst(GamePlayer player)
+    {
+        Player p = player.getPlayer();
+        p.getWorld().createExplosion(p.getLocation(), 0F);
+
+
+        this.questFailGeneral(player);
+        Bukkit.broadcastMessage(ChatColor.RED + p.getName() + " は力を込めすぎて爆発してしまった！");
     }
 
     @Override

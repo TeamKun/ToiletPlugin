@@ -7,7 +7,6 @@ import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,7 +30,6 @@ public class QuestLogic implements Listener
     }
 
     @EventHandler
-    @SuppressWarnings("deprecation")
     public void onPlayerDeath(PlayerDeathEvent event)
     {
         Player player = event.getEntity();
@@ -46,7 +44,6 @@ public class QuestLogic implements Listener
             return;
 
         game.getPlayerStateManager().getPlayer(player).playSound(GameSound.QUEST_FAILURE);
-        Bukkit.broadcastMessage(ChatColor.RED + player.getName() + " は便意に耐えられず死んでしまった！");
     }
 
     @EventHandler
