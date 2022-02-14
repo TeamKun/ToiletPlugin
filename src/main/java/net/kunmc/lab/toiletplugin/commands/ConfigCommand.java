@@ -123,6 +123,8 @@ public class ConfigCommand extends CommandBase
         }
 
         String value = args[1];
+        Object currentValueMin = config.getValue();
+        Object currentValueMax = configMax.getValue();
         try
         {
             if (define.ranged())
@@ -146,6 +148,15 @@ public class ConfigCommand extends CommandBase
                 sender.sendMessage(ChatColor.RED + "E: 設定にエラーを検出しました。");
                 for (String error : errors)
                     sender.sendMessage(ChatColor.RED + "E: " + error);
+
+                if (define.ranged())
+                {
+                    config.setValue(currentValueMin);
+                    configMax.setValue(currentValueMax);
+                }
+                else
+                    config.setValue(currentValueMin);
+                sender.sendMessage(ChatColor.GREEN + "S: 設定をロールバックしました。");
             }
         }
         catch (SizeLimitExceededException e)
