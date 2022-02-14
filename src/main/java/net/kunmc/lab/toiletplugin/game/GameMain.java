@@ -3,6 +3,7 @@ package net.kunmc.lab.toiletplugin.game;
 import com.google.gson.Gson;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
+import net.kunmc.lab.toiletplugin.game.config.GameConfig;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.game.sound.DestinySoundPlayer;

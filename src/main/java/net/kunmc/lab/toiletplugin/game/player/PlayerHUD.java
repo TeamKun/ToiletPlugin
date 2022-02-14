@@ -1,8 +1,8 @@
 package net.kunmc.lab.toiletplugin.game.player;
 
 import lombok.Getter;
-import net.kunmc.lab.toiletplugin.game.GameConfig;
 import net.kunmc.lab.toiletplugin.game.GameMain;
+import net.kunmc.lab.toiletplugin.game.config.GameConfig;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import net.kyori.adventure.text.Component;

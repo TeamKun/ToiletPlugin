@@ -1,9 +1,9 @@
 package net.kunmc.lab.toiletplugin.commands;
 
 import net.kunmc.lab.toiletplugin.CommandBase;
-import net.kunmc.lab.toiletplugin.game.GameConfig;
 import net.kunmc.lab.toiletplugin.game.config.Config;
 import net.kunmc.lab.toiletplugin.game.config.ConfigManager;
+import net.kunmc.lab.toiletplugin.game.config.GameConfig;
 import net.kunmc.lab.toiletplugin.utils.CommandUtils;
 import net.kunmc.lab.toiletplugin.utils.Pair;
 import net.kyori.adventure.text.Component;

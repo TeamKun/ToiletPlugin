@@ -1,8 +1,7 @@
-package net.kunmc.lab.toiletplugin.game;
+package net.kunmc.lab.toiletplugin.game.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.kunmc.lab.toiletplugin.game.config.Config;
 import net.kunmc.lab.toiletplugin.utils.Pair;
 
 import java.util.ArrayList;
