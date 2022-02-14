@@ -194,7 +194,11 @@ public class ConfigCommand extends CommandBase
         catch (ClassNotFoundException e)
         {
             sender.sendMessage(ChatColor.RED + "E: " + value + " は有効な値ではありません。使用可: " +
-                    String.join(", ", config.getDefine().enums()));
+                    String.join(", ",
+                            config.getField().getType().isEnum() ?
+                                    Arrays.stream(config.getField().getType().getEnumConstants())
+                                            .map(Object::toString)
+                                            .toArray(String[]::new): config.getDefine().enums()));
         }
     }
 
@@ -380,6 +384,10 @@ public class ConfigCommand extends CommandBase
                 result.addAll(Arrays.asList(config.getDefine().enums()));
                 if (config.getField().getType() == boolean.class || config.getField().getType() == Boolean.class)
                     result.addAll(Arrays.asList("true", "false"));
+                else if (config.getField().getType().isEnum())
+                    result.addAll(Arrays.stream(config.getField().getType().getEnumConstants())
+                            .map(Object::toString)
+                            .collect(Collectors.toList()));
                 return result;
             default:
                 return null;

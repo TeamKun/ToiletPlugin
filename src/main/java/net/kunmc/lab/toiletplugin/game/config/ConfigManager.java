@@ -121,8 +121,14 @@ public class ConfigManager
             if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false"))
                 throw new IllegalArgumentException("The value is not a boolean: " + name);
         }
+        else if (config.getField().getType().isEnum())
+        {
+            if (!Arrays.asList(config.getField().getType().getEnumConstants()).contains(value))
+                throw new ClassNotFoundException("The value is not in the enum list");
+        }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public boolean setValue(String name, String value)
             throws NoSuchFieldException, SizeLimitExceededException, NegativeArraySizeException,
             NumberFormatException, IllegalAccessException, ClassNotFoundException
@@ -140,6 +146,8 @@ public class ConfigManager
             config.setValue(value);
         else if (config.getField().getType() == Boolean.class || config.getField().getType() == boolean.class)
             config.setValue(Boolean.parseBoolean(value));
+        else if (config.getField().getType().isEnum())
+            config.setValue(Enum.valueOf((Class<Enum>) config.getField().getType(), value));
         else
             return false;
         return true;
