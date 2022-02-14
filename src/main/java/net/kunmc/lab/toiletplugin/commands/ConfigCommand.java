@@ -2,8 +2,10 @@ package net.kunmc.lab.toiletplugin.commands;
 
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.game.GameConfig;
+import net.kunmc.lab.toiletplugin.game.config.Config;
 import net.kunmc.lab.toiletplugin.game.config.ConfigManager;
 import net.kunmc.lab.toiletplugin.utils.CommandUtils;
+import net.kunmc.lab.toiletplugin.utils.Pair;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -46,7 +48,7 @@ public class ConfigCommand extends CommandBase
                 a = String.valueOf((int) min);
             else
                 a = String.valueOf(min);
-            sb.append(a).append("~");
+            sb.append(":").append(a).append("~");
         }
         if (max != -1)
         {
@@ -55,6 +57,8 @@ public class ConfigCommand extends CommandBase
                 a = String.valueOf((int) max);
             else
                 a = String.valueOf(max);
+            if (min == -1)
+                sb.append(":");
             sb.append(a);
         }
         sb.append(">");
@@ -93,9 +97,13 @@ public class ConfigCommand extends CommandBase
             return;
         }
 
-        ConfigManager.GeneratedConfig config = this.config.getConfig(configName);
+        ConfigManager.GeneratedConfig config = this.config.getConfigAllowRanged(configName, false);
+        ConfigManager.GeneratedConfig configMax = this.config.getConfigAllowRanged(configName, true);
 
-        if (config.getDefine().toggle())
+        Config define = config.getDefine();
+        Config defineMax = config.getDefine();
+
+        if (define.toggle())
         {
             config.setValue(!config.booleanValue());
             sender.sendMessage(ChatColor.GREEN + "S: " + configName + "を" + config.booleanValue() + "に設定しました。");
@@ -104,14 +112,33 @@ public class ConfigCommand extends CommandBase
 
         if (args.length == 1)
         {
-            sender.sendMessage(ChatColor.GREEN + "S: " + configName + "は" + config.getValue() + "です。");
+            if (!define.ranged())
+            {
+                sender.sendMessage(ChatColor.GREEN + "S: " + configName + "は" + config.getValue() + "です。");
+                return;
+            }
+
+            sender.sendMessage(ChatColor.GREEN + "S: " + configName + "は" + config.getValue() + "~" + configMax.getValue() + "です。");
             return;
         }
 
         String value = args[1];
         try
         {
-            this.config.setValue(configName, value);
+            if (define.ranged())
+            {
+                Pair<String, String> range = parsePair(sender, value, defineMax.min(), defineMax.max(), defineMax.min(), defineMax.max());
+
+                if (range == null)
+                    return;
+
+                if (range.getLeft() != null)
+                    this.config.setValue(config.getField().getName(), range.getLeft());
+                if (range.getRight() != null)
+                    this.config.setValue(configMax.getField().getName(), range.getRight());
+            }
+            else
+                this.config.setValue(configName, value);
             sender.sendMessage(ChatColor.GREEN + "S: " + configName + "を" + value + "に設定しました。");
             String[] errors = ((GameConfig) this.config.getConfig()).checkConfig();
             if (errors.length > 0)
@@ -146,6 +173,49 @@ public class ConfigCommand extends CommandBase
             sender.sendMessage(ChatColor.RED + "E: " + value + " は有効な値ではありません。使用可: " +
                     String.join(", ", config.getDefine().enums()));
         }
+    }
+
+    private Pair<String, String> parsePair(CommandSender sender, String arg, double minMin, double minMax, double maxMin, double maxMax)
+    {
+        if (!arg.contains("~"))
+        {
+            sender.sendMessage(ChatColor.RED + "E: 範囲値には ~ を含み、最小または最大 もしくは両方を指定する必要があります。");
+            return null;
+        }
+
+        String minSpec = null;
+        String maxSpec = null;
+
+        // 10~20
+        if (arg.startsWith("~"))
+            maxSpec = arg.substring(1);
+        else if (arg.endsWith("~"))
+            minSpec = arg.substring(0, arg.length() - 1);
+        else
+        {
+            String[] split = StringUtils.split(arg, '~');
+            if (split.length != 2)
+            {
+                sender.sendMessage(ChatColor.RED + "E: 範囲値には ~ を含み、最小または最大 もしくは両方を指定する必要があります。");
+                return null;
+            }
+
+            minSpec = split[0];
+            maxSpec = split[1];
+        }
+
+        if (minSpec == null && maxSpec == null)
+        {
+            sender.sendMessage(ChatColor.RED + "E: 範囲値には ~ を含み、最小または最大 もしくは両方を指定する必要があります。");
+            return null;
+        }
+
+        if (minSpec != null && CommandUtils.parseDouble(sender, minSpec, minMin, minMax) == null)
+            return null;
+        if (maxSpec != null && CommandUtils.parseDouble(sender, maxSpec, maxMin, maxMax) == null)
+            return null;
+
+        return new Pair<>(minSpec, maxSpec);
     }
 
     private void showPagedHelp(CommandSender sender, int page)
@@ -210,18 +280,37 @@ public class ConfigCommand extends CommandBase
         {
             case 1:
                 return this.config.getConfigs().stream().parallel()
-                        .map(generatedConfig -> generatedConfig.getDefine().name().equals("")
-                                ? generatedConfig.getField().getName(): generatedConfig.getDefine().name())
+                        .filter(generatedConfig -> {
+                            Config define = generatedConfig.getDefine();
+                            if (!define.ranged())
+                                return true;
+                            return generatedConfig.getField().getName().startsWith("min");
+                        })
+                        .map(generatedConfig -> {
+                            String name = generatedConfig.getField().getName();
+                            if (name.startsWith("min"))
+                                name = name.substring(3, 4).toLowerCase() + name.substring(4);
+                            return name;
+                        })
                         .collect(Collectors.toList());
             case 2:
                 String configName = args[0];
                 if (!this.config.isConfigExist(configName))
                     return Collections.singletonList("存在しないコンフィグ名です。");
 
-                ConfigManager.GeneratedConfig config = this.config.getConfig(configName);
+                ConfigManager.GeneratedConfig config = this.config.getConfigAllowRanged(configName, false);
 
                 List<String> result = new ArrayList<>();
-                result.add(getArgument(configName, config));
+                if (config.getDefine().ranged())
+                {
+                    String arg = getArgument(configName, config) + "~";
+                    ConfigManager.GeneratedConfig maxConfig = this.config.getConfigAllowRanged(configName, true);
+                    if (maxConfig != null)
+                        arg += getArgument(configName, maxConfig);
+                    result.add(arg);
+                }
+                else
+                    result.add(getArgument(configName, config));
                 result.addAll(Arrays.asList(config.getDefine().enums()));
                 if (config.getField().getType() == boolean.class || config.getField().getType() == Boolean.class)
                     result.addAll(Arrays.asList("true", "false"));

@@ -103,9 +103,28 @@ public class CommandUtils
         }
     }
 
+    public static Double parseDouble(@NotNull CommandSender sender, @NotNull String arg, double min, double max)
+    {
+        try
+        {
+            double num = Double.parseDouble(arg);
+            if (checkValidNumber(sender, num, min, max))
+                return null;
+            return num;
+        }
+        catch (NumberFormatException e)
+        {
+            sender.sendMessage(ChatColor.RED + "引数が数値ではありません: 必要: " +
+                    (max == -1 ? min: min + "〜" + max) +
+                    " 提供: " + arg);
+            return null;
+        }
+    }
+
     public static boolean checkValidNumber(@NotNull CommandSender sender, Number number, Number min, Number max)
     {
-        if (number.doubleValue() < min.doubleValue() || (max != null && number.doubleValue() > max.doubleValue()))
+
+        if ((min.doubleValue() != -1d && number.doubleValue() < min.doubleValue()) || (max.doubleValue() != -1d && number.doubleValue() > max.doubleValue()))
         {
             sender.sendMessage(ChatColor.RED + "E: 引数の値が不正です: 必要: " +
                     (max == null ? min: min + "〜" + max) +

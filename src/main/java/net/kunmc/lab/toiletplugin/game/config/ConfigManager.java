@@ -29,12 +29,22 @@ public class ConfigManager
     private void generateMap()
     {
         List<GeneratedConfig> configs = getConfigs();
-        configs.forEach(config -> map.put(config.getDefine().name().equals("") ? config.getField().getName(): config.getDefine().name(), config));
+        configs.forEach(config -> map.put(config.getField().getName(), config));
     }
 
     public boolean isConfigExist(String name)
     {
-        return map.containsKey(name);
+        if (map.containsKey(name))
+            return true;
+
+        if (name.length() < 4)
+            return false;
+        String n = "min" + name.substring(0, 1).toUpperCase() + name.substring(1);
+        GeneratedConfig config = map.get(n);
+        if (config == null)
+            return false;
+
+        return config.define.ranged();
     }
 
     public List<GeneratedConfig> getConfigs()
@@ -140,6 +150,29 @@ public class ConfigManager
         if (!map.containsKey(name))
             return null;
         return map.get(name);
+    }
+
+    public GeneratedConfig getConfigAllowRanged(String name, boolean isMax)
+    {
+        if (map.containsKey(name))
+            return map.get(name);
+
+        if (name.length() < 1)
+            return null;
+
+        String prefix = isMax ? "max": "min";
+        name = prefix + name.substring(0, 1).toUpperCase() + name.substring(1);
+        if (map.containsKey(name))
+            return map.get(name);
+        return null;
+    }
+
+    public GeneratedConfig getConfigAllowRangedAny(String name)
+    {
+        GeneratedConfig config = getConfigAllowRanged(name, false);
+        if (config != null)
+            return config;
+        return getConfigAllowRanged(name, true);
     }
 
     @AllArgsConstructor

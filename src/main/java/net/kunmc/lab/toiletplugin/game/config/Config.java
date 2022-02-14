@@ -9,8 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Config
 {
-    String name() default "";
-
     String helpMessage() default "";
 
     boolean toggle() default false;
@@ -20,4 +18,6 @@ public @interface Config
     double max() default -1;
 
     String[] enums() default {};
+
+    boolean ranged() default false;
 }
