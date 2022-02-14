@@ -123,8 +123,10 @@ public class ConfigCommand extends CommandBase
         }
 
         String value = args[1];
+
         Object currentValueMin = config.getValue();
         Object currentValueMax = configMax.getValue();
+
         try
         {
             if (define.ranged())
@@ -141,7 +143,9 @@ public class ConfigCommand extends CommandBase
             }
             else
                 this.config.setValue(configName, value);
+
             sender.sendMessage(ChatColor.GREEN + "S: " + configName + "を" + value + "に設定しました。");
+
             List<Pair<String, String>> errors = ((GameConfig) this.config.getConfig()).checkConfig();
             if (errors.size() > 0)
             {
@@ -229,9 +233,15 @@ public class ConfigCommand extends CommandBase
             return null;
         }
 
-        if (minSpec != null && CommandUtils.parseDouble(sender, minSpec, minMin, minMax) == null)
+        Double min = null;
+        Double max = null;
+
+        if (minSpec != null && (min = CommandUtils.parseDouble(sender, minSpec, minMin, minMax)) == null)
             return null;
-        if (maxSpec != null && CommandUtils.parseDouble(sender, maxSpec, maxMin, maxMax) == null)
+        if (maxSpec != null && (max = CommandUtils.parseDouble(sender, maxSpec, maxMin, maxMax)) == null)
+            return null;
+
+        if (CommandUtils.checkValidNumber(sender, min, max))
             return null;
 
         return new Pair<>(minSpec, maxSpec);

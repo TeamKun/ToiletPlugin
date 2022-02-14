@@ -135,6 +135,20 @@ public class CommandUtils
         return false;
     }
 
+    public static boolean checkValidNumber(@NotNull CommandSender sender, Number min, Number max)
+    {
+        if (min == null || max == null)
+            return false;
+
+        if (min.doubleValue() >= max.doubleValue())
+        {
+            sender.sendMessage(ChatColor.RED + "E: 右辺よりも左辺が大きいまたは同じです。");
+            return true;
+        }
+
+        return false;
+    }
+
     public static @Nullable Integer parseInteger(@NotNull CommandSender sender, @NotNull String arg, int min)
     {
         return parseInteger(sender, arg, min, -1);
