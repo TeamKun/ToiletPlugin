@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
+import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -126,6 +127,9 @@ public class PlayerManager extends BukkitRunnable implements Listener
                     return;
                 }
                 gamePlayer.setNowPower(Math.min(gamePlayer.getNowPower() + gain, 100));
+                GameSound.TOILETPLAYER_POWER_CHANGE.play(player, 0.5F,
+                        +(gamePlayer.getNowPower() / 100.0F) + 0.6F
+                );
             }
             else if (gamePlayer.getNowPower() > 0)
                 gamePlayer.setNowPower(Math.max(0, gamePlayer.getNowPower() - loss));

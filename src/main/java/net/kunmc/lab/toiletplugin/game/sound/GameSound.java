@@ -24,6 +24,8 @@ public enum GameSound
 
     QUESTING_OPPRESSIVE("block.beacon.ambient", Sound.Source.MASTER, 0.5F, 1.0F),
 
+    TOILETPLAYER_POWER_CHANGE("block.note_block.bass", Sound.Source.MASTER, 0.5F, 1.0F),
+
     ;
     @Getter
     private final String name;
