@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ConfigCommand extends CommandBase
@@ -250,7 +249,6 @@ public class ConfigCommand extends CommandBase
 
     private void showPagedHelp(CommandSender sender, int page)
     {
-        AtomicInteger maxLength = new AtomicInteger(0);
         HashMap<String, ConfigManager.GeneratedConfig> helps = config.getMap();
 
         int maxPage = helps.size() / 10 + 1;
@@ -260,14 +258,6 @@ public class ConfigCommand extends CommandBase
             sender.sendMessage(ChatColor.RED + "E: 存在しないページです。");
             return;
         }
-
-        helps.values().stream().parallel()
-                .skip((page - 1) * 10L)
-                .limit(10)
-                .forEach(s -> {
-                    String m = getHelpConfig(s);
-                    maxLength.set(Math.max(maxLength.get(), m.length()));
-                });
 
         sender.sendMessage(ChatColor.GOLD + "-----=====     ToiletPlugin (" + page + "/" + maxPage + ")  =====-----");
 
@@ -288,11 +278,7 @@ public class ConfigCommand extends CommandBase
                     return Pair.of(
                             config.getDefine().ranged() ? config.getField().getName().substring(3, 4).toLowerCase() + config.getField().getName().substring(4):
                                     config.getField().getName(),
-                            ChatColor.AQUA + msg + StringUtils.repeat(
-                                    " ",
-                                    maxLength.get() - msg.length()
-                            ) + " -  " +
-                                    ChatColor.DARK_AQUA + config.getDefine().helpMessage()
+                            ChatColor.AQUA + msg + "\n" + ChatColor.DARK_AQUA + config.getDefine().helpMessage() + "\n"
                     );
                 })
                 .map(pair -> Component.text(pair.getRight())
