@@ -113,6 +113,12 @@ public class GamePlayer
         this.questPhase = QuestPhase.NONE;
     }
 
+    public void resetPlayerForQuest()
+    {
+        this.nowPower = 0;
+        this.nowCount = 0;
+    }
+
     // Logic
 
     public void setPlayState(PlayState state)

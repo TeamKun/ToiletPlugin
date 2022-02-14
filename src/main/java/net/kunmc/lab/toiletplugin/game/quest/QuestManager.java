@@ -41,6 +41,8 @@ public class QuestManager extends BukkitRunnable
         if (info.isQuesting())
             return -1;
 
+        info.resetPlayerForQuest();
+
         int questTime = this.game.getConfig().generateQuestTime();
 
         info.playSound(GameSound.QUEST_START);
@@ -161,8 +163,7 @@ public class QuestManager extends BukkitRunnable
         player.setHealth(0d);
         gamePlayer.setQuestPhase(QuestPhase.NONE, 0);
 
-        gamePlayer.setNowPower(0);
-        gamePlayer.setNowCount(0);
+        gamePlayer.resetPlayerForQuest();
     }
 
     @SuppressWarnings("deprecation")
