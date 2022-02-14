@@ -142,20 +142,28 @@ public class ConfigCommand extends CommandBase
             else
                 this.config.setValue(configName, value);
             sender.sendMessage(ChatColor.GREEN + "S: " + configName + "を" + value + "に設定しました。");
-            String[] errors = ((GameConfig) this.config.getConfig()).checkConfig();
-            if (errors.length > 0)
+            List<Pair<String, String>> errors = ((GameConfig) this.config.getConfig()).checkConfig();
+            if (errors.size() > 0)
             {
                 sender.sendMessage(ChatColor.RED + "E: 設定にエラーを検出しました。");
-                for (String error : errors)
-                    sender.sendMessage(ChatColor.RED + "E: " + error);
+                boolean rollback = false;
+                for (Pair<String, String> error : errors)
+                {
+                    sender.sendMessage(ChatColor.RED + "E: " + error.getLeft() + ": " + error.getRight());
+                    if (error.getLeft().equals(configName))
+                        rollback = true;
+                    else if (error.getLeft().equals("min" + configName.substring(0, 1).toUpperCase() + configName.substring(1)))
+                        rollback = true;
+                }
 
-                if (define.ranged())
+                if (rollback && define.ranged())
                 {
                     config.setValue(currentValueMin);
                     configMax.setValue(currentValueMax);
                 }
-                else
+                else if (rollback)
                     config.setValue(currentValueMin);
+
                 sender.sendMessage(ChatColor.GREEN + "S: 設定をロールバックしました。");
             }
         }

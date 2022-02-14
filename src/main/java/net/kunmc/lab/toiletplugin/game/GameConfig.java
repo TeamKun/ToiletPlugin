@@ -3,6 +3,7 @@ package net.kunmc.lab.toiletplugin.game;
 import lombok.Getter;
 import lombok.Setter;
 import net.kunmc.lab.toiletplugin.game.config.Config;
+import net.kunmc.lab.toiletplugin.utils.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,17 +78,17 @@ public class GameConfig
         return RANDOM.nextInt(maxToiletCooldownTime - minToiletCooldownTime) + minToiletCooldownTime;
     }
 
-    public String[] checkConfig()
+    public List<Pair<String, String>> checkConfig()
     {
-        List<String> errors = new ArrayList<>();
+        List<Pair<String, String>> errors = new ArrayList<>();
         if (minQuestTime >= maxQuestTime)
-            errors.add("questTime：最小値が最大値より大きいまたは同じです。");
+            errors.add(new Pair<>("questTime", "最小値が最大値より大きいまたは同じです。"));
         if (minScheduleTime >= maxScheduleTime)
-            errors.add("scheduleTime：最小値が最大値より大きいまたは同じです。");
+            errors.add(new Pair<>("scheduleTime", "最小値が最大値より大きいまたは同じです。"));
         if (minPlayerCooldownTime >= maxPlayerCooldownTime)
-            errors.add("playerCooldownTime：最小値が最大値より大きいまたは同じです。");
+            errors.add(new Pair<>("playerCooldownTime", "最小値が最大値より大きいまたは同じです。"));
         if (minToiletCooldownTime >= maxToiletCooldownTime)
-            errors.add("toiletCooldownTime：最小値が最大値より大きいまたは同じです。");
-        return errors.toArray(new String[0]);
+            errors.add(new Pair<>("toiletCooldownTime", "最小値が最大値より大きいまたは同じです。"));
+        return errors;
     }
 }
