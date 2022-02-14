@@ -18,6 +18,7 @@ import javax.naming.SizeLimitExceededException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -260,25 +261,43 @@ public class ConfigCommand extends CommandBase
             return;
         }
 
-        helps.forEach((s, s2) -> maxLength.set(Math.max(maxLength.get(), s.length())));
+        helps.values().stream().parallel()
+                .skip((page - 1) * 10L)
+                .limit(10)
+                .forEach(s -> {
+                    String m = getHelpConfig(s);
+                    maxLength.set(Math.max(maxLength.get(), m.length()));
+                });
 
         sender.sendMessage(ChatColor.GOLD + "-----=====     ToiletPlugin (" + page + "/" + maxPage + ")  =====-----");
 
-        helps.entrySet().stream()
+        helps.values().stream()
+                .sorted(Comparator.comparing(o -> o.getField().getName()))
                 .skip((page - 1) * 10L)
                 .limit(10)
-                .map(entry -> ChatColor.AQUA + entry.getKey() +
-                        StringUtils.repeat(" ", maxLength.get() - entry.getKey().length()) +
-                        "  -  " +
-                        ChatColor.DARK_AQUA + entry.getValue().getDefine().helpMessage() + "\n" +
-                        "    " + ChatColor.AQUA + getArgument(entry.getKey(), entry.getValue()))
-                .map(Component::text)
-                .map(textComponent -> textComponent
-                        .clickEvent(ClickEvent.suggestCommand("/toilet config " +
-                                textComponent.content().substring(2, textComponent.content().indexOf(" "))
-                                + " "))
-                        .hoverEvent(HoverEvent.showText(Component.text(ChatColor.AQUA + "クリックして設定を使用します。")))
-                )
+                .filter(config -> {
+                    Config define = config.getDefine();
+                    if (!define.ranged())
+                        return true;
+                    return config.getField().getName().startsWith("min");
+                })
+                .map(config -> {
+
+                    String msg = getHelpConfig(config);
+
+                    return Pair.of(
+                            config.getDefine().ranged() ? config.getField().getName().substring(3, 4).toLowerCase() + config.getField().getName().substring(4):
+                                    config.getField().getName(),
+                            ChatColor.AQUA + msg + StringUtils.repeat(
+                                    " ",
+                                    maxLength.get() - msg.length()
+                            ) + " -  " +
+                                    ChatColor.DARK_AQUA + config.getDefine().helpMessage()
+                    );
+                })
+                .map(pair -> Component.text(pair.getRight())
+                        .clickEvent(ClickEvent.suggestCommand("/toilet config " + pair.getLeft() + " "))
+                        .hoverEvent(HoverEvent.showText(Component.text(ChatColor.AQUA + "クリックして設定を使用します。"))))
                 .forEach(sender::sendMessage);
 
         TextComponent footer = of(ChatColor.GOLD + "-----=====");
@@ -300,6 +319,38 @@ public class ConfigCommand extends CommandBase
             footer = footer.append(of("    "));
 
         sender.sendMessage(footer.append(of(ChatColor.GOLD + "=====-----")));
+    }
+
+    private List<String> getHelpConfig(List<ConfigManager.GeneratedConfig> configs)
+    {
+        List<String> result = new ArrayList<>();
+
+        configs.forEach(config -> {
+            Config define = config.getDefine();
+
+            StringBuilder builder = new StringBuilder();
+
+            if (define.ranged() && config.getField().getName().length() > 3)
+            {
+                String name = config.getField().getName().substring(3, 4).toLowerCase() + config.getField().getName().substring(4);
+
+                builder.append(getArgument(name, config));
+                ConfigManager.GeneratedConfig configMax = this.config.getConfigAllowRanged(name, true);
+                if (configMax != null)
+                    builder.append("~").append(getArgument("max", configMax));
+            }
+            else
+                builder.append(getArgument(config.getField().getName(), config));
+
+            result.add(builder.toString());
+        });
+
+        return result;
+    }
+
+    private String getHelpConfig(ConfigManager.GeneratedConfig config)
+    {
+        return getHelpConfig(Collections.singletonList(config)).get(0);
     }
 
     @Override
