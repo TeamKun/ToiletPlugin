@@ -48,7 +48,7 @@ public class GameConfig
     @Config(helpMessage = "クエスト中の低音の再生")
     boolean questingOppressiveSoundEnable = true;
 
-    @Config(min = 1, max = 10, helpMessage = "1秒に与えるパワー(スニーク中)")
+    @Config(min = 1, max = 10, helpMessage = "スニークで与える力")
     int powerGainOnSecAmount = 80;
     @Config(min = 1, max = 20, helpMessage = "1秒に剥奪するパワー(スニークしていない)")
     int powerLossOnSecAmount = 80;
