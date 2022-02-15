@@ -10,12 +10,12 @@ import net.kunmc.lab.toiletplugin.commands.ToolCommand;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.config.ConfigManager;
 import net.kunmc.lab.toiletplugin.utils.CommandUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -101,9 +101,14 @@ public class CommandHandler implements CommandExecutor, TabCompleter
                 completes.add(ChatColor.stripColor(commandArguments[args.length - 1]));
         }
 
-        ArrayList<String> asCopy = new ArrayList<>();
-        StringUtil.copyPartialMatches(args[args.length - 1], completes, asCopy);
-        Collections.sort(asCopy);
-        return asCopy;
+        ArrayList<String> result = new ArrayList<>();
+
+        for (String complete : completes)
+        {
+            if (StringUtils.containsIgnoreCase(complete, args[args.length - 1]))
+                result.add(complete);
+        }
+        Collections.sort(result);
+        return result;
     }
 }
