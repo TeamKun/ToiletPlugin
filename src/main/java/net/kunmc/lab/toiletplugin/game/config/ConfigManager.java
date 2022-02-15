@@ -123,7 +123,10 @@ public class ConfigManager
         }
         else if (config.getField().getType().isEnum())
         {
-            if (!Arrays.asList(config.getField().getType().getEnumConstants()).contains(value))
+            if (Arrays.stream(config.getField().getType().getEnumConstants())
+                    .map(o -> (Enum<?>) o)
+                    .map(Enum::name)
+                    .noneMatch(s -> s.equalsIgnoreCase(value)))
                 throw new ClassNotFoundException("The value is not in the enum list");
         }
     }
