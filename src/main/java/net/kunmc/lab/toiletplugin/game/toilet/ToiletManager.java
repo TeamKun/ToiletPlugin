@@ -65,9 +65,16 @@ public class ToiletManager
             @Override
             public void run()
             {
-                toilets.values().forEach(OnGroundToilet::purge);
+                new HashMap<>(toilets).values().forEach(toilet -> {
+                    toilet.getArmorStandLocation().toLocation().getChunk().load();
+                    toilet.getDoorLocation().toLocation().getChunk().load();
+                    toilet.getScytheLocation().toLocation().getChunk().load();
+                    toilet = new OnGroundToilet(toilet);
+                    toilet.purge();
+                    toilets.put(toilet.getName(), toilet);
+                });
             }
-        }.runTaskLater(ToiletPlugin.getPlugin(), 20);
+        }.runTaskLater(ToiletPlugin.getPlugin(), 0);
 
     }
 
