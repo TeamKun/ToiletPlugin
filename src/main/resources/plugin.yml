@@ -7,6 +7,7 @@ description: Die if you don't go to the toilet.
 website: https://kunmc.net/
 prefix: ToiletPlugin
 depend: [StructureBlockLib]
+load: POSTWORLD
 
 commands:
   toilet:
