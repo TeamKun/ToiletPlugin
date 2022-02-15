@@ -121,14 +121,14 @@ public class PlayerManager extends BukkitRunnable implements Listener
                 return;
             if (player.isSneaking())
             {
-                if (gamePlayer.getNowPower() >= 100)
+                if (gamePlayer.getNowPower() >= 100 && burst)
                 {
                     onBurstAsSync(gamePlayer);
                     return;
                 }
                 gamePlayer.setNowPower(Math.min(gamePlayer.getNowPower() + gain, 100));
                 GameSound.TOILETPLAYER_POWER_CHANGE.play(player, 0.5F,
-                        +(gamePlayer.getNowPower() / 100.0F) + 0.6F
+                        (gamePlayer.getNowPower() / 100.0F) + 0.6F
                 );
             }
             else if (gamePlayer.getNowPower() > 0)
