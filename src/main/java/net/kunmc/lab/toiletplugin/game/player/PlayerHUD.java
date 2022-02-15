@@ -108,7 +108,7 @@ public class PlayerHUD
 
         double progress = (double) now / max;
 
-        this.powerBossbar.setProgress(progress);
+        this.powerBossbar.setProgress(Math.min(progress, 1.0));
         if (now >= min)
         {
             this.powerBossbar.setColor(BarColor.GREEN);
