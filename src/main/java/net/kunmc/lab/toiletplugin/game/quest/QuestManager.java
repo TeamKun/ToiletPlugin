@@ -1,5 +1,6 @@
 package net.kunmc.lab.toiletplugin.game.quest;
 
+import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
@@ -180,10 +181,12 @@ public class QuestManager extends BukkitRunnable
         Bukkit.broadcastMessage(ChatColor.RED + p.getName() + " は力を込めすぎて爆発してしまった！");
     }
 
+    @Getter
     private int gain;
     private int loss;
+    @Getter
     private DefecationType defecationType;
-    boolean burst;
+    private boolean burst;
 
     public void init()
     {

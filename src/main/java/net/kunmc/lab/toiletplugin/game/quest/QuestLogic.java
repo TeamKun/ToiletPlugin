@@ -71,11 +71,12 @@ public class QuestLogic implements Listener
     @EventHandler
     public void onShift(PlayerToggleSneakEvent e)
     {
-        if (e.isSneaking() && this.game.getConfig().getDefecationType() == DefecationType.SHIFT_MASH)
+        if (e.isSneaking() && questManager.getDefecationType() == DefecationType.SHIFT_MASH)
         {
-            int gain = this.game.getConfig().getPowerGainAmount();
             GamePlayer gamePlayer = this.game.getPlayerStateManager().getPlayer(e.getPlayer());
-            gamePlayer.setNowPower(gamePlayer.getNowPower() + gain);
+            if (gamePlayer.getQuestPhase() != QuestPhase.TOILET_JOINED)
+                return;
+            gamePlayer.setNowPower(gamePlayer.getNowPower() + questManager.getGain());
             GameSound.TOILETPLAYER_POWER_CHANGE.play(gamePlayer, 0.5F,
                     (gamePlayer.getNowPower() / 100.0F) + 0.8F
             );
