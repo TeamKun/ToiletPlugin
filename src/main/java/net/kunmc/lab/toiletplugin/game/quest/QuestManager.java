@@ -183,6 +183,7 @@ public class QuestManager extends BukkitRunnable
     private int gain;
     private int loss;
     private DefecationType defecationType;
+    boolean burst;
 
     public void init()
     {
@@ -195,14 +196,13 @@ public class QuestManager extends BukkitRunnable
     {
         gain = Math.toIntExact(Math.round((double) this.game.getConfig().getPowerGainAmount() / 2.0d));
         loss = Math.toIntExact(Math.round((double) this.game.getConfig().getPowerLossOnSecAmount() / 2.0d));
-
         defecationType = this.game.getConfig().getDefecationType();
+        burst = this.game.getConfig().isBurstOnPowerOver100();
     }
 
     @Override
     public void run()
     {
-        boolean burst = this.game.getConfig().isBurstOnPowerOver100();
 
         this.game.getPlayerStateManager().getGamePlayers().forEach((player, gamePlayer) -> {
             gamePlayer.getDisplay().updateScreen();
