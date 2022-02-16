@@ -60,6 +60,19 @@ public class GameConfig
     @Config(helpMessage = "排便の方法")
     DefecationType defecationType = DefecationType.SHIFT_HOLD;
 
+    @Config(min = 1, max = 5, helpMessage = "便の数")
+    int minPoopAmount = 1;
+    @Config(min = 2, max = 6, helpMessage = "便の数")
+    int maxPoopAmount = 3;
+
+    @Config(min = 0, max = 10, helpMessage = "排便時に力を保持する必要がある時間")
+    int powerKeepCountSeconds = 5;
+
+    public int generatePoopAmount()
+    {
+        return RANDOM.nextInt(maxPoopAmount - minPoopAmount + 1) + minPoopAmount;
+    }
+
     public int generateQuestTime()
     {
         return RANDOM.nextInt(maxQuestTime - minQuestTime) + minQuestTime;
