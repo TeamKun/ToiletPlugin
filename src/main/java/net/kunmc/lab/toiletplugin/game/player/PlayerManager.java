@@ -117,6 +117,9 @@ public class PlayerManager extends BukkitRunnable implements Listener
             int gain = this.game.getConfig().getPowerGainAmount();
             GamePlayer gamePlayer = this.gamePlayers.get(e.getPlayer());
             gamePlayer.setNowPower(gamePlayer.getNowPower() + gain);
+            GameSound.TOILETPLAYER_POWER_CHANGE.play(gamePlayer, 0.5F,
+                    (gamePlayer.getNowPower() / 100.0F) + 0.8F
+            );
         }
     }
 

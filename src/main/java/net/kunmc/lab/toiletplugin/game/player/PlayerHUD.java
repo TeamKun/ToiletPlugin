@@ -108,23 +108,32 @@ public class PlayerHUD
 
         double progress = (double) now / max;
 
+        String titlePrefix = "パワー";
+
         this.powerBossbar.setProgress(Math.min(progress, 1.0));
+
+        if (now > 90)
+        {
+            this.powerBossbar.setColor(BarColor.GREEN);
+            titlePrefix = ChatColor.DARK_RED + "⚠⚠⚠" + titlePrefix;
+        }
         if (now >= min)
         {
             this.powerBossbar.setColor(BarColor.GREEN);
-            this.powerBossbar.setTitle(ChatColor.GREEN + "パワー");
+            titlePrefix = ChatColor.GREEN + titlePrefix;
         }
         else if (now >= min / 2)
         {
             this.powerBossbar.setColor(BarColor.YELLOW);
-            this.powerBossbar.setTitle(ChatColor.YELLOW + "パワー");
+            titlePrefix = ChatColor.YELLOW + titlePrefix;
         }
         else
         {
             this.powerBossbar.setColor(BarColor.RED);
-            this.powerBossbar.setTitle(ChatColor.RED + "パワー");
+            titlePrefix = ChatColor.RED + titlePrefix;
         }
 
+        this.powerBossbar.setTitle(titlePrefix + ": " + now + ChatColor.DARK_GREEN + "/" + max);
     }
 
     private void clearBossBar()

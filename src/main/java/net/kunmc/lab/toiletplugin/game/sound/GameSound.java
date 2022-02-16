@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin.game.sound;
 
 import lombok.Getter;
+import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.Location;
@@ -95,6 +96,11 @@ public enum GameSound
         this.play(player, SoundArea.SELF, this.volume, this.pitch);
     }
 
+    public void play(GamePlayer player)
+    {
+        this.play(player.getPlayer(), SoundArea.SELF, this.volume, this.pitch);
+    }
+
     public void play(Location location)
     {
         this.play(location, SoundArea.SERVER_ALL, this.volume, this.pitch);
@@ -103,6 +109,11 @@ public enum GameSound
     public void play(Player player, SoundArea area)
     {
         this.play(player, area, this.volume, this.pitch);
+    }
+
+    public void play(GamePlayer player, SoundArea area)
+    {
+        this.play(player.getPlayer(), area, this.volume, this.pitch);
     }
 
     public void play(Location location, SoundArea area)
@@ -115,6 +126,11 @@ public enum GameSound
         this.play(player, SoundArea.SELF, volume, pitch);
     }
 
+    public void play(GamePlayer player, float volume, float pitch)
+    {
+        this.play(player.getPlayer(), volume, pitch);
+    }
+
     public void play(Location location, float volume, float pitch)
     {
         this.play(location, SoundArea.SERVER_ALL, volume, pitch);
@@ -123,6 +139,11 @@ public enum GameSound
     public void play(Player player, Location location)
     {
         this.play(player, location, SoundArea.SELF, this.volume, this.pitch);
+    }
+
+    public void play(GamePlayer player, Location location)
+    {
+        this.play(player.getPlayer(), location, SoundArea.SELF, this.volume, this.pitch);
     }
 
     public void play(World world, float volume, float pitch)
