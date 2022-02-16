@@ -60,9 +60,9 @@ public class GameConfig
     @Config(helpMessage = "排便の方法")
     DefecationType defecationType = DefecationType.SHIFT_HOLD;
 
-    @Config(min = 1, max = 5, helpMessage = "便の数")
+    @Config(min = 1, max = 5, helpMessage = "便の数", ranged = true)
     int minPoopAmount = 1;
-    @Config(min = 2, max = 6, helpMessage = "便の数")
+    @Config(min = 2, max = 6, helpMessage = "便の数", ranged = true)
     int maxPoopAmount = 3;
 
     @Config(min = 0, max = 10, helpMessage = "排便時に力を保持する必要がある時間")
