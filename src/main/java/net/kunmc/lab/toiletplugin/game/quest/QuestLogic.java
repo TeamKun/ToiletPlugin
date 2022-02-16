@@ -61,6 +61,9 @@ public class QuestLogic implements Listener
         if (player.getQuestPhase() != QuestPhase.STARTED)
             return;
 
-        player.setQuestPhase(QuestPhase.TOILET_JOINED);
+        player.setQuestPhase(
+                QuestPhase.TOILET_JOINED,
+                this.game.getConfig().getDefecationType().getMessage()
+        );
     }
 }

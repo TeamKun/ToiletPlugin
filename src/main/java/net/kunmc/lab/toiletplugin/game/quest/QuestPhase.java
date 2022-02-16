@@ -7,7 +7,7 @@ public enum QuestPhase
     NONE(null, null, false, true),
     SCHEDULED(null, null, false, true),
     STARTED("トイレに向かう", "使えるトイレを探して中に入ろう！", true, false),
-    TOILET_JOINED("排便をしよう", "便器の中に入って指示通りにしゃがもう！", false, true),
+    TOILET_JOINED("排便をしよう", "便器の中に入ってシフトを%sメーターを緑にしよう！", false, true),
     DEFECATION_STARTED("排便をしよう", "%s！", false, true),
     DEFECATION_FINISHED("トイレから出よう", "トイレから出よう！", false, true);
 

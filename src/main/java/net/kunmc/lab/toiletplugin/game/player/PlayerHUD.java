@@ -61,13 +61,19 @@ public class PlayerHUD
 
     public void showQuestTitle(QuestPhase quest)
     {
+        this.showQuestTitle(quest, "");
+    }
+
+    public void showQuestTitle(QuestPhase quest, String customStateMessage)
+    {
         String titleStr = quest.getTitle() == null ? "": ChatColor.GREEN + "クエスト発生：" + quest.getTitle();
         if (quest.getTitle() != null && quest.isEmergency())
             titleStr = ChatColor.DARK_RED + "緊急クエスト発生: " + ChatColor.RED + titleStr;
 
         Title title = Title.title(
                 Component.text(titleStr),
-                Component.text(quest.getSubTitle() == null ? "": ChatColor.YELLOW + quest.getSubTitle()),
+                Component.text(quest.getSubTitle() == null ? "": ChatColor.YELLOW + quest.getSubTitle()
+                        .replace("%s", customStateMessage)),
                 Title.Times.of(
                         Duration.ofMillis(500),
                         Duration.ofSeconds(3),

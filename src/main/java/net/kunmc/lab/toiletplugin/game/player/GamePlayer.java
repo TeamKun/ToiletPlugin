@@ -67,6 +67,11 @@ public class GamePlayer
 
     public void setQuestPhase(QuestPhase state)
     {
+        this.setQuestPhase(state, "");
+    }
+
+    public void setQuestPhase(QuestPhase state, String customStateMessage)
+    {
         this.questPhase = state;
 
         if (this.questPhase == QuestPhase.NONE || this.questPhase == QuestPhase.SCHEDULED)
@@ -79,7 +84,7 @@ public class GamePlayer
             display.questStarted();
         else
         {
-            display.showQuestTitle(state);
+            display.showQuestTitle(state, customStateMessage);
             if (state.isSubQuest())
                 this.playSound(GameSound.QUEST_PHASE_COMPLETE);
         }
