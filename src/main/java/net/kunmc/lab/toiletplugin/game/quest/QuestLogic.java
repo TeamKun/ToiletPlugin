@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 public class QuestLogic implements Listener
 {
@@ -65,5 +66,19 @@ public class QuestLogic implements Listener
                 QuestPhase.TOILET_JOINED,
                 this.game.getConfig().getDefecationType().getMessage()
         );
+    }
+
+    @EventHandler
+    public void onShift(PlayerToggleSneakEvent e)
+    {
+        if (e.isSneaking() && this.game.getConfig().getDefecationType() == DefecationType.SHIFT_MASH)
+        {
+            int gain = this.game.getConfig().getPowerGainAmount();
+            GamePlayer gamePlayer = this.game.getPlayerStateManager().getPlayer(e.getPlayer());
+            gamePlayer.setNowPower(gamePlayer.getNowPower() + gain);
+            GameSound.TOILETPLAYER_POWER_CHANGE.play(gamePlayer, 0.5F,
+                    (gamePlayer.getNowPower() / 100.0F) + 0.8F
+            );
+        }
     }
 }

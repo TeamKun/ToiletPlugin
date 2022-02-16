@@ -25,11 +25,7 @@ public class QuestManager extends BukkitRunnable
         this.stateManager = game.getPlayerStateManager();
     }
 
-    public void init()
-    {
-        this.logic.init();
-        this.runTaskTimer(ToiletPlugin.getPlugin(), 0, 20);
-    }
+    private int secCount = 0;
 
     public int start(Player player)
     {
@@ -184,9 +180,55 @@ public class QuestManager extends BukkitRunnable
         Bukkit.broadcastMessage(ChatColor.RED + p.getName() + " は力を込めすぎて爆発してしまった！");
     }
 
+    private int gain;
+    private int loss;
+    private DefecationType defecationType;
+
+    public void init()
+    {
+        this.logic.init();
+        this.runTaskTimer(ToiletPlugin.getPlugin(), 0, 10);
+        this.updateConfig();
+    }
+
+    private void updateConfig()
+    {
+        gain = Math.toIntExact(Math.round((double) this.game.getConfig().getPowerGainAmount() / 2.0d));
+        loss = Math.toIntExact(Math.round((double) this.game.getConfig().getPowerLossOnSecAmount() / 2.0d));
+
+        defecationType = this.game.getConfig().getDefecationType();
+    }
+
     @Override
     public void run()
     {
+        boolean burst = this.game.getConfig().isBurstOnPowerOver100();
+
+        this.game.getPlayerStateManager().getGamePlayers().forEach((player, gamePlayer) -> {
+            gamePlayer.getDisplay().updateScreen();
+            if (gamePlayer.getQuestPhase() != QuestPhase.TOILET_JOINED)
+                return;
+
+            if (gamePlayer.getNowPower() >= 100 && burst)
+            {
+                game.getQuestManager().onBurst(gamePlayer);
+                return;
+            }
+
+            if (defecationType == DefecationType.SHIFT_HOLD && player.isSneaking())
+            {
+                gamePlayer.setNowPower(Math.min(gamePlayer.getNowPower() + gain, 100));
+                GameSound.TOILETPLAYER_POWER_CHANGE.play(player, 0.5F,
+                        (gamePlayer.getNowPower() / 100.0F) + 0.6F
+                );
+            }
+            else if (gamePlayer.getNowPower() > 0)
+                gamePlayer.setNowPower(Math.max(0, gamePlayer.getNowPower() - loss));
+        });
+
+        if (++secCount != 2)
+            return;
+
         this.stateManager.getPlayers().forEach(info -> {
             Player player = info.getPlayer();
 
@@ -204,5 +246,8 @@ public class QuestManager extends BukkitRunnable
 
             info.setTime(info.getTime() - 1);
         });
+
+        updateConfig();
+        secCount = 0;
     }
 }

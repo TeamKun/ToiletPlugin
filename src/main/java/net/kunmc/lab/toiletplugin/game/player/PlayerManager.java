@@ -3,9 +3,7 @@ package net.kunmc.lab.toiletplugin.game.player;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
-import net.kunmc.lab.toiletplugin.game.quest.DefecationType;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
-import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -14,7 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -109,62 +106,11 @@ public class PlayerManager extends BukkitRunnable implements Listener
         }
     }
 
-    @EventHandler
-    public void onShift(PlayerToggleSneakEvent e)
-    {
-        if (e.isSneaking() && this.game.getConfig().getDefecationType() == DefecationType.SHIFT_MASH)
-        {
-            int gain = this.game.getConfig().getPowerGainAmount();
-            GamePlayer gamePlayer = this.gamePlayers.get(e.getPlayer());
-            gamePlayer.setNowPower(gamePlayer.getNowPower() + gain);
-            GameSound.TOILETPLAYER_POWER_CHANGE.play(gamePlayer, 0.5F,
-                    (gamePlayer.getNowPower() / 100.0F) + 0.8F
-            );
-        }
-    }
-
     @Override
     public void run()
     {
-        int gain = Math.toIntExact(Math.round((double) this.game.getConfig().getPowerGainAmount() / 2.0d));
-        int loss = Math.toIntExact(Math.round((double) this.game.getConfig().getPowerLossOnSecAmount() / 2.0d));
-
-        DefecationType defecationType = this.game.getConfig().getDefecationType();
-
-        boolean burst = this.game.getConfig().isBurstOnPowerOver100();
-
         this.gamePlayers.forEach((player, gamePlayer) -> {
             gamePlayer.getDisplay().updateScreen();
-            if (gamePlayer.getQuestPhase() != QuestPhase.TOILET_JOINED)
-                return;
-
-            if (gamePlayer.getNowPower() >= 100 && burst)
-            {
-                onBurstAsSync(gamePlayer);
-                return;
-            }
-
-            if (defecationType == DefecationType.SHIFT_HOLD && player.isSneaking())
-            {
-                gamePlayer.setNowPower(Math.min(gamePlayer.getNowPower() + gain, 100));
-                GameSound.TOILETPLAYER_POWER_CHANGE.play(player, 0.5F,
-                        (gamePlayer.getNowPower() / 100.0F) + 0.6F
-                );
-            }
-            else if (gamePlayer.getNowPower() > 0)
-                gamePlayer.setNowPower(Math.max(0, gamePlayer.getNowPower() - loss));
         });
-    }
-
-    private void onBurstAsSync(GamePlayer player)
-    {
-        new BukkitRunnable()
-        {
-            @Override
-            public void run()
-            {
-                game.getQuestManager().onBurst(player);
-            }
-        }.runTask(ToiletPlugin.getPlugin());
     }
 }

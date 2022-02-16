@@ -88,7 +88,10 @@ public class PlayerHUD
     {
         if (this.player.isQuesting())
         {
-            this.updateActionBar();
+            if (this.player.getQuestPhase() == QuestPhase.TOILET_JOINED)
+                this.updateActionBar(this.gameMain.getConfig().getDefecationType().getMessage());
+            else
+                this.updateActionBar("");
             this.updateTimeBossBar();
             this.questRun = true;
             if (this.player.getQuestPhase() == QuestPhase.TOILET_JOINED)
@@ -196,7 +199,7 @@ public class PlayerHUD
         }
     }
 
-    private void updateActionBar()
+    private void updateActionBar(String customQuestMessage)
     {
         QuestPhase quest = this.getPlayer().getQuestPhase();
 
@@ -220,9 +223,11 @@ public class PlayerHUD
                 actionBar.append(ChatColor.RED).append(ChatColor.BOLD).append(quest.getTitle());
         if (quest.getSubTitle() != null)
             if (whiteFlag)
-                actionBar.append(ChatColor.WHITE).append(ChatColor.BOLD).append(" - ").append(quest.getSubTitle());
+                actionBar.append(ChatColor.WHITE).append(ChatColor.BOLD).append(" - ")
+                        .append(quest.getSubTitle().replace("%s", customQuestMessage));
             else
-                actionBar.append(ChatColor.YELLOW).append(ChatColor.BOLD).append(" - ").append(quest.getSubTitle());
+                actionBar.append(ChatColor.YELLOW).append(ChatColor.BOLD).append(" - ")
+                        .append(quest.getSubTitle().replace("%s", customQuestMessage));
 
         this.player.getPlayer().sendActionBar(Component.text(actionBar.toString()));
     }
