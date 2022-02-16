@@ -15,28 +15,28 @@ public class GameConfig
 {
     private static final Random RANDOM = new Random();
 
-    @Config(min = 1, ranged = true, helpMessage = "クエスト時間：最小")
+    @Config(min = 1, ranged = true, helpMessage = "クエスト時間")
     int minQuestTime = 30;
-    @Config(min = 2, ranged = true, helpMessage = "クエスト時間：最大")
+    @Config(min = 2, ranged = true, helpMessage = "クエスト時間")
     int maxQuestTime = 180;
 
-    @Config(min = 1, ranged = true, helpMessage = "クエストが始まるまでの時間：最小")
+    @Config(min = 1, ranged = true, helpMessage = "クエストが始まるまでの時間")
     int minScheduleTime = 30;
-    @Config(min = 1, ranged = true, helpMessage = "クエストが始まるまでの時間：最大")
+    @Config(min = 1, ranged = true, helpMessage = "クエストが始まるまでの時間")
     int maxScheduleTime = 180;
 
     @Config(helpMessage = "プレイヤのトイレ後クールダウン時間")
     boolean playerCooldownEnable = true;
-    @Config(min = 1, ranged = true, helpMessage = "プレイヤのトイレ後クールダウン時間：最小")
+    @Config(min = 1, ranged = true, helpMessage = "プレイヤのトイレ後クールダウン時間")
     int minPlayerCooldownTime = 30;
-    @Config(min = 1, ranged = true, helpMessage = "プレイヤのトイレ後クールダウン時間：最大")
+    @Config(min = 1, ranged = true, helpMessage = "プレイヤのトイレ後クールダウン時間")
     int maxPlayerCooldownTime = 31;
 
     @Config(helpMessage = "トイレのトイレ後クールダウン時間")
     boolean toiletCooldownEnable = true;
-    @Config(min = 1, ranged = true, helpMessage = "トイレのトイレ後クールダウン時間：最小")
+    @Config(min = 1, ranged = true, helpMessage = "トイレのトイレ後クールダウン時間")
     int minToiletCooldownTime = 30;
-    @Config(min = 1, ranged = true, helpMessage = "トイレのトイレ後クールダウン時間：最大")
+    @Config(min = 1, ranged = true, helpMessage = "トイレのトイレ後クールダウン時間")
     int maxToiletCooldownTime = 31;
 
     @Config(helpMessage = "ゲーム参加時のクエストの自動ケジュール")
