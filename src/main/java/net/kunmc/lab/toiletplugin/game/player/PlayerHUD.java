@@ -17,6 +17,8 @@ import java.time.Duration;
 
 public class PlayerHUD
 {
+    private static final int TITLE_SHOWING_TIME = 4000;
+
     @Getter
     private final GamePlayer player;
     @Getter
@@ -75,9 +77,9 @@ public class PlayerHUD
                 Component.text(quest.getSubTitle() == null ? "": ChatColor.YELLOW + quest.getSubTitle()
                         .replace("%s", customStateMessage)),
                 Title.Times.of(
-                        Duration.ofMillis(500),
-                        Duration.ofSeconds(3),
-                        Duration.ofMillis(500)
+                        Duration.ofMillis((long) (TITLE_SHOWING_TIME * 0.125)),
+                        Duration.ofSeconds((long) (TITLE_SHOWING_TIME * 0.75)),
+                        Duration.ofMillis((long) (TITLE_SHOWING_TIME * 0.125))
                 )
         );
 
@@ -89,7 +91,10 @@ public class PlayerHUD
         if (this.player.isQuesting())
         {
             if (this.player.getQuestPhase() == QuestPhase.TOILET_JOINED)
+            {
                 this.updateActionBar(this.gameMain.getConfig().getDefecationType().getMessage());
+                this.updateDefecationTitle();
+            }
             else
                 this.updateActionBar("");
             this.updateTimeBossBar();
@@ -106,6 +111,31 @@ public class PlayerHUD
             this.clearBossBar();
         }
 
+    }
+
+    private void updateDefecationTitle()
+    {
+        if (this.player.getToiletJoinedIn() == -1)
+            return;
+        long diff = System.currentTimeMillis() - player.getToiletJoinedIn();
+        if (diff < TITLE_SHOWING_TIME)
+            return;
+
+        if (this.player.getQuestPhase() != QuestPhase.TOILET_JOINED)
+            return;
+
+        this.player.getPlayer().showTitle(Title.title(
+                Component.text(ChatColor.YELLOW + "(0/1)"),
+                Component.text(ChatColor.YELLOW + QuestPhase.TOILET_JOINED.getSubTitle().replace(
+                        "%s",
+                        this.gameMain.getConfig().getDefecationType().getMessage()
+                )),
+                Title.Times.of(
+                        Duration.ofMillis(0),
+                        Duration.ofSeconds(30),
+                        Duration.ofMillis(0)
+                )
+        ));
     }
 
     private void updatePowerBossBar()

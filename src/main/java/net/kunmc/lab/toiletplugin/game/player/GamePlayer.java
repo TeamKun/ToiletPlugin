@@ -38,8 +38,11 @@ public class GamePlayer
     private int nowCount;
 
     @Getter
-    @Setter
     private OnGroundToilet toilet;
+
+    @Getter
+    @Setter
+    private long toiletJoinedIn;
 
     public GamePlayer(Player player, GameMain game)
     {
@@ -48,9 +51,17 @@ public class GamePlayer
         this.questPhase = QuestPhase.NONE;
         this.maxTimeLimit = -1;
         this.time = -1;
+        this.toiletJoinedIn = -1;
         this.toilet = null;
         this.nowCount = 0;
         this.nowPower = 0;
+    }
+
+    public void setToilet(OnGroundToilet toilet)
+    {
+        if (toilet != null)
+            this.toiletJoinedIn = System.currentTimeMillis();
+        this.toilet = toilet;
     }
 
     public void setMaxTimeLimit(int maxTimeLimit)
