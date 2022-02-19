@@ -27,6 +27,8 @@ public enum GameSound
 
     TOILETPLAYER_POWER_CHANGE("block.note_block.bass", Sound.Source.MASTER, 0.5F, 1.0F),
 
+    POOP_THROW("entity.arrow.shoot", Sound.Source.MASTER, 0.5F, 0.6F),
+    POOP_WATER_LAND("entity.generic.splash", Sound.Source.MASTER, 0.3F, 1.2F),
     ;
     @Getter
     private final String name;
@@ -161,5 +163,10 @@ public enum GameSound
         location.getWorld().getNearbyEntitiesByType(Player.class, location, range).forEach(player ->
                 player.playSound(location, this.name, volume, pitch)
         );
+    }
+
+    public void stop(Player player)
+    {
+        player.stopSound(this.name);
     }
 }

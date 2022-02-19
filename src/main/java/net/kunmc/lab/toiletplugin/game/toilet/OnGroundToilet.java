@@ -2,6 +2,8 @@ package net.kunmc.lab.toiletplugin.game.toilet;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.kunmc.lab.toiletplugin.ToiletPlugin;
+import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.game.sound.SoundArea;
 import net.kunmc.lab.toiletplugin.toiletobject.Toilet;
@@ -25,7 +27,7 @@ public class OnGroundToilet extends Toilet
 
     private List<ArmorStand> displays;
 
-    private Player toiletPlayer;
+    private GamePlayer toiletPlayer;
 
     private int timesElapsed;
     private int cooldownMax;
@@ -34,6 +36,10 @@ public class OnGroundToilet extends Toilet
 
     private ToiletState state;
 
+    public void setToiletPlayer(Player player)
+    {
+        this.toiletPlayer = ToiletPlugin.getPlugin().getGame().getPlayerStateManager().getPlayer(player);
+    }
 
     public OnGroundToilet(Toilet toilet)
     {
@@ -121,12 +127,14 @@ public class OnGroundToilet extends Toilet
         if (state != ToiletState.TOILET_COOLDOWN && state != ToiletState.PLAYER_COOLDOWN)
             throw new IllegalArgumentException("state must be TOILET_COOLDOWN or PLAYER_COOLDOWN");
 
-        this.setState(ToiletState.TOILET_COOLDOWN);
-        this.setDoorOpen(false);
+        this.setState(state);
         this.setCooldownMax(max);
         this.setCooldown(now);
 
         if (state == ToiletState.TOILET_COOLDOWN)
+        {
             this.setToiletPlayer(null);
+            this.setDoorOpen(false);
+        }
     }
 }

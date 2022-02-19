@@ -6,6 +6,7 @@ import net.kunmc.lab.toiletplugin.events.PlayerToiletQuitEvent;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
+import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.game.sound.SoundArea;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
@@ -54,6 +55,7 @@ public class ToiletLogic implements Listener
                 .values()
                 .stream()
                 .filter(GamePlayer::isQuesting)
+                .filter(gamePlayer -> gamePlayer.getQuestPhase() != QuestPhase.PLAYER_COOLDOWN)
                 .map(GamePlayer::getPlayer)
                 .forEach(this::checkPlayerInToilet);
     }
@@ -66,7 +68,13 @@ public class ToiletLogic implements Listener
                 if (toilet.getState() != ToiletState.OPEN)
                     toilet.setTimesElapsed(toilet.getTimesElapsed() + 1);
                 if (toilet.getCooldownMax() > 0 && toilet.getCooldown() > 0)
+                {
+                    if (toilet.getToiletPlayer() != null &&
+                            toilet.getToiletPlayer().getQuestPhase() == QuestPhase.PLAYER_COOLDOWN)
+                        toilet.setCooldown(toilet.getToiletPlayer().getTime());
+
                     toilet.setCooldown(toilet.getCooldown() - 1);
+                }
 
                 if (toilet.getCooldown() == 0)
                     this.onCooldownFinished(toilet);

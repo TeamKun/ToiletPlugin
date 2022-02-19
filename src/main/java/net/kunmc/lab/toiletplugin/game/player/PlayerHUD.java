@@ -5,6 +5,7 @@ import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.config.GameConfig;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
+import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -78,7 +79,7 @@ public class PlayerHUD
                         .replace("%s", customStateMessage)),
                 Title.Times.of(
                         Duration.ofMillis((long) (TITLE_SHOWING_TIME * 0.125)),
-                        Duration.ofSeconds((long) (TITLE_SHOWING_TIME * 0.75)),
+                        Duration.ofMillis((long) (TITLE_SHOWING_TIME * 0.75)),
                         Duration.ofMillis((long) (TITLE_SHOWING_TIME * 0.125))
                 )
         );
@@ -88,30 +89,36 @@ public class PlayerHUD
 
     public void updateScreen()
     {
-        if (this.player.isQuesting())
+        if (!this.player.isQuesting())
         {
-            if (this.player.getQuestPhase() == QuestPhase.TOILET_JOINED)
+            if (this.questRun)
             {
-                this.updateActionBar(this.gameMain.getConfig().getDefecationType().getMessage());
-                this.updateDefecationTitle();
+                this.questRun = false;
+                this.clearBossBar();
             }
-            else
-                this.updateActionBar("");
-            this.updateTimeBossBar();
-            this.questRun = true;
-            if (this.player.getQuestPhase() == QuestPhase.TOILET_JOINED)
-            {
-                this.powerBossbar.setVisible(true);
-                this.updatePowerBossBar();
-            }
+            return;
         }
-        else if (this.questRun)
+
+        this.questRun = true;
+
+        if (this.player.getQuestPhase() == QuestPhase.TOILET_JOINED)
         {
-            this.questRun = false;
-            this.clearBossBar();
+            this.updateActionBar(this.gameMain.getConfig().getDefecationType().getMessage());
+            this.updateDefecationTitle();
+        }
+        else
+            this.updateActionBar("");
+
+        this.updateTimeBossBar();
+
+        if (this.player.getQuestPhase() == QuestPhase.TOILET_JOINED)
+        {
+            this.powerBossbar.setVisible(true);
+            this.updatePowerBossBar();
         }
 
     }
+
 
     private void updateDefecationTitle()
     {
@@ -124,15 +131,39 @@ public class PlayerHUD
         if (this.player.getQuestPhase() != QuestPhase.TOILET_JOINED)
             return;
 
+        String countTitle = String.valueOf(
+                (char) (0x2460 + (this.gameMain.getConfig().getPowerKeepCountSeconds() - this.player.getNowCount()))
+        );
+        double count = this.player.getNowCount() / (double) this.gameMain.getConfig().getPowerKeepCountSeconds();
+
+        if (count != 0.0)
+            if (count < 0.5)
+                countTitle = ChatColor.RED + countTitle;
+            else if (count < 0.8)
+                countTitle = ChatColor.YELLOW + countTitle;
+            else
+                countTitle = ChatColor.GREEN + countTitle;
+        else
+            countTitle = "";
+
+        ChatColor poopTitleColor;
+
+        double poop = this.player.getNowPoop() / (double) this.player.getMaxPoop();
+
+        if (poop < 0.5)
+            poopTitleColor = ChatColor.RED;
+        else
+            poopTitleColor = ChatColor.YELLOW;
+
+        String poopTitle = ChatColor.YELLOW + "(" + poopTitleColor +
+                this.player.getNowPoop() + ChatColor.YELLOW + "/" + this.player.getMaxPoop() + ")";
+
         this.player.getPlayer().showTitle(Title.title(
-                Component.text(ChatColor.YELLOW + "(0/1)"),
-                Component.text(ChatColor.YELLOW + QuestPhase.TOILET_JOINED.getSubTitle().replace(
-                        "%s",
-                        this.gameMain.getConfig().getDefecationType().getMessage()
-                )),
+                Component.text(countTitle),
+                Component.text(poopTitle),
                 Title.Times.of(
                         Duration.ofMillis(0),
-                        Duration.ofSeconds(30),
+                        Duration.ofSeconds(1),
                         Duration.ofMillis(0)
                 )
         ));
@@ -175,7 +206,7 @@ public class PlayerHUD
         this.powerBossbar.setTitle(titlePrefix + ": " + now + ChatColor.DARK_GREEN + "/" + max);
     }
 
-    private void clearBossBar()
+    public void clearBossBar()
     {
         this.timeBossBar.setVisible(false);
         this.timeBossBar.setProgress(1.0);
@@ -275,5 +306,24 @@ public class PlayerHUD
                 "",
                 0, 20, 10
         );
+    }
+
+    public void onQuestFinished()
+    {
+        this.questRun = false;
+        this.clearBossBar();
+
+        GameSound.QUEST_COMPLETE.play(this.player);
+
+        this.player.getPlayer().sendTitle(
+                ChatColor.GREEN + "クエスト成功！",
+                "",
+                0, 20, 0
+        );
+    }
+
+    public void clearPowerBossBar()
+    {
+        this.powerBossbar.removeAll();
     }
 }

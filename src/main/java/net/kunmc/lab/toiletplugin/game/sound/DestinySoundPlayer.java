@@ -3,6 +3,7 @@ package net.kunmc.lab.toiletplugin.game.sound;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
+import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
@@ -38,6 +39,7 @@ public class DestinySoundPlayer extends BukkitRunnable
         tick += 10;
         playerManager.getGamePlayers().values().stream()
                 .filter(GamePlayer::isQuesting)
+                .filter(p -> p.getQuestPhase() != QuestPhase.PLAYER_COOLDOWN)
                 .forEach(this::playSound);
     }
 

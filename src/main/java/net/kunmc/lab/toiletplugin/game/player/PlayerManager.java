@@ -6,12 +6,16 @@ import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -67,6 +71,16 @@ public class PlayerManager extends BukkitRunnable implements Listener
         this.updatePlayer(e.getPlayer(), e.getNewGameMode());
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPickUpPoop(PlayerAttemptPickupItemEvent e)
+    {
+        if (e.getItem().getPersistentDataContainer().has(
+                new NamespacedKey(ToiletPlugin.getPlugin(), "poop_item"),
+                PersistentDataType.STRING
+        ))
+            e.setCancelled(true);
+    }
+
     public boolean isPlaying(Player player)
     {
         return getPlayer(player).isPlaying();
@@ -109,8 +123,6 @@ public class PlayerManager extends BukkitRunnable implements Listener
     @Override
     public void run()
     {
-        this.gamePlayers.forEach((player, gamePlayer) -> {
-            gamePlayer.getDisplay().updateScreen();
-        });
+        this.gamePlayers.forEach((player, gamePlayer) -> gamePlayer.getDisplay().updateScreen());
     }
 }

@@ -110,7 +110,7 @@ public class InformationDisplay
                     if (display.getToiletPlayer() != null)
                     {
                         armorStand.setCustomNameVisible(true);
-                        armorStand.setCustomName(customName("使用者", display.getToiletPlayer().getName()));
+                        armorStand.setCustomName(customName("使用者", display.getToiletPlayer().getPlayer().getName()));
                         displayCount++;
                     }
                     break;
