@@ -216,7 +216,7 @@ public class QuestManager extends BukkitRunnable
         loss = Math.toIntExact(Math.round((double) config.getPowerLossOnSecAmount() / 2.0d));
         defecationType = config.getDefecationType();
         burst = config.isBurstOnPowerOver100();
-        accept = config.getMinDefecationAcceptPower();
+        accept = config.getDefecationNeedPower();
         maxCount = config.getPowerKeepCountSeconds();
         cooldown = config.generatePlayerCooldownTime();
     }
@@ -255,6 +255,7 @@ public class QuestManager extends BukkitRunnable
             player.doDefecation();
             player.setNowPoop(player.getNowPoop() + 1);
             player.setNowCount(0);
+            player.setNowPower(player.getNowPower() - accept);
             if (player.getNowPoop() >= player.getMaxPoop())
             {
                 player.getDisplay().clearPowerBossBar();

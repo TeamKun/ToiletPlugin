@@ -173,7 +173,7 @@ public class PlayerHUD
     {
         GameConfig config = this.getGameMain().getConfig();
         int max = 100;
-        int min = config.getMinDefecationAcceptPower();
+        int min = config.getDefecationNeedPower();
         int now = this.player.getNowPower();
 
         double progress = (double) now / max;

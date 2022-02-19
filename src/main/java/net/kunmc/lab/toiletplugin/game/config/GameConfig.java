@@ -53,8 +53,8 @@ public class GameConfig
     int powerGainAmount = 10;
     @Config(min = 1, max = 20, helpMessage = "1秒に剥奪するパワー(スニークしていない)")
     int powerLossOnSecAmount = 20;
-    @Config(min = 1, max = 100, helpMessage = "排便時の最小パワー")
-    int minDefecationAcceptPower = 80;
+    @Config(min = 1, max = 100, helpMessage = "排便時に必要なパワー")
+    int defecationNeedPower = 80;
     @Config(helpMessage = "パワーが100(最大)を超えたのバースト(爆発)有効化")
     boolean burstOnPowerOver100 = true;
     @Config(helpMessage = "排便の方法")
