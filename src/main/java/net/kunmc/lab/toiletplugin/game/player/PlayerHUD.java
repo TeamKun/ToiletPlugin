@@ -324,6 +324,6 @@ public class PlayerHUD
 
     public void clearPowerBossBar()
     {
-        this.powerBossbar.removeAll();
+        this.powerBossbar.setVisible(false);
     }
 }
