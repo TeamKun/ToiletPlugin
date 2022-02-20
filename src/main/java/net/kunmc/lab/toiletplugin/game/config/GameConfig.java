@@ -70,7 +70,7 @@ public class GameConfig
 
     public int generatePoopAmount()
     {
-        return RANDOM.nextInt(maxPoopAmount - minPoopAmount + 1) + minPoopAmount;
+        return RANDOM.nextInt(maxPoopAmount - minPoopAmount) + minPoopAmount;
     }
 
     public int generateQuestTime()
