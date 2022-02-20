@@ -30,7 +30,7 @@ public class PlayerHUD
     private final QuestManager questManager;
 
     private final BossBar timeBossBar;
-    private final BossBar powerBossbar;
+    private final BossBar powerBossBar;
 
     private boolean questRun;
 
@@ -42,7 +42,7 @@ public class PlayerHUD
         this.questManager = gameMain.getQuestManager();
 
         this.timeBossBar = this.createBossBar("残り時間");
-        this.powerBossbar = this.createBossBar("パワー");
+        this.powerBossBar = this.createBossBar("パワー");
 
         this.questRun = false;
     }
@@ -113,7 +113,7 @@ public class PlayerHUD
 
         if (this.player.getQuestPhase() == QuestPhase.TOILET_JOINED)
         {
-            this.powerBossbar.setVisible(true);
+            this.powerBossBar.setVisible(true);
             this.updatePowerBossBar();
         }
 
@@ -180,30 +180,30 @@ public class PlayerHUD
 
         String titlePrefix = "パワー";
 
-        this.powerBossbar.setProgress(Math.min(progress, 1.0));
+        this.powerBossBar.setProgress(Math.min(progress, 1.0));
 
         if (now > 90)
         {
-            this.powerBossbar.setColor(BarColor.GREEN);
+            this.powerBossBar.setColor(BarColor.GREEN);
             titlePrefix = ChatColor.DARK_RED + "⚠⚠⚠" + titlePrefix;
         }
         if (now >= min)
         {
-            this.powerBossbar.setColor(BarColor.GREEN);
+            this.powerBossBar.setColor(BarColor.GREEN);
             titlePrefix = ChatColor.GREEN + titlePrefix;
         }
         else if (now >= min / 2)
         {
-            this.powerBossbar.setColor(BarColor.YELLOW);
+            this.powerBossBar.setColor(BarColor.YELLOW);
             titlePrefix = ChatColor.YELLOW + titlePrefix;
         }
         else
         {
-            this.powerBossbar.setColor(BarColor.RED);
+            this.powerBossBar.setColor(BarColor.RED);
             titlePrefix = ChatColor.RED + titlePrefix;
         }
 
-        this.powerBossbar.setTitle(titlePrefix + ": " + now + ChatColor.DARK_GREEN + "/" + max);
+        this.powerBossBar.setTitle(titlePrefix + ": " + now + ChatColor.DARK_GREEN + "/" + max);
     }
 
     public void clearBossBar()
@@ -211,8 +211,8 @@ public class PlayerHUD
         this.timeBossBar.setVisible(false);
         this.timeBossBar.setProgress(1.0);
 
-        this.powerBossbar.setVisible(false);
-        this.powerBossbar.setProgress(1.0);
+        this.powerBossBar.setVisible(false);
+        this.powerBossBar.setProgress(1.0);
     }
 
     private void updateTimeBossBar()
@@ -324,6 +324,6 @@ public class PlayerHUD
 
     public void clearPowerBossBar()
     {
-        this.powerBossbar.setVisible(false);
+        this.powerBossBar.setVisible(false);
     }
 }
