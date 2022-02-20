@@ -29,7 +29,7 @@ public class GamePlayer
     @Getter
     private final Player player;
     @Getter
-    private final PlayerHUD display;
+    private final PlayerDisplay display;
 
     @Getter
     @Setter
@@ -67,7 +67,7 @@ public class GamePlayer
     public GamePlayer(Player player, GameMain game)
     {
         this.player = player;
-        this.display = new PlayerHUD(this, game);
+        this.display = new PlayerDisplay(this, game);
         this.questPhase = QuestPhase.NONE;
         this.maxTimeLimit = -1;
         this.time = -1;

@@ -16,7 +16,7 @@ import org.bukkit.boss.BossBar;
 
 import java.time.Duration;
 
-public class PlayerHUD
+public class PlayerDisplay
 {
     private static final int TITLE_SHOWING_TIME = 4000;
 
@@ -34,7 +34,7 @@ public class PlayerHUD
 
     private boolean questRun;
 
-    public PlayerHUD(GamePlayer player, GameMain gameMain)
+    public PlayerDisplay(GamePlayer player, GameMain gameMain)
     {
         this.player = player;
         this.gameMain = gameMain;
