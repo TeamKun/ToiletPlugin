@@ -161,6 +161,11 @@ public class GamePlayer
 
     // Logic
 
+    public void onDeath()
+    {
+        this.display.onDeath();
+    }
+
     public void setPlayState(PlayState state)
     {
         switch (state)

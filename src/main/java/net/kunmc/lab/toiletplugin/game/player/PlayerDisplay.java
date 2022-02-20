@@ -13,8 +13,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 
 import java.time.Duration;
+import java.util.Optional;
 
 public class PlayerDisplay
 {
@@ -32,6 +35,9 @@ public class PlayerDisplay
     private final BossBar timeBossBar;
     private final BossBar powerBossBar;
 
+    private ArmorStand hud;
+    private ArmorStand hudBar;
+
     private boolean questRun;
 
     public PlayerDisplay(GamePlayer player, GameMain gameMain)
@@ -47,6 +53,27 @@ public class PlayerDisplay
         this.questRun = false;
     }
 
+    private void initHud(ArmorStand stand)
+    {
+        stand.setVisible(false);
+        stand.setGravity(false);
+        stand.setSmall(true);
+        stand.setCustomName("");
+    }
+
+    private ArmorStand getHud(Entity player)
+    {
+        Optional<Entity> passenger = player.getPassengers().stream().findFirst();
+        if (passenger.isPresent())
+            if (passenger.get() instanceof ArmorStand)
+                return (ArmorStand) passenger.get();
+
+        ArmorStand stand = player.getWorld().spawn(player.getLocation(), ArmorStand.class);
+        player.addPassenger(stand);
+
+        return stand;
+    }
+
     private BossBar createBossBar(String title)
     {
         BossBar bar = Bukkit.createBossBar(title, BarColor.GREEN, BarStyle.SOLID);
@@ -60,6 +87,13 @@ public class PlayerDisplay
     {
         showQuestTitle(this.player.getQuestPhase());
         this.timeBossBar.setVisible(true);
+
+
+        this.hud = getHud(player.getPlayer());
+        this.hudBar = getHud(this.hud);
+
+        initHud(this.hud);
+        initHud(this.hudBar);
     }
 
     public void showQuestTitle(QuestPhase quest)
@@ -95,6 +129,7 @@ public class PlayerDisplay
             {
                 this.questRun = false;
                 this.clearBossBar();
+                this.clearHud();
             }
             return;
         }
@@ -117,8 +152,48 @@ public class PlayerDisplay
             this.updatePowerBossBar();
         }
 
+        if (this.player.getQuestPhase() != QuestPhase.PLAYER_COOLDOWN)
+            this.updateHud();
+        else
+            this.clearHud();
     }
 
+    public void clearHud()
+    {
+        this.hud.remove();
+        this.hudBar.remove();
+    }
+
+    public void updateHud()
+    {
+        if (this.player.getTime() < 0)
+        {
+            this.clearHud();
+            return;
+        }
+
+        this.hud.setCustomName(getTimeString(this.player.getTime(), this.player.getMaxTimeLimit()));
+        this.hud.setCustomNameVisible(true);
+
+        double progress = (double) this.player.getTime() / this.player.getMaxTimeLimit();
+
+        StringBuilder progressBar = new StringBuilder("[");
+
+        // Right to Left Progress Bar
+
+        for (int i = 0; i < 10; i++)
+        {
+            if (i > progress * 10)
+                progressBar.append("░");
+            else
+                progressBar.append("█");
+        }
+
+        progressBar.append("]");
+
+        hudBar.setCustomName(progressBar.toString());
+        hudBar.setCustomNameVisible(true);
+    }
 
     private void updateDefecationTitle()
     {
@@ -220,8 +295,6 @@ public class PlayerDisplay
         int max = this.player.getMaxTimeLimit();
         int time = this.player.getTime();
 
-        boolean whiteFlag = time % 2 == 0;
-
         if (max == 0 || time == 0)
         {
             this.timeBossBar.setTitle(ChatColor.DARK_RED + ChatColor.BOLD.toString() + "残り時間: " +
@@ -233,31 +306,39 @@ public class PlayerDisplay
 
         this.timeBossBar.setProgress(progress);
 
-        if (whiteFlag)
-            this.timeBossBar.setTitle(ChatColor.WHITE + ChatColor.BOLD.toString() + "残り時間: " + time + " 秒");
-        else if (progress < 0.15)
-        {
-            this.timeBossBar.setTitle(ChatColor.DARK_RED + ChatColor.BOLD.toString() + "残り時間: " +
-                    ChatColor.WHITE + ChatColor.BOLD + time + " 秒");
-        }
-        else if (progress < 0.3)
-        {
-            this.timeBossBar.setTitle(ChatColor.RED + ChatColor.BOLD.toString() + "残り時間: " +
-                    ChatColor.WHITE + ChatColor.BOLD + time + " 秒");
-            this.timeBossBar.setColor(BarColor.RED);
-        }
+        this.timeBossBar.setTitle(getTimeString(time, max));
+        this.timeBossBar.setColor(getBossBarColor(progress));
+    }
+
+    private BarColor getBossBarColor(double progress)
+    {
+        if (progress < 0.3)
+            return BarColor.RED;
         else if (progress < 0.6)
-        {
-            this.timeBossBar.setTitle(ChatColor.YELLOW + ChatColor.BOLD.toString() + "残り時間: " +
-                    ChatColor.WHITE + ChatColor.BOLD + time + " 秒");
-            this.timeBossBar.setColor(BarColor.YELLOW);
-        }
+            return BarColor.YELLOW;
         else
-        {
-            this.timeBossBar.setTitle(ChatColor.GREEN + ChatColor.BOLD.toString() + "残り時間: " +
-                    ChatColor.WHITE + ChatColor.BOLD + time + " 秒");
-            this.timeBossBar.setColor(BarColor.GREEN);
-        }
+            return BarColor.GREEN;
+    }
+
+    private String getTimeString(int time, int max)
+    {
+        boolean whiteFlag = time % 2 == 0;
+
+        if (max == 0 || time == 0)
+            return ChatColor.DARK_RED + ChatColor.BOLD.toString() + "残り時間: " + ChatColor.WHITE + ChatColor.BOLD + "0 秒";
+
+        double progress = (double) time / (double) max;
+
+        if (whiteFlag)
+            return ChatColor.WHITE + ChatColor.BOLD.toString() + "残り時間: " + time + " 秒";
+        else if (progress < 0.15)
+            return ChatColor.DARK_RED + ChatColor.BOLD.toString() + "残り時間: " + ChatColor.WHITE + ChatColor.BOLD + time + " 秒";
+        else if (progress < 0.3)
+            return ChatColor.RED + ChatColor.BOLD.toString() + "残り時間: " + ChatColor.WHITE + ChatColor.BOLD + time + " 秒";
+        else if (progress < 0.6)
+            return ChatColor.YELLOW + ChatColor.BOLD.toString() + "残り時間: " + ChatColor.WHITE + ChatColor.BOLD + time + " 秒";
+        else
+            return ChatColor.GREEN + ChatColor.BOLD.toString() + "残り時間: " + ChatColor.WHITE + ChatColor.BOLD + time + " 秒";
     }
 
     private void updateActionBar(String customQuestMessage)
@@ -325,5 +406,11 @@ public class PlayerDisplay
     public void clearPowerBossBar()
     {
         this.powerBossBar.setVisible(false);
+    }
+
+    public void onDeath()
+    {
+        this.hud.remove();
+        this.hudBar.remove();
     }
 }

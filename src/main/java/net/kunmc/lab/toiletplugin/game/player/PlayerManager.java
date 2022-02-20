@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -79,6 +80,12 @@ public class PlayerManager extends BukkitRunnable implements Listener
                 PersistentDataType.STRING
         ))
             e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent e)
+    {
+        getPlayer(e.getEntity()).onDeath();
     }
 
     public boolean isPlaying(Player player)
