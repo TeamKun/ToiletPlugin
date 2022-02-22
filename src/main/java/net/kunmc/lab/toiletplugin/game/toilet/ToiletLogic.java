@@ -68,13 +68,7 @@ public class ToiletLogic implements Listener
                 if (toilet.getState() != ToiletState.OPEN)
                     toilet.setTimesElapsed(toilet.getTimesElapsed() + 1);
                 if (toilet.getCooldownMax() > 0 && toilet.getCooldown() > 0)
-                {
-                    if (toilet.getToiletPlayer() != null &&
-                            toilet.getToiletPlayer().getQuestPhase() == QuestPhase.PLAYER_COOLDOWN)
-                        toilet.setCooldown(toilet.getToiletPlayer().getTime());
-
                     toilet.setCooldown(toilet.getCooldown() - 1);
-                }
 
                 if (toilet.getCooldown() == 0)
                     this.onCooldownFinished(toilet);

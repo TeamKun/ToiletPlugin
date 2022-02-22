@@ -260,6 +260,6 @@ public class GamePlayer
         this.setQuestPhase(QuestPhase.PLAYER_COOLDOWN);
 
         if (this.toilet != null)
-            this.toilet.setCooldown(ToiletState.PLAYER_COOLDOWN, cooldown);
+            this.toilet.setCooldown(ToiletState.PLAYER_COOLDOWN, cooldown + 1);
     }
 }
