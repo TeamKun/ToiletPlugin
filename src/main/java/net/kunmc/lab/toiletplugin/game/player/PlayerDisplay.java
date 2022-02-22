@@ -184,12 +184,12 @@ public class PlayerDisplay
         for (int i = 0; i < 10; i++)
         {
             if (i > progress * 10)
-                progressBar.append("░");
+                progressBar.append(ChatColor.RED).append("░");
             else
-                progressBar.append("█");
+                progressBar.append(ChatColor.GREEN).append("█");
         }
 
-        progressBar.append("]");
+        progressBar.append(ChatColor.WHITE).append("]");
 
         hudBar.setCustomName(progressBar.toString());
         hudBar.setCustomNameVisible(true);
