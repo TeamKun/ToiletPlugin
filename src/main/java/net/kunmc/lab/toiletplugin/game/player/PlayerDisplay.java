@@ -156,6 +156,8 @@ public class PlayerDisplay
             this.updateHud();
         else
             this.clearHud();
+
+        this.updateGeneralTitle();
     }
 
     public void clearHud()
@@ -193,6 +195,43 @@ public class PlayerDisplay
 
         hudBar.setCustomName(progressBar.toString());
         hudBar.setCustomNameVisible(true);
+    }
+
+    public void updateGeneralTitle()
+    {
+        int time = this.player.getTime();
+        int max = this.player.getMaxTimeLimit();
+
+        if (time < 0 || max < 0)
+            return;
+
+        ChatColor color = ChatColor.GREEN;
+        boolean flag = true;
+        if (time < 5)
+            color = ChatColor.RED;
+        else if (time % 10 == 0)
+        {
+            double progress = (double) time / max;
+            if (progress < 0.15)
+                color = ChatColor.DARK_RED;
+            else if (progress < 0.3)
+                color = ChatColor.RED;
+            else if (progress < 0.6)
+                color = ChatColor.YELLOW;
+        }
+        else
+            flag = false;
+
+        if (flag)
+            this.player.getPlayer().showTitle(Title.title(
+                    Component.text(ChatColor.YELLOW + "残り " + color + time + ChatColor.YELLOW + " 秒"),
+                    Component.text(""),
+                    Title.Times.of(
+                            Duration.ofMillis(500),
+                            Duration.ofSeconds(1),
+                            Duration.ofMillis(500)
+                    )
+            ));
     }
 
     private void updateDefecationTitle()
