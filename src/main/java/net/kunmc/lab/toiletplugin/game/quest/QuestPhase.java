@@ -8,8 +8,7 @@ public enum QuestPhase
     SCHEDULED(null, null, false, true),
     STARTED("トイレに向かう", "使えるトイレを探して中に入ろう！", true, false),
     TOILET_JOINED("排便をしよう", "便器の中に入ってシフトを%sメーターを緑にしよう！", false, true),
-    PLAYER_COOLDOWN("待機しよう", "クールダウン中, 待機しましょう！", false, true),
-    DEFECATION_FINISHED("トイレから出よう", "トイレから出よう！", false, true);
+    PLAYER_COOLDOWN("待機しよう", "クールダウン中, 待機しましょう！", false, true);
 
     @Getter
     private final String subTitle;
