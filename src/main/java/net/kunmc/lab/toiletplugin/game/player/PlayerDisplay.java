@@ -376,7 +376,6 @@ public class PlayerDisplay
 
     public void onQuestCancelled()
     {
-        this.questRun = false;
         this.clearBossBar();
 
         this.player.getPlayer().sendActionBar(
@@ -410,7 +409,6 @@ public class PlayerDisplay
 
     public void onDeath()
     {
-        this.hud.remove();
-        this.hudBar.remove();
+        this.clearHud();
     }
 }
