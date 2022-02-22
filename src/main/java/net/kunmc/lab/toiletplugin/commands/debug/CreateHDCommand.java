@@ -8,14 +8,16 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +25,6 @@ import java.util.UUID;
 
 public class CreateHDCommand extends CommandBase implements Listener
 {
-    private static final Class<? extends Entity> entityClass = ArmorStand.class;
 
     @EventHandler
     public void onDamageEvent(EntityDamageByEntityEvent event)
@@ -37,6 +38,30 @@ public class CreateHDCommand extends CommandBase implements Listener
                     .clickEvent(ClickEvent.suggestCommand("/toilet debug createHD " + event.getEntity().getUniqueId() + " "))
                     .hoverEvent(HoverEvent.showText(Component.text("Click to suggest command."))));
         }
+    }
+
+    // Playground
+    private static final Class<? extends Entity> entityClass = Item.class;
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, String[] args)
+    {
+        return null;
+    }
+
+    @Override
+    public TextComponent getHelpOneLine()
+    {
+        return of("Create HD stack.");
+    }
+
+    @Override
+    public String[] getArguments()
+    {
+        return new String[]{
+                optional("uuid", "uuid"),
+                required("text", "string")
+        };
     }
 
     @Override
@@ -77,12 +102,19 @@ public class CreateHDCommand extends CommandBase implements Listener
             return;
         }
 
+        sender.sendMessage(Component.text("HD ID: " + entity.getUniqueId())
+                .clickEvent(ClickEvent.suggestCommand("/toilet debug createHD " + entity.getUniqueId() + " "))
+                .hoverEvent(HoverEvent.showText(Component.text("Click to suggest command."))));
+
         if (args.length == 1)
         {
             passEntity(entity);
             entity.setCustomName(args[0]);
             entity.setCustomNameVisible(true);
             sender.sendMessage("Created HD.");
+
+            player.addPassenger(entity);
+
             return;
         }
 
@@ -94,34 +126,11 @@ public class CreateHDCommand extends CommandBase implements Listener
         passenger.setCustomNameVisible(true);
         entity.addPassenger(passenger);
 
-
         sender.sendMessage("Created HD.");
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args)
-    {
-        return null;
-    }
-
-    @Override
-    public TextComponent getHelpOneLine()
-    {
-        return of("Create HD stack.");
-    }
-
-    @Override
-    public String[] getArguments()
-    {
-        return new String[]{
-                optional("uuid", "uuid"),
-                required("text", "string")
-        };
-    }
-
-    // Playground
     public void passEntity(Entity entity)
     {
-
+        ((Item) entity).setItemStack(new ItemStack(Material.POTATO));
     }
 }
