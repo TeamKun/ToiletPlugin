@@ -4,6 +4,7 @@ import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.SubCommandable;
 import net.kunmc.lab.toiletplugin.commands.debug.ChangeToiletCooldownChangeCommand;
 import net.kunmc.lab.toiletplugin.commands.debug.ChangeToiletStateCommand;
+import net.kunmc.lab.toiletplugin.commands.debug.CreateHDCommand;
 import net.kunmc.lab.toiletplugin.commands.debug.KillPassengersCommand;
 import net.kunmc.lab.toiletplugin.commands.debug.PlaySoundCommand;
 import net.kunmc.lab.toiletplugin.commands.debug.PurgeToiletLocalDataCommand;
@@ -44,6 +45,7 @@ public class DebugCommand extends SubCommandable
         map.put("purgeToiletLocalData", new PurgeToiletLocalDataCommand(game));
         map.put("playSound", new PlaySoundCommand());
         map.put("killPassengers", new KillPassengersCommand());
+        map.put("createHD", new CreateHDCommand());
         return map;
     }
 }
