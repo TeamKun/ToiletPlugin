@@ -55,8 +55,8 @@ public class GameConfig
     int powerLossOnSecAmount = 20;
     @Config(min = 1, max = 100, helpMessage = "排便時に必要なパワー")
     int defecationNeedPower = 80;
-    @Config(helpMessage = "パワーが100(最大)を超えたのバースト(爆発)有効化")
-    boolean burstOnPowerOver100 = true;
+    @Config(helpMessage = "パワーが最大になったときの爆発")
+    boolean enablePowerBurst = true;
     @Config(helpMessage = "排便の方法")
     DefecationType defecationType = DefecationType.SHIFT_HOLD;
 

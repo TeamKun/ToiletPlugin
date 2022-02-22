@@ -215,7 +215,7 @@ public class QuestManager extends BukkitRunnable
         gain = Math.toIntExact(Math.round((double) config.getPowerGainAmount() / 2.0d));
         loss = Math.toIntExact(Math.round((double) config.getPowerLossOnSecAmount() / 2.0d));
         defecationType = config.getDefecationType();
-        burst = config.isBurstOnPowerOver100();
+        burst = config.isEnablePowerBurst();
         accept = config.getDefecationNeedPower();
         maxCount = config.getPowerKeepCountSeconds();
         cooldown = config.generatePlayerCooldownTime();
