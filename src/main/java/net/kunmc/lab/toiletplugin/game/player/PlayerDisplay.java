@@ -230,7 +230,7 @@ public class PlayerDisplay
                     Component.text(ChatColor.YELLOW + "残り " + color + time + ChatColor.YELLOW + " 秒"),
                     Component.text(""),
                     Title.Times.of(
-                            Duration.ofMillis(500),
+                            Duration.ofMillis(0),
                             Duration.ofSeconds(1),
                             Duration.ofMillis(500)
                     )
