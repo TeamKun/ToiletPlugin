@@ -6,6 +6,7 @@ import net.kunmc.lab.toiletplugin.game.config.GameConfig;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
+import net.kunmc.lab.toiletplugin.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -106,6 +107,8 @@ public class PlayerDisplay
         String titleStr = quest.getTitle() == null ? "": ChatColor.GREEN + "クエスト発生：" + quest.getTitle();
         if (quest.getTitle() != null && quest.isEmergency())
             titleStr = ChatColor.DARK_RED + "緊急クエスト発生: " + ChatColor.RED + titleStr;
+
+        titleStr = Utils.replaceExplict(gameMain, titleStr, "排便", "うんこ");
 
         Title title = Title.title(
                 Component.text(titleStr),

@@ -7,6 +7,7 @@ import net.kunmc.lab.toiletplugin.game.config.GameConfig;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
+import net.kunmc.lab.toiletplugin.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -118,7 +119,8 @@ public class QuestManager extends BukkitRunnable
     public void onPlayerFailedQuest(GamePlayer gamePlayer)
     {
         this.questFailGeneral(gamePlayer);
-        Bukkit.broadcastMessage(ChatColor.RED + gamePlayer.getPlayer().getName() + " は便意に耐えられず死んでしまった！");
+        Bukkit.broadcastMessage(ChatColor.RED + gamePlayer.getPlayer().getName() +
+                Utils.convertExplict(gamePlayer.getGame(), " は便意に耐えられず死んでしまった！", " はうんこを漏らしてしまった！"));
     }
 
     @SuppressWarnings("deprecation")
@@ -156,7 +158,8 @@ public class QuestManager extends BukkitRunnable
         info.setMaxPoop(maxPoop);
 
         player.sendMessage(ChatColor.DARK_RED + "あなたは便意を感じている... ");
-        player.sendMessage(ChatColor.RED + "あなたは" + questTime + "秒以内に排便をしないと死んでしまう！");
+        player.sendMessage(ChatColor.RED + "あなたは" + questTime + "秒以内に" +
+                Utils.convertExplict(this.game, "うんこ", "排泄") + "をしないと死んでしまう！");
 
 
         return questTime;

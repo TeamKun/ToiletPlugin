@@ -8,6 +8,7 @@ import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.game.toilet.OnGroundToilet;
 import net.kunmc.lab.toiletplugin.game.toilet.ToiletState;
+import net.kunmc.lab.toiletplugin.utils.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -28,6 +29,9 @@ public class GamePlayer
 {
     @Getter
     private final Player player;
+    @Getter
+    private final GameMain game;
+
     @Getter
     private final PlayerDisplay display;
 
@@ -66,6 +70,7 @@ public class GamePlayer
 
     public GamePlayer(Player player, GameMain game)
     {
+        this.game = game;
         this.player = player;
         this.display = new PlayerDisplay(this, game);
         this.questPhase = QuestPhase.NONE;
@@ -215,7 +220,9 @@ public class GamePlayer
         Item itemEntity = this.player.getWorld().dropItem(poopLoc, stack);
 
         itemEntity.setCustomNameVisible(true);
-        itemEntity.customName(Component.text(this.player.getName() + "のうんこ"));
+        itemEntity.customName(Component.text(this.player.getName() + "の" +
+                Utils.convertExplict(this.game, "うんこ", "排泄物")
+        ));
         itemEntity.getPersistentDataContainer().set(new NamespacedKey(ToiletPlugin.getPlugin(), "poop_item"), PersistentDataType.STRING, "poop");
 
 

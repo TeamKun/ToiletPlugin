@@ -68,6 +68,9 @@ public class GameConfig
     @Config(min = 0, max = 10, helpMessage = "排便時に力を保持する必要がある時間")
     int powerKeepCountSeconds = 5;
 
+    @Config(helpMessage = "露骨な表現")
+    boolean enableExplictExpression = true;
+
     public int generatePoopAmount()
     {
         return RANDOM.nextInt(maxPoopAmount - minPoopAmount) + minPoopAmount;
