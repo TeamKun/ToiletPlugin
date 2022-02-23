@@ -57,6 +57,8 @@ public class GameConfig
     int defecationNeedPower = 80;
     @Config(helpMessage = "パワーが最大になったときの爆発")
     boolean enablePowerBurst = true;
+    @Config(min = 0, max = 10, helpMessage = "排便時に力を保持する必要がある時間")
+    int powerKeepCountSeconds = 5;
     @Config(helpMessage = "排便の方法")
     DefecationType defecationType = DefecationType.SHIFT_HOLD;
 
@@ -64,9 +66,6 @@ public class GameConfig
     int minPoopAmount = 1;
     @Config(min = 2, max = 6, helpMessage = "便の数", ranged = true)
     int maxPoopAmount = 3;
-
-    @Config(min = 0, max = 10, helpMessage = "排便時に力を保持する必要がある時間")
-    int powerKeepCountSeconds = 5;
 
     @Config(helpMessage = "露骨な表現")
     boolean enableExplictExpression = true;
