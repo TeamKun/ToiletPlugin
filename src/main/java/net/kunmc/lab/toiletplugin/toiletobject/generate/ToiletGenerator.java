@@ -121,7 +121,7 @@ public class ToiletGenerator implements Listener
                     else
                         scanned_door_y -= 2;
 
-                    Location infoArmorStand = new Location(location.getWorld(), doorLoc.getX() + 0.5, scanned_door_y, doorLoc.getZ() + 0.5);
+                    Location infoArmorStand = new Location(location.getWorld(), doorLoc.getX() + 0.5, scanned_door_y + 0.5, doorLoc.getZ() + 0.5);
                     infoArmorStand = DirectionUtils.getDirLoc(infoArmorStand, 1, direction);
 
 
@@ -156,6 +156,7 @@ public class ToiletGenerator implements Listener
         stand.addScoreboardTag("toilet_" + name);
         stand.setVisible(false);
         stand.setGravity(false);
+        stand.setMarker(false);
 
         if (direction == null)
             return;
