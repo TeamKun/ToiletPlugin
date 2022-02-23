@@ -210,7 +210,7 @@ public class PlayerDisplay
 
         ChatColor color = ChatColor.GREEN;
         boolean flag = true;
-        if (time < 5)
+        if (time <= 5)
             color = ChatColor.RED;
         else if (time % 10 == 0)
         {
