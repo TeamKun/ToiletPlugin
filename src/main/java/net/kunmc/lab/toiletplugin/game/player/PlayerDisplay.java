@@ -325,11 +325,24 @@ public class PlayerDisplay
 
     public void clearBossBar()
     {
+        this.clearTimeBossBar();
+        this.clearPowerBossBar();
+    }
+
+    public void clearTimeBossBar()
+    {
         this.timeBossBar.setVisible(false);
         this.timeBossBar.setProgress(1.0);
+    }
 
-        this.powerBossBar.setVisible(false);
-        this.powerBossBar.setProgress(1.0);
+    public void showTimeBossBar()
+    {
+        this.timeBossBar.setVisible(true);
+    }
+
+    public void showPowerBossBar()
+    {
+        this.powerBossBar.setVisible(true);
     }
 
     private void updateTimeBossBar()
@@ -337,7 +350,7 @@ public class PlayerDisplay
         int max = this.player.getMaxTimeLimit();
         int time = this.player.getTime();
 
-        if (max == 0 || time == 0)
+        if (max <= 0 || time <= 0)
         {
             this.timeBossBar.setTitle(ChatColor.DARK_RED + ChatColor.BOLD.toString() + "残り時間: " +
                     ChatColor.WHITE + ChatColor.BOLD + "0 秒");
@@ -366,7 +379,7 @@ public class PlayerDisplay
     {
         boolean whiteFlag = time % 2 == 0;
 
-        if (max == 0 || time == 0)
+        if (max <= 0 || time <= 0)
             return ChatColor.DARK_RED + ChatColor.BOLD.toString() + "残り時間: " + ChatColor.WHITE + ChatColor.BOLD + "0 秒";
 
         double progress = (double) time / (double) max;

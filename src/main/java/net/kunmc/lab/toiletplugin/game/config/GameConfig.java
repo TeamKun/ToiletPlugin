@@ -67,6 +67,9 @@ public class GameConfig
     @Config(min = 2, max = 6, helpMessage = "便の数", ranged = true)
     int maxPoopAmount = 3;
 
+    @Config(helpMessage = "トイレに入った瞬間にタイマーを止める")
+    boolean stopTimerOnJoinToilet = false;
+
     @Config(helpMessage = "露骨な表現")
     boolean enableExplictExpression = true;
 

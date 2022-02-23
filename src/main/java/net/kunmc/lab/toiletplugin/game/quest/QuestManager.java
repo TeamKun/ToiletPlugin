@@ -262,6 +262,7 @@ public class QuestManager extends BukkitRunnable
             if (player.getNowPoop() >= player.getMaxPoop())
             {
                 player.getDisplay().clearPowerBossBar();
+                player.getDisplay().showTimeBossBar(); // Patch of stopTimerOnJoinToilet
                 player.setCooldown(cooldown);
                 return true;
             }

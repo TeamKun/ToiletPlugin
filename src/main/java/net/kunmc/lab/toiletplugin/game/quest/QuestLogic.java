@@ -66,6 +66,13 @@ public class QuestLogic implements Listener
                 QuestPhase.TOILET_JOINED,
                 this.game.getConfig().getDefecationType().getMessage()
         );
+
+        if (this.game.getConfig().isStopTimerOnJoinToilet())
+        {
+            player.setMaxTimeLimit(-1);
+            player.setTime(-1);
+            player.getDisplay().clearBossBar();
+        }
     }
 
     @EventHandler
