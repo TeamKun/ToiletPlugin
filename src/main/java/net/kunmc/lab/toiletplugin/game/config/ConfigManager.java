@@ -134,7 +134,7 @@ public class ConfigManager
     @SuppressWarnings({"unchecked", "rawtypes"})
     public boolean setValue(String name, String value)
             throws NoSuchFieldException, SizeLimitExceededException, NegativeArraySizeException,
-            NumberFormatException, IllegalAccessException, ClassNotFoundException
+            IllegalArgumentException, ClassNotFoundException
     {
         checkValid(name, value);
 

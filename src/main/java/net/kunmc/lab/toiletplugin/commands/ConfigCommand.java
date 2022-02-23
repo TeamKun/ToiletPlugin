@@ -187,14 +187,15 @@ public class ConfigCommand extends CommandBase
         {
             sender.sendMessage(ChatColor.RED + "E: " + value + " は有効な数値ではありません。");
         }
-        catch (IllegalAccessException e)
+        catch (IllegalArgumentException e)
         {
             sender.sendMessage(ChatColor.RED + "E: " + value + " は有効な真偽値ではありません。");
         }
         catch (ClassNotFoundException e)
         {
             sender.sendMessage(ChatColor.RED + "E: " + value + " は有効な値ではありません。使用可: " +
-                    String.join(", ",
+                    String.join(
+                            ", ",
                             config.getField().getType().isEnum() ?
                                     Arrays.stream(config.getField().getType().getEnumConstants())
                                             .map(Object::toString)
