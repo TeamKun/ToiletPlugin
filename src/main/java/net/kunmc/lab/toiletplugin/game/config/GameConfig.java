@@ -61,6 +61,8 @@ public class GameConfig
     int powerKeepCountSeconds = 5;
     @Config(helpMessage = "排便の方法")
     DefecationType defecationType = DefecationType.SHIFT_HOLD;
+    @Config(helpMessage = "排便時に大釜の中に入る必要があるか")
+    boolean strictDefecation = false;
 
     @Config(min = 1, max = 5, helpMessage = "便の数", ranged = true)
     int minPoopAmount = 1;

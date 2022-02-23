@@ -10,6 +10,7 @@ import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -237,6 +238,10 @@ public class QuestManager extends BukkitRunnable
 
         if (defecationType == DefecationType.SHIFT_HOLD && player.isSneaking())
         {
+            if (game.getConfig().isStrictDefecation() &&
+                    player.getLocation().getBlock().getType() != Material.CAULDRON)
+                return;
+
             gamePlayer.setNowPower(Math.min(gamePlayer.getNowPower() + gain, 100));
             GameSound.TOILETPLAYER_POWER_CHANGE.play(player, 0.5F,
                     (gamePlayer.getNowPower() / 100.0F) + 0.6F

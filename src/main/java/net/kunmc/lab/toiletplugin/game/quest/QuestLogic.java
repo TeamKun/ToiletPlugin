@@ -7,6 +7,7 @@ import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -80,6 +81,10 @@ public class QuestLogic implements Listener
     {
         if (e.isSneaking() && questManager.getDefecationType() == DefecationType.SHIFT_MASH)
         {
+            if (game.getConfig().isStrictDefecation() &&
+                    e.getPlayer().getLocation().getBlock().getType() != Material.CAULDRON)
+                return;
+
             GamePlayer gamePlayer = this.game.getPlayerStateManager().getPlayer(e.getPlayer());
             if (gamePlayer.getQuestPhase() != QuestPhase.TOILET_JOINED)
                 return;
