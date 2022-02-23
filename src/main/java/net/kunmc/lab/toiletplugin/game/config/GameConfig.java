@@ -63,6 +63,8 @@ public class GameConfig
     DefecationType defecationType = DefecationType.SHIFT_HOLD;
     @Config(helpMessage = "排便時に大釜の中に入る必要があるか")
     boolean strictDefecation = false;
+    @Config(helpMessage = "多動(余計な動き)をしたときに剥奪するパワー")
+    int powerLossOnUnnecessaryActionAmount = 10;
 
     @Config(min = 1, max = 5, helpMessage = "便の数", ranged = true)
     int minPoopAmount = 1;

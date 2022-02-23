@@ -11,8 +11,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 public class QuestLogic implements Listener
@@ -93,5 +96,37 @@ public class QuestLogic implements Listener
                     (gamePlayer.getNowPower() / 100.0F) + 0.8F
             );
         }
+    }
+
+    private void onUnnecessaryAction(Player player)
+    {
+        int amount = this.game.getConfig().getPowerLossOnUnnecessaryActionAmount();
+        GamePlayer gamePlayer = this.game.getPlayerStateManager().getPlayer(player);
+        if (gamePlayer.getQuestPhase() != QuestPhase.TOILET_JOINED)
+            return;
+        int currentAmount = gamePlayer.getNowPower();
+        if (amount == 0)
+            return;
+        gamePlayer.setNowPower(Math.max(0, currentAmount - amount));
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent event)
+    {
+        if (event.getFrom().getX() == event.getTo().getX() &&
+                event.getFrom().getZ() == event.getTo().getZ() &&
+                event.getFrom().getY() == event.getTo().getY())
+            return;
+
+        onUnnecessaryAction(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onClick(PlayerInteractEvent event)
+    {
+        if (event.getAction() == Action.PHYSICAL)
+            return;
+
+        onUnnecessaryAction(event.getPlayer());
     }
 }
