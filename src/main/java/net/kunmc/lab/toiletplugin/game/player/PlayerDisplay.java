@@ -58,8 +58,8 @@ public class PlayerDisplay
                 player.getPlayer().getUniqueId().toString().substring(0, 8))) == null)
             objective = SCOREBOARD.registerNewObjective("pg-" +
                     player.getPlayer().getUniqueId().toString().substring(0, 8), "dummy", Component.text(""), RenderType.INTEGER);
-        objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
         player.getPlayer().setScoreboard(SCOREBOARD);
+        objective.getScore(player.getPlayer().getName()).setScore(1);
     }
 
     private BossBar createBossBar(String title)
@@ -79,6 +79,7 @@ public class PlayerDisplay
     public void questStarted()
     {
         showQuestTitle(this.player.getQuestPhase());
+        objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
         this.timeBossBar.setVisible(true);
     }
 
