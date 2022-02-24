@@ -2,9 +2,9 @@ package net.kunmc.lab.toiletplugin.commands.debug;
 
 import net.kunmc.lab.toiletplugin.CommandBase;
 import net.kunmc.lab.toiletplugin.utils.CommandUtils;
+import net.kunmc.lab.toiletplugin.utils.Utils;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -18,17 +18,11 @@ public class KillPassengersCommand extends CommandBase
                 CommandUtils.checkPlayer(sender))
             return;
 
-        killPassenger(((Player) sender).getPassengers());
+        Utils.killPassenger(((Player) sender).getPassengers());
 
         sender.sendMessage("All passengers were killed.");
     }
 
-    public void killPassenger(List<Entity> passengers)
-    {
-        passengers.forEach(entity -> killPassenger(entity.getPassengers()));
-
-        passengers.forEach(Entity::remove);
-    }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args)

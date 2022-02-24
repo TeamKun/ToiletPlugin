@@ -2,6 +2,9 @@ package net.kunmc.lab.toiletplugin.utils;
 
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.config.GameConfig;
+import org.bukkit.entity.Entity;
+
+import java.util.List;
 
 public class Utils
 {
@@ -23,5 +26,12 @@ public class Utils
     public static String replaceExplict(GameMain game, String str, String from, String to)
     {
         return replaceExplict(game.getConfig(), str, from, to);
+    }
+
+    public static void killPassenger(List<Entity> passengers)
+    {
+        passengers.forEach(entity -> killPassenger(entity.getPassengers()));
+
+        passengers.forEach(Entity::remove);
     }
 }
