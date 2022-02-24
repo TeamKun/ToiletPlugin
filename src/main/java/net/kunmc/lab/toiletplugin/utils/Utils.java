@@ -4,6 +4,7 @@ import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.config.GameConfig;
 import org.bukkit.entity.Entity;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Utils
@@ -28,10 +29,20 @@ public class Utils
         return replaceExplict(game.getConfig(), str, from, to);
     }
 
-    public static void killPassenger(List<Entity> passengers)
+    public static void killPassenger(List<Entity> passengers, Class<?>... types)
     {
-        passengers.forEach(entity -> killPassenger(entity.getPassengers()));
+        List<Class<?>> typeList = Arrays.asList(types);
 
-        passengers.forEach(Entity::remove);
+        passengers.stream()
+                .filter(entity -> {
+                    if (types.length == 0)
+                        return true;
+                    return typeList.stream().parallel()
+                            .anyMatch(type -> type.isInstance(entity));
+                })
+                .forEach(entity -> {
+                    killPassenger(entity.getPassengers(), types);
+                    entity.remove();
+                });
     }
 }
