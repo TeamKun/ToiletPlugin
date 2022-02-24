@@ -88,7 +88,7 @@ public class GameMain extends BukkitRunnable
         this.questManager.init();
         this.destinySoundPlayer.init();
 
-        plugin.getServer().getOnlinePlayers().stream().parallel()
+        plugin.getServer().getOnlinePlayers()
                 .forEach(player ->
                         Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(player, (Component) null)));
 
