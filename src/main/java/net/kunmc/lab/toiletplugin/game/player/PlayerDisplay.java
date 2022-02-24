@@ -23,7 +23,6 @@ import java.time.Duration;
 
 public class PlayerDisplay
 {
-    private static final Scoreboard SCOREBOARD = Bukkit.getScoreboardManager().getNewScoreboard();
     private static final int TITLE_SHOWING_TIME = 4000;
 
     @Getter
@@ -54,11 +53,13 @@ public class PlayerDisplay
 
         this.questRun = false;
 
-        if ((objective = SCOREBOARD.getObjective("pg-" +
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        if ((objective = scoreboard.getObjective("pg-" +
                 player.getPlayer().getUniqueId().toString().substring(0, 8))) == null)
-            objective = SCOREBOARD.registerNewObjective("pg-" +
+            objective = scoreboard.registerNewObjective("pg-" +
                     player.getPlayer().getUniqueId().toString().substring(0, 8), "dummy", Component.text(""), RenderType.INTEGER);
-        player.getPlayer().setScoreboard(SCOREBOARD);
+        player.getPlayer().setScoreboard(scoreboard);
+
         objective.getScore(player.getPlayer().getName()).setScore(1);
     }
 
