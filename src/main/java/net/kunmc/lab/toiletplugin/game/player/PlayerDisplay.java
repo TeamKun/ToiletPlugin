@@ -14,14 +14,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.RenderType;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.time.Duration;
-import java.util.Optional;
 
 public class PlayerDisplay
 {
+    private static final Scoreboard SCOREBOARD = Bukkit.getScoreboardManager().getNewScoreboard();
     private static final int TITLE_SHOWING_TIME = 4000;
 
     @Getter
@@ -36,10 +38,9 @@ public class PlayerDisplay
     private final BossBar timeBossBar;
     private final BossBar powerBossBar;
 
-    private ArmorStand hud;
-    private ArmorStand hudBar;
-
     private boolean questRun;
+
+    private Objective objective;
 
     public PlayerDisplay(GamePlayer player, GameMain gameMain)
     {
@@ -52,27 +53,13 @@ public class PlayerDisplay
         this.powerBossBar = this.createBossBar("パワー");
 
         this.questRun = false;
-    }
 
-    private void initHud(ArmorStand stand)
-    {
-        stand.setVisible(false);
-        stand.setGravity(false);
-        stand.setSmall(true);
-        stand.setCustomName("");
-    }
-
-    private ArmorStand getHud(Entity player)
-    {
-        Optional<Entity> passenger = player.getPassengers().stream().findFirst();
-        if (passenger.isPresent())
-            if (passenger.get() instanceof ArmorStand)
-                return (ArmorStand) passenger.get();
-
-        ArmorStand stand = player.getWorld().spawn(player.getLocation(), ArmorStand.class);
-        player.addPassenger(stand);
-
-        return stand;
+        if ((objective = SCOREBOARD.getObjective("pg-" +
+                player.getPlayer().getUniqueId().toString().substring(0, 8))) == null)
+            objective = SCOREBOARD.registerNewObjective("pg-" +
+                    player.getPlayer().getUniqueId().toString().substring(0, 8), "dummy", Component.text(""), RenderType.INTEGER);
+        objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+        player.getPlayer().setScoreboard(SCOREBOARD);
     }
 
     private BossBar createBossBar(String title)
@@ -84,17 +71,15 @@ public class PlayerDisplay
         return bar;
     }
 
+    public void clearHud()
+    {
+        objective.setDisplaySlot(null);
+    }
+
     public void questStarted()
     {
         showQuestTitle(this.player.getQuestPhase());
         this.timeBossBar.setVisible(true);
-
-
-        this.hud = getHud(player.getPlayer());
-        this.hudBar = getHud(this.hud);
-
-        initHud(this.hud);
-        initHud(this.hudBar);
     }
 
     public void showQuestTitle(QuestPhase quest)
@@ -163,12 +148,6 @@ public class PlayerDisplay
         this.updateGeneralTitle();
     }
 
-    public void clearHud()
-    {
-        this.hud.remove();
-        this.hudBar.remove();
-    }
-
     public void updateHud()
     {
         if (this.player.getTime() < 0)
@@ -176,9 +155,6 @@ public class PlayerDisplay
             this.clearHud();
             return;
         }
-
-        this.hud.setCustomName(getTimeString(this.player.getTime(), this.player.getMaxTimeLimit()));
-        this.hud.setCustomNameVisible(true);
 
         double progress = (double) this.player.getTime() / this.player.getMaxTimeLimit();
 
@@ -196,8 +172,7 @@ public class PlayerDisplay
 
         progressBar.append(ChatColor.WHITE).append("]");
 
-        hudBar.setCustomName(progressBar.toString());
-        hudBar.setCustomNameVisible(true);
+        objective.displayName(Component.text(getTimeString(this.player.getTime(), this.player.getMaxTimeLimit()) + " " + progressBar));
     }
 
     public void updateGeneralTitle()
