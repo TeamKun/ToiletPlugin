@@ -14,12 +14,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.RenderType;
-import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Slime;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.time.Duration;
+import java.util.Optional;
 
 public class PlayerDisplay
 {
@@ -37,9 +39,10 @@ public class PlayerDisplay
     private final BossBar timeBossBar;
     private final BossBar powerBossBar;
 
-    private boolean questRun;
+    private ArmorStand hud;
+    private ArmorStand hudBar;
 
-    private Objective objective;
+    private boolean questRun;
 
     public PlayerDisplay(GamePlayer player, GameMain gameMain)
     {
@@ -52,15 +55,28 @@ public class PlayerDisplay
         this.powerBossBar = this.createBossBar("パワー");
 
         this.questRun = false;
+    }
 
-        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        if ((objective = scoreboard.getObjective("pg-" +
-                player.getPlayer().getUniqueId().toString().substring(0, 8))) == null)
-            objective = scoreboard.registerNewObjective("pg-" +
-                    player.getPlayer().getUniqueId().toString().substring(0, 8), "dummy", Component.text(""), RenderType.INTEGER);
-        player.getPlayer().setScoreboard(scoreboard);
+    private void initHud(ArmorStand stand)
+    {
+        stand.setVisible(false);
+        stand.setGravity(false);
+        stand.setSmall(true);
+        stand.setMarker(true);
+        stand.setCustomName("");
+    }
 
-        objective.getScore(player.getPlayer().getName()).setScore(1);
+    private ArmorStand getHud(Entity player)
+    {
+        Optional<Entity> passenger = player.getPassengers().stream().findFirst();
+        if (passenger.isPresent())
+            if (passenger.get() instanceof ArmorStand)
+                return (ArmorStand) passenger.get();
+
+        ArmorStand stand = player.getWorld().spawn(player.getLocation(), ArmorStand.class);
+        player.addPassenger(stand);
+
+        return stand;
     }
 
     private BossBar createBossBar(String title)
@@ -72,16 +88,37 @@ public class PlayerDisplay
         return bar;
     }
 
-    public void clearHud()
+    public Slime spawnDummy(Entity parent)
     {
-        objective.setDisplaySlot(null);
+        Slime slime = this.player.getPlayer().getWorld().spawn(this.player.getPlayer().getLocation(), Slime.class);
+        slime.setAI(false);
+        slime.setSize(-1);
+        slime.setInvulnerable(true);
+        slime.setSilent(true);
+        slime.setCustomName("Dinnerbone");
+        slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 255, true, false));
+        parent.addPassenger(slime);
+        return slime;
+    }
+
+    public void initHuds()
+    {
+        Entity slime = this.spawnDummy(this.player.getPlayer());
+        slime = this.spawnDummy(slime);
+        slime = this.spawnDummy(slime);
+        this.hud = getHud(slime);
+        slime = this.spawnDummy(slime);
+        this.hudBar = getHud(slime);
+
+        initHud(this.hud);
+        initHud(this.hudBar);
     }
 
     public void questStarted()
     {
         showQuestTitle(this.player.getQuestPhase());
-        objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
         this.timeBossBar.setVisible(true);
+        this.initHuds();
     }
 
     public void showQuestTitle(QuestPhase quest)
@@ -158,6 +195,9 @@ public class PlayerDisplay
             return;
         }
 
+        this.hud.setCustomName("   " + getTimeString(this.player.getTime(), this.player.getMaxTimeLimit()));
+        this.hud.setCustomNameVisible(true);
+
         double progress = (double) this.player.getTime() / this.player.getMaxTimeLimit();
 
         StringBuilder progressBar = new StringBuilder("[");
@@ -174,7 +214,13 @@ public class PlayerDisplay
 
         progressBar.append(ChatColor.WHITE).append("]");
 
-        objective.displayName(Component.text(getTimeString(this.player.getTime(), this.player.getMaxTimeLimit()) + " " + progressBar));
+        hudBar.setCustomName(progressBar.toString());
+        hudBar.setCustomNameVisible(true);
+    }
+
+    public void clearHud()
+    {
+        Utils.killPassenger(this.player.getPlayer().getPassengers(), ArmorStand.class, Slime.class);
     }
 
     public void updateGeneralTitle()
