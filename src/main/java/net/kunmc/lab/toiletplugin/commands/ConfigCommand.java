@@ -34,8 +34,6 @@ public class ConfigCommand extends CommandBase
 
     private static String getArgument(String configName, ConfigManager.GeneratedConfig config)
     {
-        if (config.getDefine().toggle())
-            return null;
 
         StringBuilder sb = new StringBuilder("<").append(configName).append(":").append(config.getField().getType().getSimpleName());
 
@@ -102,13 +100,6 @@ public class ConfigCommand extends CommandBase
 
         Config define = config.getDefine();
         Config defineMax = config.getDefine();
-
-        if (define.toggle())
-        {
-            config.setValue(!config.booleanValue());
-            sender.sendMessage(ChatColor.GREEN + "S: " + configName + "を" + config.booleanValue() + "に設定しました。");
-            return;
-        }
 
         if (args.length == 1)
         {

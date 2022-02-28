@@ -9,9 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Config
 {
-    String helpMessage() default "";
-
-    boolean toggle() default false;
+    String helpMessage();
 
     double min() default -1;
 
