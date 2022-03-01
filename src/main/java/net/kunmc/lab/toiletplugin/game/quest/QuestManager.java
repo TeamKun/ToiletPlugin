@@ -10,11 +10,15 @@ import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Random;
 
 public class QuestManager extends BukkitRunnable
 {
@@ -115,6 +119,9 @@ public class QuestManager extends BukkitRunnable
             block.setType(Material.LAVA);
         }
 
+        if (game.getConfig().isSpreadPoopOnFail())
+            spreadPoops(gamePlayer);
+
         player.setKiller(null);
         player.setLastDamageCause(new EntityDamageEvent(player, EntityDamageEvent.DamageCause.CUSTOM, 0.11235));
         player.setHealth(0d);
@@ -122,6 +129,19 @@ public class QuestManager extends BukkitRunnable
 
 
         gamePlayer.resetPlayerForQuest();
+    }
+
+    private void spreadPoops(GamePlayer player)
+    {
+        Location location = player.getPlayer().getLocation();
+
+        Random random = new Random();
+
+        for (int i = 0; i < game.getConfig().getSpreadPoopAmount(); i++)
+        {
+            Item poop = player.spawnPoopItem(location);
+            Utils.setPoopVelocityRandom(poop, random.nextInt(15), game.getConfig().getSpreadPoopDistanceMax());
+        }
     }
 
     @SuppressWarnings("deprecation")

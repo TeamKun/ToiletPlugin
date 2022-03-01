@@ -43,6 +43,12 @@ public class GameConfig
     int maxPoopAmount = 3;
     @Config(helpMessage = "クエスト失敗時プレイヤの場所溶岩設置")
     boolean placeLavaOnFail = false;
+    @Config(helpMessage = "クエスト失敗時プレイヤ周囲に便をばらまく")
+    boolean spreadPoopOnFail = false;
+    @Config(helpMessage = "クエスト失敗時プレイヤ周囲に便をばらまく数")
+    int spreadPoopAmount = 6;
+    @Config(helpMessage = "クエスト失敗時プレイヤ周囲に便をばらまく最大強さ")
+    double spreadPoopDistanceMax = 0.6;
 
     // Player
 

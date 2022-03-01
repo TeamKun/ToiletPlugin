@@ -22,8 +22,12 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Collections;
+import java.util.UUID;
 
 public class GamePlayer
 {
@@ -205,17 +209,13 @@ public class GamePlayer
         sound.stop(this.player);
     }
 
-    public void doDefecation()
+    public Item spawnPoopItem(Location poopLoc)
     {
-        Location soundLoc = this.player.getLocation().clone();
-        soundLoc.setX(soundLoc.getX() - 10);
-
-        playSound(GameSound.POOP_THROW, soundLoc);
-
         ItemStack stack = new ItemStack(Material.COCOA_BEANS);
 
-        Location poopLoc = this.player.getLocation().clone();
-        poopLoc.setY(poopLoc.getY() + 0.3);
+        ItemMeta meta = stack.getItemMeta();
+        meta.lore(Collections.singletonList(Component.text(UUID.randomUUID().toString())));
+        stack.setItemMeta(meta);
 
         Item itemEntity = this.player.getWorld().dropItem(poopLoc, stack);
 
@@ -225,6 +225,21 @@ public class GamePlayer
         ));
         itemEntity.getPersistentDataContainer().set(new NamespacedKey(ToiletPlugin.getPlugin(), "poop_item"), PersistentDataType.STRING, "poop");
 
+
+        return itemEntity;
+    }
+
+    public void doDefecation()
+    {
+        Location soundLoc = this.player.getLocation().clone();
+        soundLoc.setX(soundLoc.getX() - 10);
+
+        playSound(GameSound.POOP_THROW, soundLoc);
+
+        Location poopLoc = this.player.getLocation().clone();
+        poopLoc.setY(poopLoc.getY() + 0.3);
+
+        spawnPoopItem(poopLoc);
 
         Location fireWorksLoc = this.player.getLocation().clone();
         fireWorksLoc.setY(fireWorksLoc.getY() + 7);
