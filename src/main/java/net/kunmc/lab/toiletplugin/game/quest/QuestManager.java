@@ -11,6 +11,7 @@ import net.kunmc.lab.toiletplugin.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -108,10 +109,17 @@ public class QuestManager extends BukkitRunnable
         if (gamePlayer.getToilet() != null)  // TODO: Refactor: playerLeftToilet
             game.getToiletManager().getLogic().playerLeftToilet(gamePlayer.getPlayer(), gamePlayer.getToilet());
 
+        if (game.getConfig().isPlaceLavaOnFail())
+        {
+            Block block = player.getLocation().getBlock();
+            block.setType(Material.LAVA);
+        }
+
         player.setKiller(null);
         player.setLastDamageCause(new EntityDamageEvent(player, EntityDamageEvent.DamageCause.CUSTOM, 0.11235));
         player.setHealth(0d);
         gamePlayer.setQuestPhase(QuestPhase.NONE, 0);
+
 
         gamePlayer.resetPlayerForQuest();
     }

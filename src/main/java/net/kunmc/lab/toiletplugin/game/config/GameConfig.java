@@ -41,6 +41,8 @@ public class GameConfig
     int minPoopAmount = 1;
     @Config(min = 2, max = 6, helpMessage = "便の数", ranged = true)
     int maxPoopAmount = 3;
+    @Config(helpMessage = "クエスト失敗時プレイヤの場所溶岩設置")
+    boolean placeLavaOnFail = false;
 
     // Player
 
