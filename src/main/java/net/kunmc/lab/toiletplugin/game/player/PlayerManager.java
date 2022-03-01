@@ -1,5 +1,6 @@
 package net.kunmc.lab.toiletplugin.game.player;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
@@ -52,6 +53,9 @@ public class PlayerManager extends BukkitRunnable implements Listener
     {
         Bukkit.getPluginManager().registerEvents(this, ToiletPlugin.getPlugin());
         this.runTaskTimerAsynchronously(ToiletPlugin.getPlugin(), 0, 10);
+
+        ProtocolLibrary.getProtocolManager()
+                .addPacketListener(new HUDPacketFilter());
     }
 
     @EventHandler

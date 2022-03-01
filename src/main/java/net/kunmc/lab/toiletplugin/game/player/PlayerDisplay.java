@@ -66,6 +66,11 @@ public class PlayerDisplay
         stand.setGravity(false);
         stand.setSmall(true);
         stand.setMarker(true);
+        stand.getPersistentDataContainer().set(
+                new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity"),
+                PersistentDataType.STRING, player.getPlayer().getUniqueId().toString()
+        );
+
         stand.setCustomName("");
     }
 
@@ -100,7 +105,10 @@ public class PlayerDisplay
         slime.setSilent(true);
         slime.setCustomName("Dinnerbone");
         slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 255, true, false));
-        slime.getPersistentDataContainer().set(new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity"), PersistentDataType.STRING, "hud_entity");
+        slime.getPersistentDataContainer().set(
+                new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity"),
+                PersistentDataType.STRING, player.getPlayer().getUniqueId().toString()
+        );
 
         parent.addPassenger(slime);
         return slime;
