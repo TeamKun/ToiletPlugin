@@ -1,6 +1,7 @@
 package net.kunmc.lab.toiletplugin.game.player;
 
 import lombok.Getter;
+import net.kunmc.lab.toiletplugin.ToiletPlugin;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.config.GameConfig;
 import net.kunmc.lab.toiletplugin.game.quest.QuestManager;
@@ -11,12 +12,14 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -97,6 +100,8 @@ public class PlayerDisplay
         slime.setSilent(true);
         slime.setCustomName("Dinnerbone");
         slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 255, true, false));
+        slime.getPersistentDataContainer().set(new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity"), PersistentDataType.STRING, "hud_entity");
+
         parent.addPassenger(slime);
         return slime;
     }

@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,6 +17,7 @@ import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -58,6 +60,19 @@ public class PlayerManager extends BukkitRunnable implements Listener
         this.gamePlayers.put(e.getPlayer(), new GamePlayer(e.getPlayer(), game));
 
         this.updatePlayer(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onExiting(VehicleExitEvent e)
+    {
+        if (!(e.getVehicle() instanceof Player) || !(e.getExited() instanceof Slime))
+            return;
+
+        if (e.getVehicle().getPersistentDataContainer().has(
+                new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity"),
+                PersistentDataType.STRING
+        ))
+            e.setCancelled(true);
     }
 
     @EventHandler
