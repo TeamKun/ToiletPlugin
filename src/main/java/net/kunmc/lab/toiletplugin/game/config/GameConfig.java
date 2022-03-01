@@ -15,6 +15,9 @@ public class GameConfig
 {
     private static final Random RANDOM = new Random();
 
+    // Quest
+
+    // Quest => Time
     @Config(min = 1, ranged = true, helpMessage = "クエスト時間")
     int minQuestTime = 30;
     @Config(min = 2, ranged = true, helpMessage = "クエスト時間")
@@ -25,20 +28,7 @@ public class GameConfig
     @Config(min = 1, ranged = true, helpMessage = "クエストが始まるまでの時間")
     int maxScheduleTime = 180;
 
-    @Config(helpMessage = "プレイヤのトイレ後クールダウン時間")
-    boolean playerCooldownEnable = true;
-    @Config(min = 1, ranged = true, helpMessage = "プレイヤのトイレ後クールダウン時間")
-    int minPlayerCooldownTime = 30;
-    @Config(min = 1, ranged = true, helpMessage = "プレイヤのトイレ後クールダウン時間")
-    int maxPlayerCooldownTime = 31;
-
-    @Config(helpMessage = "トイレのトイレ後クールダウン時間")
-    boolean toiletCooldownEnable = true;
-    @Config(min = 1, ranged = true, helpMessage = "トイレのトイレ後クールダウン時間")
-    int minToiletCooldownTime = 30;
-    @Config(min = 1, ranged = true, helpMessage = "トイレのトイレ後クールダウン時間")
-    int maxToiletCooldownTime = 31;
-
+    // Quest => Scheduler
     @Config(helpMessage = "ゲーム参加時のクエストの自動ケジュール")
     boolean autoScheduleOnJoin = false;
     @Config(helpMessage = "リスポーン時のクエストの自動リスケジュール")
@@ -46,36 +36,62 @@ public class GameConfig
     @Config(helpMessage = "クエスト完了時のクエストの自動リスケジュール")
     boolean autoRescheduleOnSuccess = true;
 
+    // Quest => Questing
+    @Config(min = 1, max = 5, helpMessage = "便の数", ranged = true)
+    int minPoopAmount = 1;
+    @Config(min = 2, max = 6, helpMessage = "便の数", ranged = true)
+    int maxPoopAmount = 3;
+
+    // Player
+
+    // Player => Logic
+    @Config(helpMessage = "プレイヤのトイレ後クールダウン時間")
+    boolean playerCooldownEnable = true;
+    @Config(min = 1, ranged = true, helpMessage = "プレイヤのトイレ後クールダウン時間")
+    int minPlayerCooldownTime = 30;
+    @Config(min = 1, ranged = true, helpMessage = "プレイヤのトイレ後クールダウン時間")
+    int maxPlayerCooldownTime = 31;
+
+    // Player => Effect
     @Config(helpMessage = "クエスト中の低音の再生")
     boolean questingOppressiveSoundEnable = true;
+    @Config(helpMessage = "露骨な表現")
+    boolean enableExplictExpression = true;
 
+
+    // Toilet
+
+    // Toilet => Logic
+    @Config(helpMessage = "トイレのトイレ後クールダウン時間")
+    boolean toiletCooldownEnable = true;
+    @Config(min = 1, ranged = true, helpMessage = "トイレのトイレ後クールダウン時間")
+    int minToiletCooldownTime = 30;
+    @Config(min = 1, ranged = true, helpMessage = "トイレのトイレ後クールダウン時間")
+    int maxToiletCooldownTime = 31;
+
+    // Toilet => Logic => Defecation
+    @Config(helpMessage = "排便の方法")
+    DefecationType defecationType = DefecationType.SHIFT_HOLD;
+    @Config(helpMessage = "排便時に大釜の中に入る必要があるか")
+    boolean strictDefecation = false;
+    @Config(min = 0, max = 10, helpMessage = "排便時に力を保持する必要がある時間")
+    int powerKeepCountSeconds = 5;
+
+    // Toilet => Logic => Defecation => Power
     @Config(min = 1, max = 10, helpMessage = "スニークで与える力。ホールドモードの場合は1秒間にどれだけ与えるか。")
     int powerGainAmount = 10;
     @Config(min = 1, max = 20, helpMessage = "1秒に剥奪するパワー(スニークしていない)")
     int powerLossOnSecAmount = 20;
     @Config(min = 1, max = 100, helpMessage = "排便時に必要なパワー")
     int defecationNeedPower = 80;
-    @Config(helpMessage = "パワーが最大になったときの爆発")
-    boolean enablePowerBurst = true;
-    @Config(min = 0, max = 10, helpMessage = "排便時に力を保持する必要がある時間")
-    int powerKeepCountSeconds = 5;
-    @Config(helpMessage = "排便の方法")
-    DefecationType defecationType = DefecationType.SHIFT_HOLD;
-    @Config(helpMessage = "排便時に大釜の中に入る必要があるか")
-    boolean strictDefecation = false;
     @Config(helpMessage = "多動(余計な動き)をしたときに剥奪するパワー")
     int powerLossOnUnnecessaryActionAmount = 10;
 
-    @Config(min = 1, max = 5, helpMessage = "便の数", ranged = true)
-    int minPoopAmount = 1;
-    @Config(min = 2, max = 6, helpMessage = "便の数", ranged = true)
-    int maxPoopAmount = 3;
-
+    // Toilet => Logic => Misc
+    @Config(helpMessage = "パワーが最大になったときの爆発")
+    boolean enablePowerBurst = true;
     @Config(helpMessage = "トイレに入った瞬間にタイマーを止める")
     boolean stopTimerOnJoinToilet = false;
-
-    @Config(helpMessage = "露骨な表現")
-    boolean enableExplictExpression = true;
 
     public int generatePoopAmount()
     {
