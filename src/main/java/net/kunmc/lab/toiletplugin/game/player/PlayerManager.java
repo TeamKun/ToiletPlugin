@@ -8,6 +8,7 @@ import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
@@ -18,9 +19,9 @@ import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,12 +68,14 @@ public class PlayerManager extends BukkitRunnable implements Listener
     }
 
     @EventHandler
-    public void onExiting(VehicleExitEvent e)
+    public void onExiting(EntityDismountEvent e)
     {
-        if (!(e.getVehicle() instanceof Player) || !(e.getExited() instanceof Slime))
+        if (!(e.getEntity() instanceof Slime) && !(e.getEntity() instanceof ArmorStand)
+                && !(e.getDismounted() instanceof Slime) && !(e.getDismounted() instanceof ArmorStand) &&
+                !(e.getEntity() instanceof Player))
             return;
 
-        if (e.getVehicle().getPersistentDataContainer().has(
+        if (e.getDismounted().getPersistentDataContainer().has(
                 new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity"),
                 PersistentDataType.STRING
         ))
