@@ -9,8 +9,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,8 +26,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class PlayerManager extends BukkitRunnable implements Listener
 {
@@ -67,19 +71,28 @@ public class PlayerManager extends BukkitRunnable implements Listener
         this.updatePlayer(e.getPlayer());
     }
 
-    @EventHandler
-    public void onExiting(EntityDismountEvent e)
-    {
-        if (!(e.getEntity() instanceof Slime) && !(e.getEntity() instanceof ArmorStand)
-                && !(e.getDismounted() instanceof Slime) && !(e.getDismounted() instanceof ArmorStand) &&
-                !(e.getEntity() instanceof Player))
-            return;
+    private static final NamespacedKey KEY = new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity");
+    private final Class<?>[] validEntities = new Class<?>[]{
+            Slime.class,
+            ArmorStand.class,
+    };
 
-        if (e.getDismounted().getPersistentDataContainer().has(
-                new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity"),
-                PersistentDataType.STRING
-        ))
-            e.setCancelled(true);
+    @EventHandler
+    public void onDismount(EntityDismountEvent e)
+    {
+        passDismount(e, e.getEntity(), e.getDismounted());
+    }
+
+    public void passDismount(Cancellable event, Entity vehicle, Entity passenger)
+    {
+        if (Arrays.stream(validEntities)
+                .parallel()
+                .noneMatch(((Predicate<Class<?>>) aClass -> aClass.isInstance(vehicle))
+                        .or(aClass -> aClass.isInstance(passenger))))
+            return;
+        if (passenger.getPersistentDataContainer().has(KEY, PersistentDataType.STRING)
+                || vehicle.getPersistentDataContainer().has(KEY, PersistentDataType.STRING))
+            event.setCancelled(true);
     }
 
     @EventHandler
