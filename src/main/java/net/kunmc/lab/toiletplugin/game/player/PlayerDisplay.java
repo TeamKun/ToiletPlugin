@@ -163,6 +163,12 @@ public class PlayerDisplay
 
     public void updateScreen()
     {
+        if (!this.player.isPlaying())
+        {
+            this.updateRespawnDisplay();
+            return;
+        }
+
         if (!this.player.isQuesting())
         {
             if (this.questRun)
@@ -236,19 +242,20 @@ public class PlayerDisplay
         Utils.killPassenger(this.player.getPlayer().getPassengers(), ArmorStand.class, Slime.class);
     }
 
-    public void updateGeneralTitle()
+    public String getGeneralTimeStr(boolean goodRoundOnly)
     {
+
         int time = this.player.getTime();
         int max = this.player.getMaxTimeLimit();
 
-        if (time < 0 || max < 0)
-            return;
+        if (time < 0 || max <= 0)
+            return null;
 
         ChatColor color = ChatColor.GREEN;
         boolean flag = true;
         if (time <= 5)
             color = ChatColor.RED;
-        else if (time % 10 == 0)
+        else if (!goodRoundOnly || time % 10 == 0)
         {
             double progress = (double) time / max;
             if (progress < 0.15)
@@ -261,9 +268,39 @@ public class PlayerDisplay
         else
             flag = false;
 
+
         if (flag)
+            return ChatColor.YELLOW + "残り " + color + time + ChatColor.YELLOW + " 秒";
+        else
+            return null;
+    }
+
+    public void updateRespawnDisplay()
+    {
+        if (this.player.isPlaying())
+            return;
+        String timeStr = getGeneralTimeStr(false);
+        if (timeStr != null)
+            this.player.getPlayer().sendActionBar(Component.text(ChatColor.YELLOW + "リスポーンまで " + timeStr));
+        timeStr = getGeneralTimeStr(true);
+        if (timeStr != null)
             this.player.getPlayer().showTitle(Title.title(
-                    Component.text(ChatColor.YELLOW + "残り " + color + time + ChatColor.YELLOW + " 秒"),
+                    Component.text(timeStr),
+                    Component.text(""),
+                    Title.Times.of(
+                            Duration.ofMillis(0),
+                            Duration.ofSeconds(1),
+                            Duration.ofMillis(500)
+                    )
+            ));
+    }
+
+    public void updateGeneralTitle()
+    {
+        String timeStr = getGeneralTimeStr(true);
+        if (timeStr != null)
+            this.player.getPlayer().showTitle(Title.title(
+                    Component.text(timeStr),
                     Component.text(""),
                     Title.Times.of(
                             Duration.ofMillis(0),
@@ -501,5 +538,16 @@ public class PlayerDisplay
     public void onDeath()
     {
         this.clearHud();
+    }
+
+    public void onRespawn()
+    {
+        GameSound.PLAYER_RESPAWN.play(this.player);
+
+        this.player.getPlayer().sendTitle(
+                ChatColor.YELLOW + "リスポーンしました。",
+                "",
+                10, 20, 10
+        );
     }
 }

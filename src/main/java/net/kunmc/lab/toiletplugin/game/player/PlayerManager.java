@@ -3,10 +3,12 @@ package net.kunmc.lab.toiletplugin.game.player;
 import com.comphenix.protocol.ProtocolLibrary;
 import lombok.Getter;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
+import net.kunmc.lab.toiletplugin.events.PlayerRespawnEvent;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.quest.QuestPhase;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -21,6 +23,7 @@ import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.spigotmc.event.entity.EntityDismountEvent;
@@ -65,15 +68,7 @@ public class PlayerManager extends BukkitRunnable implements Listener
         e.getPlayer().setScoreboard(game.getPlugin().getPluginScoreboard());
     }
 
-    public void init()
-    {
-        Bukkit.getPluginManager().registerEvents(this, ToiletPlugin.getPlugin());
-        this.runTaskTimerAsynchronously(ToiletPlugin.getPlugin(), 0, 10);
-
-        this.KEY = new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity");
-        ProtocolLibrary.getProtocolManager()
-                .addPacketListener(new HUDPacketFilter());
-    }
+    private int time = 0;
     private final Class<?>[] validEntities = new Class<?>[]{
             Slime.class,
             ArmorStand.class,
@@ -164,9 +159,45 @@ public class PlayerManager extends BukkitRunnable implements Listener
         }
     }
 
+    public void init()
+    {
+        Bukkit.getPluginManager().registerEvents(this, ToiletPlugin.getPlugin());
+        this.runTaskTimer(ToiletPlugin.getPlugin(), 0, 10);
+
+        this.KEY = new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity");
+        ProtocolLibrary.getProtocolManager()
+                .addPacketListener(new HUDPacketFilter());
+    }
+
     @Override
     public void run()
     {
-        this.gamePlayers.forEach((player, gamePlayer) -> gamePlayer.getDisplay().updateScreen());
+        time++;
+
+        this.gamePlayers.forEach((player, gamePlayer) -> {
+            gamePlayer.getDisplay().updateScreen();
+
+            if (gamePlayer.isPlaying() || gamePlayer.getMaxTimeLimit() <= 0)
+                return;
+
+            if (time < 2)
+                return;
+
+            time = 0;
+            if (gamePlayer.getTime() > 0)
+                gamePlayer.setTime(gamePlayer.getTime() - 1);
+            else
+            {
+                Location respawn = player.getBedSpawnLocation();
+
+                if (respawn == null)
+                    respawn = player.getWorld().getSpawnLocation();
+
+                player.teleport(respawn, PlayerTeleportEvent.TeleportCause.PLUGIN);
+                player.setGameMode(GameMode.SURVIVAL);
+                gamePlayer.getDisplay().onRespawn();
+                Bukkit.getPluginManager().callEvent(new PlayerRespawnEvent(gamePlayer));
+            }
+        });
     }
 }

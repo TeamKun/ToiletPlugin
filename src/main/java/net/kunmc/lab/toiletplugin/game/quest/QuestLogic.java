@@ -1,12 +1,13 @@
 package net.kunmc.lab.toiletplugin.game.quest;
 
-import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
+import net.kunmc.lab.toiletplugin.events.PlayerRespawnEvent;
 import net.kunmc.lab.toiletplugin.events.PlayerToiletJoinEvent;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +18,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class QuestLogic implements Listener
 {
@@ -48,11 +50,24 @@ public class QuestLogic implements Listener
         if (dmgEvt.getDamage() != 0.11235)
             return;
 
-        game.getPlayerStateManager().getPlayer(player).playSound(GameSound.QUEST_FAILURE);
+        GamePlayer gamePlayer = this.game.getPlayerStateManager().getPlayer(player);
+        gamePlayer.playSound(GameSound.QUEST_FAILURE);
+        new BukkitRunnable()
+        {
+            @Override
+            public void run()
+            {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.spigot().respawn();
+                int respawn = game.getConfig().generateRespawnTime();
+                gamePlayer.setMaxTimeLimit(respawn);
+                gamePlayer.getDisplay().clearBossBar();
+            }
+        }.runTaskLater(ToiletPlugin.getPlugin(), 5L);
     }
 
     @EventHandler
-    public void onPlayerRespawn(PlayerPostRespawnEvent event)
+    public void onPlayerRespawn(PlayerRespawnEvent event)
     {
         if (this.game.getConfig().isAutoRescheduleOnRespawn())
             this.questManager.reSchedule(event.getPlayer());

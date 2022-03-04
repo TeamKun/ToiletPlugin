@@ -29,6 +29,8 @@ public enum GameSound
 
     POOP_THROW("entity.arrow.shoot", Sound.Source.MASTER, 0.5F, 0.6F),
     POOP_WATER_LAND("entity.generic.splash", Sound.Source.MASTER, 0.3F, 1.2F),
+
+    PLAYER_RESPAWN("block.enchantment_table.use", Sound.Source.MASTER, 1.0F, 0.5F),
     ;
     @Getter
     private final String name;

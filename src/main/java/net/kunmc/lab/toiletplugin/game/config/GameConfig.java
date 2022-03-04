@@ -59,6 +59,10 @@ public class GameConfig
     int minPlayerCooldownTime = 30;
     @Config(min = 1, ranged = true, helpMessage = "プレイヤのトイレ後クールダウン時間")
     int maxPlayerCooldownTime = 31;
+    @Config(min = 1, ranged = true, helpMessage = "リスポーンするまでの時間")
+    int minRespawnTime = 5;
+    @Config(min = 1, ranged = true, helpMessage = "リスポーンするまでの時間")
+    int maxRespawnTime = 30;
 
     // Player => Effect
     @Config(helpMessage = "クエスト中の低音の再生")
@@ -128,6 +132,11 @@ public class GameConfig
     public int generateToiletCooldownTime()
     {
         return RANDOM.nextInt(maxToiletCooldownTime - minToiletCooldownTime) + minToiletCooldownTime;
+    }
+
+    public int generateRespawnTime()
+    {
+        return RANDOM.nextInt(maxRespawnTime - minRespawnTime) + maxRespawnTime;
     }
 
     public List<Pair<String, String>> checkConfig()
