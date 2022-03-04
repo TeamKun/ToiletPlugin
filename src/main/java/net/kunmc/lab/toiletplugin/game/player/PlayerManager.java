@@ -54,14 +54,7 @@ public class PlayerManager extends BukkitRunnable implements Listener
         return this.gamePlayers.get(player);
     }
 
-    public void init()
-    {
-        Bukkit.getPluginManager().registerEvents(this, ToiletPlugin.getPlugin());
-        this.runTaskTimerAsynchronously(ToiletPlugin.getPlugin(), 0, 10);
-
-        ProtocolLibrary.getProtocolManager()
-                .addPacketListener(new HUDPacketFilter());
-    }
+    private NamespacedKey KEY;
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e)
@@ -71,7 +64,15 @@ public class PlayerManager extends BukkitRunnable implements Listener
         this.updatePlayer(e.getPlayer());
     }
 
-    private static final NamespacedKey KEY = new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity");
+    public void init()
+    {
+        Bukkit.getPluginManager().registerEvents(this, ToiletPlugin.getPlugin());
+        this.runTaskTimerAsynchronously(ToiletPlugin.getPlugin(), 0, 10);
+
+        this.KEY = new NamespacedKey(ToiletPlugin.getPlugin(), "hud_entity");
+        ProtocolLibrary.getProtocolManager()
+                .addPacketListener(new HUDPacketFilter());
+    }
     private final Class<?>[] validEntities = new Class<?>[]{
             Slime.class,
             ArmorStand.class,
