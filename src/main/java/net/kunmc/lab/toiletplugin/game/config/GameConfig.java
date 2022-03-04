@@ -65,6 +65,8 @@ public class GameConfig
     boolean questingOppressiveSoundEnable = true;
     @Config(helpMessage = "クエスト中の発光")
     boolean glowingOnQuesting = true;
+    @Config(helpMessage = "クエスト中の発光の色の有効化")
+    boolean glowingOnQuestingColorEnable = true;
     @Config(helpMessage = "露骨な表現")
     boolean enableExplictExpression = true;
 

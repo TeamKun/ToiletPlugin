@@ -200,7 +200,8 @@ public class QuestManager extends BukkitRunnable
 
         if (this.game.getConfig().isGlowingOnQuesting())
         {
-            this.glowColorTeam.addEntry(player.getName());
+            if (this.game.getConfig().isGlowingOnQuestingColorEnable())
+                this.glowColorTeam.addEntry(player.getName());
             player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 1, true, false));
         }
         return questTime;
