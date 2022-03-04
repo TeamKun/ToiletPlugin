@@ -257,9 +257,8 @@ public class QuestManager extends BukkitRunnable
         this.updateConfig();
 
         if ((this.glowColorTeam =
-                Bukkit.getScoreboardManager().getMainScoreboard().getTeam("toiletQstGlower")) == null)
-            this.glowColorTeam = Bukkit.getScoreboardManager().getMainScoreboard()
-                    .registerNewTeam("toiletQstGlower");
+                game.getPlugin().getPluginScoreboard().getTeam("toilet_QstGlower")) == null)
+            this.glowColorTeam = game.getPlugin().getPluginScoreboard().registerNewTeam("toilet_QstGlower");
 
         this.glowColorTeam.color(NamedTextColor.RED);
     }

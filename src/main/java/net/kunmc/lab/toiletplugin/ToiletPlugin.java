@@ -8,6 +8,9 @@ import net.kunmc.lab.toiletplugin.toiletobject.generate.ToolManager;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +36,9 @@ public final class ToiletPlugin extends JavaPlugin
     private final ModelManager modelManager;
     @Getter
     private final GameMain game;
+
+    @Getter
+    private Scoreboard pluginScoreboard;
 
     public ToiletPlugin() throws IOException
     {
@@ -61,6 +67,8 @@ public final class ToiletPlugin extends JavaPlugin
 
         Bukkit.getPluginManager().registerEvents(new ToolManager(), this);
         Bukkit.getPluginManager().registerEvents(new ToiletGenerator(this.game.getToiletManager()), this);
+
+        pluginScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
         game.setup();
 
@@ -142,6 +150,21 @@ public final class ToiletPlugin extends JavaPlugin
         {
             e.printStackTrace();
         }
+
+        LOGGER.info("Unregistering scoreboard/team/objectives...");
+
+        pluginScoreboard.getTeams().stream()
+                .filter(team -> team.getName().startsWith("toilet_"))
+                .forEach(Team::unregister);
+
+        pluginScoreboard.getObjectives().stream()
+                .filter(objective -> objective.getName().startsWith("toilet_"))
+                .filter(objective -> objective.getCriteria().equalsIgnoreCase("dummy"))
+                .forEach(Objective::unregister);
+
+        Bukkit.getOnlinePlayers()
+                .forEach(player -> player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard()));
+
         LOGGER.info("ToiletPlugin has disabled!");
     }
 }

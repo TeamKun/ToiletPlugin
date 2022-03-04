@@ -62,6 +62,7 @@ public class PlayerManager extends BukkitRunnable implements Listener
         this.gamePlayers.put(e.getPlayer(), new GamePlayer(e.getPlayer(), game));
 
         this.updatePlayer(e.getPlayer());
+        e.getPlayer().setScoreboard(game.getPlugin().getPluginScoreboard());
     }
 
     public void init()

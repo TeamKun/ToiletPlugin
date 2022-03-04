@@ -24,6 +24,7 @@ public class GameMain extends BukkitRunnable
     @Getter
     private final File configFile;
 
+    @Getter
     private final ToiletPlugin plugin;
 
     @Getter
