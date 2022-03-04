@@ -8,6 +8,7 @@ import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
 import net.kunmc.lab.toiletplugin.game.player.PlayerManager;
 import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.utils.Utils;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,7 +17,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
 
 import java.util.Random;
 
@@ -25,6 +29,8 @@ public class QuestManager extends BukkitRunnable
     private final GameMain game;
     private final QuestLogic logic;
     private final PlayerManager stateManager;
+
+    private Team glowColorTeam;
 
     public QuestManager(GameMain game)
     {
@@ -127,6 +133,8 @@ public class QuestManager extends BukkitRunnable
         player.setHealth(0d);
         gamePlayer.setQuestPhase(QuestPhase.NONE, 0);
 
+        player.removePotionEffect(PotionEffectType.GLOWING);
+        glowColorTeam.removeEntry(player.getName());
 
         gamePlayer.resetPlayerForQuest();
     }
@@ -190,7 +198,11 @@ public class QuestManager extends BukkitRunnable
         player.sendMessage(ChatColor.RED + "あなたは" + questTime + "秒以内に" +
                 Utils.convertExplict(this.game, "うんこ", "排泄") + "をしないと死んでしまう！");
 
-
+        if (this.game.getConfig().isGlowingOnQuesting())
+        {
+            this.glowColorTeam.addEntry(player.getName());
+            player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 1, true, false));
+        }
         return questTime;
     }
 
@@ -216,6 +228,10 @@ public class QuestManager extends BukkitRunnable
         info.playSound(GameSound.QUEST_CANCEL);
 
         info.getDisplay().onQuestCancelled();
+
+        player.removePotionEffect(PotionEffectType.GLOWING);
+        glowColorTeam.removeEntry(player.getName());
+
         return 0;
     }
 
@@ -238,6 +254,13 @@ public class QuestManager extends BukkitRunnable
         this.logic.init();
         this.runTaskTimer(ToiletPlugin.getPlugin(), 0, 10);
         this.updateConfig();
+
+        if ((this.glowColorTeam =
+                Bukkit.getScoreboardManager().getMainScoreboard().getTeam("toiletQstGlower")) == null)
+            this.glowColorTeam = Bukkit.getScoreboardManager().getMainScoreboard()
+                    .registerNewTeam("toiletQstGlower");
+
+        this.glowColorTeam.color(NamedTextColor.RED);
     }
 
     private void updateConfig()

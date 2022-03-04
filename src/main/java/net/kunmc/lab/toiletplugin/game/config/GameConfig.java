@@ -63,6 +63,8 @@ public class GameConfig
     // Player => Effect
     @Config(helpMessage = "クエスト中の低音の再生")
     boolean questingOppressiveSoundEnable = true;
+    @Config(helpMessage = "クエスト中の発光")
+    boolean glowingOnQuesting = true;
     @Config(helpMessage = "露骨な表現")
     boolean enableExplictExpression = true;
 
