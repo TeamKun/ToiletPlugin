@@ -65,6 +65,8 @@ public class GameConfig
     int minRespawnTime = 5;
     @Config(min = 1, ranged = true, helpMessage = "リスポーンするまでの時間")
     int maxRespawnTime = 30;
+    @Config(helpMessage = "クエスト開始時のブロードキャスト")
+    boolean broadcastOnQuestStart = true;
 
     // Player => Effect
     @Config(helpMessage = "クエスト中の低音の再生")

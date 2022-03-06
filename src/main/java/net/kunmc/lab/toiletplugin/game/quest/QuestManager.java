@@ -195,6 +195,10 @@ public class QuestManager extends BukkitRunnable
         info.setQuestPhase(QuestPhase.STARTED, questTime);
         info.setMaxPoop(maxPoop);
 
+        if (this.game.getConfig().isBroadcastOnQuestStart())
+            Bukkit.getOnlinePlayers().stream().parallel()
+                    .filter(p -> p.equals(player))
+                    .forEach(p -> p.sendMessage(ChatColor.DARK_RED + player.getName() + "は便意を感じている..."));
         player.sendMessage(ChatColor.DARK_RED + "あなたは便意を感じている... ");
         player.sendMessage(ChatColor.RED + "あなたは" + questTime + "秒以内に" +
                 Utils.convertExplict(this.game, "うんこ", "排泄") + "をしないと死んでしまう！");
