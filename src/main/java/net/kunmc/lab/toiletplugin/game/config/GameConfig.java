@@ -103,11 +103,11 @@ public class GameConfig
     int powerKeepCountSeconds = 5;
     @Config(min = 1, max = 10, helpMessage = "スニークで与える力。ホールドモードの場合は1秒間にどれだけ与えるか。")
     int powerGainAmount = 10;
-    @Config(min = 1, max = 20, helpMessage = "1秒に剥奪するパワー(スニークしていない)")
+    @Config(min = 1, max = 99, helpMessage = "1秒に剥奪するパワー(スニークしていない)")
     int powerLossOnSecAmount = 20;
     @Config(min = 1, max = 100, helpMessage = "排便時に必要なパワー")
     int defecationNeedPower = 80;
-    @Config(helpMessage = "多動(余計な動き)をしたときに剥奪するパワー")
+    @Config(min = 0, helpMessage = "多動(余計な動き)をしたときに剥奪するパワー")
     int powerLossOnUnnecessaryActionAmount = 10;
 
     // Toilet => Logic => Misc
