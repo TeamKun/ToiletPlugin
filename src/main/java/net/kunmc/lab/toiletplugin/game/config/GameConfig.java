@@ -76,7 +76,7 @@ public class GameConfig
     @Config(helpMessage = "クエスト中の発光の色の有効化")
     boolean glowingOnQuestingColorEnable = true;
     @Config(helpMessage = "露骨な表現")
-    boolean enableExplictExpression = true;
+    boolean explictExpressionEnable = true;
     // Player => Assist
     @Config(helpMessage = "トイレの地図を与える")
     boolean giveToiletMap = true;
@@ -97,10 +97,10 @@ public class GameConfig
     DefecationType defecationType = DefecationType.SHIFT_HOLD;
     @Config(helpMessage = "排便時に大釜の中に入る必要があるか")
     boolean strictDefecation = false;
-    @Config(min = 0, max = 10, helpMessage = "排便時に力を保持する必要がある時間")
-    int powerKeepCountSeconds = 5;
 
     // Toilet => Logic => Defecation => Power
+    @Config(min = 0, max = 10, helpMessage = "排便時に力を保持する必要がある時間")
+    int powerKeepCountSeconds = 5;
     @Config(min = 1, max = 10, helpMessage = "スニークで与える力。ホールドモードの場合は1秒間にどれだけ与えるか。")
     int powerGainAmount = 10;
     @Config(min = 1, max = 20, helpMessage = "1秒に剥奪するパワー(スニークしていない)")

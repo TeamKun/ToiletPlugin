@@ -13,7 +13,7 @@ public class Utils
 {
     public static String convertExplict(GameConfig config, String from, String alternative)
     {
-        return config.isEnableExplictExpression() ? from: alternative;
+        return config.isExplictExpressionEnable() ? from: alternative;
     }
 
     public static String convertExplict(GameMain game, String from, String alternative)
@@ -23,7 +23,7 @@ public class Utils
 
     public static String replaceExplict(GameConfig config, String str, String from, String to)
     {
-        return config.isEnableExplictExpression() ? str.replace(from, to): str;
+        return config.isExplictExpressionEnable() ? str.replace(from, to): str;
     }
 
     public static String replaceExplict(GameMain game, String str, String from, String to)
