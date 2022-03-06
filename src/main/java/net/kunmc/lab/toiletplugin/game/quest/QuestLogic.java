@@ -60,9 +60,16 @@ public class QuestLogic implements Listener
             {
                 player.setGameMode(GameMode.SPECTATOR);
                 player.spigot().respawn();
+                gamePlayer.getDisplay().clearBossBar();
+
+                if (!game.getConfig().isRespawnEnable())
+                {
+                    gamePlayer.setMaxTimeLimit(0);
+                    return;
+                }
+
                 int respawn = game.getConfig().generateRespawnTime();
                 gamePlayer.setMaxTimeLimit(respawn);
-                gamePlayer.getDisplay().clearBossBar();
             }
         }.runTaskLater(ToiletPlugin.getPlugin(), 5L);
     }

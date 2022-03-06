@@ -59,6 +59,8 @@ public class GameConfig
     int minPlayerCooldownTime = 30;
     @Config(min = 1, ranged = true, helpMessage = "プレイヤのトイレ後クールダウン時間")
     int maxPlayerCooldownTime = 31;
+    @Config(helpMessage = "リスポーン有効化")
+    boolean respawnEnable = true;
     @Config(min = 1, ranged = true, helpMessage = "リスポーンするまでの時間")
     int minRespawnTime = 5;
     @Config(min = 1, ranged = true, helpMessage = "リスポーンするまでの時間")
