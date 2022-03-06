@@ -46,6 +46,7 @@ public class InformationDisplay
     {
         toilet.killEntities();
         this.toilets.remove(toilet.getToilet().getName());
+        game.getToiletMap().updateToilets();
     }
 
     public void playerJoinToilet(Player player, String toiletName)
