@@ -39,7 +39,9 @@ public class InformationDisplay
 
     public void init()
     {
-        game.getToiletManager().getToiletList().forEach(toilet -> this.toilets.put(toilet.getName(), new OnGroundToilet(toilet)));
+        game.getToiletManager().getToiletList().forEach(toilet -> { // ここ Lambdaくずすと起動時にExceptionになる
+            this.toilets.put(toilet.getName(), new OnGroundToilet(toilet));
+        });
     }
 
     public void removeToilet(OnGroundToilet toilet)
