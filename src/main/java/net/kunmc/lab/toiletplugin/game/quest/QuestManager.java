@@ -17,6 +17,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -204,6 +205,9 @@ public class QuestManager extends BukkitRunnable
                 this.glowColorTeam.addEntry(player.getName());
             player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 1, true, false));
         }
+
+        if (this.game.getConfig().isGiveToiletMap())
+            player.getInventory().addItem(new ItemStack(Material.MAP));
         return questTime;
     }
 

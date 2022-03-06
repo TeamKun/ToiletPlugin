@@ -73,6 +73,9 @@ public class GameConfig
     boolean glowingOnQuestingColorEnable = true;
     @Config(helpMessage = "露骨な表現")
     boolean enableExplictExpression = true;
+    // Player => Assist
+    @Config(helpMessage = "トイレの地図を与える")
+    boolean giveToiletMap = true;
 
 
     // Toilet

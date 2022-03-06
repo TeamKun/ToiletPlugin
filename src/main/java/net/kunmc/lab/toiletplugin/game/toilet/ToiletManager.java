@@ -73,6 +73,8 @@ public class ToiletManager
                     toilet.purge();
                     toilets.put(toilet.getName(), toilet);
                 });
+
+                ToiletManager.this.game.getToiletMap().updateToilets();
             }
         }.runTaskLater(ToiletPlugin.getPlugin(), 0);
 
@@ -131,6 +133,7 @@ public class ToiletManager
     public void registerToilet(String name, OnGroundToilet toilet)
     {
         toilets.put(name, toilet);
+        game.getToiletMap().updateToilets();
     }
 
     public void save() throws IOException

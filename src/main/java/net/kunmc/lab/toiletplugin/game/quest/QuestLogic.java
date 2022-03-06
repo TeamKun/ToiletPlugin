@@ -18,6 +18,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.server.MapInitializeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class QuestLogic implements Listener
@@ -143,5 +144,11 @@ public class QuestLogic implements Listener
             return;
 
         onUnnecessaryAction(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onMapInit(MapInitializeEvent event)
+    {
+        event.getMap().addRenderer(game.getToiletMap());
     }
 }
