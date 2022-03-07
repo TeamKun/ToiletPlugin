@@ -32,7 +32,7 @@ public class UnscheduleCommand extends CommandBase
         if (players == null)
             return;
 
-        players.removeIf(player -> !game.getPlayerStateManager().getPlayer(player).isScheduled());
+        players.removeIf(player -> game.getPlayerStateManager().getPlayer(player).isScheduled());
 
         players.forEach(player -> {
             boolean result = game.getQuestManager().unSchedule(player);
