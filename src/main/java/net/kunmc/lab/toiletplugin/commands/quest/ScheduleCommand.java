@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,12 +89,16 @@ public class ScheduleCommand extends CommandBase
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
         if (args.length == 1)
-            return game.getPlayerStateManager().getPlayers().stream().parallel()
+        {
+            List<String> result = game.getPlayerStateManager().getPlayers().stream().parallel()
                     .filter(GamePlayer::isPlaying)
-                    .filter(GamePlayer::isQuesting)
+                    .filter(gamePlayer -> !gamePlayer.isQuesting())
                     .map(GamePlayer::getPlayer)
                     .map(Player::getName)
                     .collect(Collectors.toList());
+            result.addAll(Arrays.asList("@a", "@p", "@r", "@s"));
+            return result;
+        }
         if (args.length == 2)
             return Collections.singletonList("[time:int:0~]");
         return null;
