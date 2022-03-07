@@ -111,8 +111,6 @@ public class QuestManager extends BukkitRunnable
         return this.stateManager.getPlayer(player).getTime();
     }
 
-    private int cooldown;
-
     private void questFailGeneral(GamePlayer gamePlayer)
     {
         Player player = gamePlayer.getPlayer();
@@ -285,7 +283,6 @@ public class QuestManager extends BukkitRunnable
         burst = config.isEnablePowerBurst();
         accept = config.getDefecationNeedPower();
         maxCount = config.getPowerKeepCountSeconds();
-        cooldown = config.generatePlayerCooldownTime();
     }
 
     private void pendingQuestTick(Player player, GamePlayer gamePlayer)
@@ -331,7 +328,8 @@ public class QuestManager extends BukkitRunnable
             {
                 player.getDisplay().clearPowerBossBar();
                 player.getDisplay().showTimeBossBar(); // Patch of stopTimerOnJoinToilet
-                player.setCooldown(cooldown);
+                if (this.game.getConfig().isPlayerCooldownEnable())
+                    player.setCooldown(this.game.getConfig().generatePlayerCooldownTime());
                 player.getPlayer().removePotionEffect(PotionEffectType.GLOWING);
                 glowColorTeam.removeEntry(player.getPlayer().getName());
                 return true;
