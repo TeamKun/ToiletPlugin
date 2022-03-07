@@ -330,6 +330,8 @@ public class QuestManager extends BukkitRunnable
                 player.getDisplay().showTimeBossBar(); // Patch of stopTimerOnJoinToilet
                 if (this.game.getConfig().isPlayerCooldownEnable())
                     player.setCooldown(this.game.getConfig().generatePlayerCooldownTime());
+                else
+                    player.setCooldown(1);
                 player.getPlayer().removePotionEffect(PotionEffectType.GLOWING);
                 glowColorTeam.removeEntry(player.getPlayer().getName());
                 return true;
