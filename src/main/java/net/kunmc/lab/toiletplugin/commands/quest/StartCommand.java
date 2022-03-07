@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class StartCommand extends CommandBase
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
-        if (CommandUtils.invalidLengthMessage(sender, args, 1))
+        if (CommandUtils.invalidLengthMessage(sender, args, 1, 2))
             return;
 
         List<Player> players = CommandUtils.getPlayer(sender, args.length == 0 ? "@a": args[0]);
@@ -40,9 +41,15 @@ public class StartCommand extends CommandBase
             return gamePlayer.isQuesting();
         });
 
+        Integer time = null;
+
+        if (args.length > 1 && (time = CommandUtils.parseInteger(sender, args[1], 1)) == null)
+            return;
+
+        Integer finalTime = time;
         players.forEach(player -> {
 
-            int result = game.getQuestManager().start(player);
+            int result = finalTime == null ? game.getQuestManager().start(player): game.getQuestManager().start(player, finalTime);
 
             if (result != -1)
                 sender.sendMessage(ChatColor.GREEN + "I: " + player.getName() + "のクエストを開始し、制限時間を" + result + "秒に設定しました。");
@@ -56,6 +63,8 @@ public class StartCommand extends CommandBase
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args)
     {
+        if (args.length == 2)
+            return Collections.singletonList("[time:int:0~]");
         if (args.length != 1)
             return null;
 
@@ -81,7 +90,8 @@ public class StartCommand extends CommandBase
     public String[] getArguments()
     {
         return new String[]{
-                required("name|selector", "player")
+                required("name|selector", "player"),
+                optional("time", "int")
         };
     }
 }

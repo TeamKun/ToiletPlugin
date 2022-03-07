@@ -178,6 +178,11 @@ public class QuestManager extends BukkitRunnable
 
     public int start(Player player)
     {
+        return start(player, this.game.getConfig().generateQuestTime());
+    }
+
+    public int start(Player player, int questTime)
+    {
         GamePlayer info = this.stateManager.getPlayer(player);
 
         if (!info.isPlaying())
@@ -188,7 +193,6 @@ public class QuestManager extends BukkitRunnable
 
         info.resetPlayerForQuest();
 
-        int questTime = this.game.getConfig().generateQuestTime();
         int maxPoop = this.game.getConfig().generatePoopAmount();
 
         info.playSound(GameSound.QUEST_START);
