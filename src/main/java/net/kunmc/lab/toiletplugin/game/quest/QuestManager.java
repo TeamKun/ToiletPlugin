@@ -65,7 +65,7 @@ public class QuestManager extends BukkitRunnable
 
         int scheduleTime = this.game.getConfig().generateScheduleTime();
 
-        info.setMaxTimeLimit(scheduleTime);
+        info.setQuestPhase(QuestPhase.SCHEDULED, scheduleTime);
         return scheduleTime;
     }
 
@@ -364,7 +364,7 @@ public class QuestManager extends BukkitRunnable
             if (info.getQuestPhase() == QuestPhase.NONE)
                 return;
 
-            if (info.getQuestPhase() != QuestPhase.PLAYER_COOLDOWN)
+            if (info.getQuestPhase() == QuestPhase.TOILET_JOINED)
             {
                 if (info.getNowPower() >= accept)
                 {
