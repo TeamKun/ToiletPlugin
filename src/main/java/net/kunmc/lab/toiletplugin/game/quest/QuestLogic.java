@@ -50,6 +50,9 @@ public class QuestLogic implements Listener
         if (dmgEvt.getDamage() != 0.11235)
             return;
 
+        player.getInventory().remove(Material.MAP);
+        player.getInventory().remove(Material.FILLED_MAP);
+
         GamePlayer gamePlayer = this.game.getPlayerStateManager().getPlayer(player);
         gamePlayer.playSound(GameSound.QUEST_FAILURE);
         new BukkitRunnable()

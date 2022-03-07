@@ -312,6 +312,20 @@ public class QuestManager extends BukkitRunnable
 
     }
 
+    private void questComplete(GamePlayer player)
+    {
+        player.getPlayer().getInventory().remove(Material.MAP);
+        player.getPlayer().getInventory().remove(Material.FILLED_MAP);
+        player.getDisplay().clearPowerBossBar();
+        player.getDisplay().showTimeBossBar(); // Patch of stopTimerOnJoinToilet
+        if (this.game.getConfig().isPlayerCooldownEnable())
+            player.setCooldown(this.game.getConfig().generatePlayerCooldownTime());
+        else
+            player.setCooldown(1);
+        player.getPlayer().removePotionEffect(PotionEffectType.GLOWING);
+        glowColorTeam.removeEntry(player.getPlayer().getName());
+    }
+
     private boolean acceptQuestTick(GamePlayer player)
     {
         int nowCount = player.getNowCount();
@@ -326,14 +340,7 @@ public class QuestManager extends BukkitRunnable
             player.setNowPower(player.getNowPower() - accept);
             if (player.getNowPoop() >= player.getMaxPoop())
             {
-                player.getDisplay().clearPowerBossBar();
-                player.getDisplay().showTimeBossBar(); // Patch of stopTimerOnJoinToilet
-                if (this.game.getConfig().isPlayerCooldownEnable())
-                    player.setCooldown(this.game.getConfig().generatePlayerCooldownTime());
-                else
-                    player.setCooldown(1);
-                player.getPlayer().removePotionEffect(PotionEffectType.GLOWING);
-                glowColorTeam.removeEntry(player.getPlayer().getName());
+                this.questComplete(player);
                 return true;
             }
         }
