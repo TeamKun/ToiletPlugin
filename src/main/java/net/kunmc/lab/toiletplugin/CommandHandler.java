@@ -97,8 +97,8 @@ public class CommandHandler implements CommandExecutor, TabCompleter
             List<String> commandCompletes = commandBase.onTabComplete(sender, removeFirst(args));
             if (commandCompletes != null)
                 completes.addAll(commandCompletes);
-            if (commandArguments.length > args.length)
-                completes.add(ChatColor.stripColor(commandArguments[args.length - 1]));
+            if (commandArguments.length >= args.length - 1)
+                completes.add(ChatColor.stripColor(commandArguments[args.length - 2]));
         }
 
         ArrayList<String> result = new ArrayList<>();

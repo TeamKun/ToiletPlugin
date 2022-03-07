@@ -99,7 +99,8 @@ public class ChangeToiletCooldownChangeCommand extends CommandBase
         return new String[]{
                 required("toiletName", "toilet"),
                 required("maxSeconds", "int:seconds"),
-                required("remainingTime", "int:seconds"),
+                optional("remainingTime", "int:seconds"),
+                optional("state", "state")
         };
     }
 }

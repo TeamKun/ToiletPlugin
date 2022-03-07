@@ -395,6 +395,9 @@ public class ConfigCommand extends CommandBase
     @Override
     public String[] getArguments()
     {
-        return new String[0];
+        return new String[]{
+                required("configName", "string"),
+                optional("value", "any")
+        };
     }
 }
