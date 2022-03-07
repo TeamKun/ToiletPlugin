@@ -6,6 +6,7 @@ import net.kunmc.lab.toiletplugin.commands.debug.ChangeToiletCooldownChangeComma
 import net.kunmc.lab.toiletplugin.commands.debug.ChangeToiletStateCommand;
 import net.kunmc.lab.toiletplugin.commands.debug.CreateHDCommand;
 import net.kunmc.lab.toiletplugin.commands.debug.KillPassengersCommand;
+import net.kunmc.lab.toiletplugin.commands.debug.MakePlayerAsSpectatorCommand;
 import net.kunmc.lab.toiletplugin.commands.debug.PlaySoundCommand;
 import net.kunmc.lab.toiletplugin.commands.debug.PurgeToiletLocalDataCommand;
 import net.kunmc.lab.toiletplugin.game.GameMain;
@@ -46,6 +47,7 @@ public class DebugCommand extends SubCommandable
         map.put("playSound", new PlaySoundCommand());
         map.put("killPassengers", new KillPassengersCommand());
         map.put("createHD", new CreateHDCommand());
+        map.put("makePlayerAsSpectator", new MakePlayerAsSpectatorCommand(game));
         return map;
     }
 }

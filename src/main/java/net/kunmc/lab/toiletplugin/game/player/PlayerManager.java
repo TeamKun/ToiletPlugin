@@ -23,7 +23,6 @@ import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.spigotmc.event.entity.EntityDismountEvent;
@@ -192,8 +191,7 @@ public class PlayerManager extends BukkitRunnable implements Listener
 
                 if (respawn == null)
                     respawn = player.getWorld().getSpawnLocation();
-
-                player.teleport(respawn, PlayerTeleportEvent.TeleportCause.PLUGIN);
+                player.teleport(respawn);
                 player.setGameMode(GameMode.SURVIVAL);
                 gamePlayer.getDisplay().onRespawn();
                 Bukkit.getPluginManager().callEvent(new PlayerRespawnEvent(gamePlayer));
