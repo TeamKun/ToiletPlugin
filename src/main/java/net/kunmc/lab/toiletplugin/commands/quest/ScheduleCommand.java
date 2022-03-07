@@ -43,11 +43,16 @@ public class ScheduleCommand extends CommandBase
         if (args.length == 1)
         {
             players.forEach(player -> {
-                Integer scheduleTime = game.getQuestManager().getScheduledTime(player);
-                if (scheduleTime == null)
-                    checkQuesting(sender, player);
+                int result = game.getQuestManager().changeScheduledTime(player);
+
+                if (result != -1)
+                    sender.sendMessage(ChatColor.GREEN + "I: " + player.getName() + "のクエストは" + result + "秒後に開始されます。");
                 else
-                    sender.sendMessage(ChatColor.BLUE + "I: " + player.getName() + "のクエストは" + scheduleTime + "秒後に開始されます。");
+                {
+                    if (checkQuesting(sender, player))
+                        return;
+                    sender.sendMessage(ChatColor.RED + "E: " + player.getName() + "のクエストを開始できませんでした。");
+                }
             });
 
             sender.sendMessage(ChatColor.GREEN + "S: " + players.size() + "人のプレイヤに対して操作を実行しました。");
