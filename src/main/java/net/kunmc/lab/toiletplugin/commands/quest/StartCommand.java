@@ -70,7 +70,7 @@ public class StartCommand extends CommandBase
 
         List<String> playerNames = game.getPlayerStateManager().getPlayers().stream().parallel()
                 .filter(GamePlayer::isPlaying)
-                .filter(GamePlayer::isQuesting)
+                .filter(gamePlayer -> !gamePlayer.isQuesting())
                 .map(GamePlayer::getPlayer)
                 .map(Player::getName)
                 .collect(Collectors.toList());
