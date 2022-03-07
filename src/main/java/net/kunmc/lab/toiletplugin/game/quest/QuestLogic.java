@@ -1,7 +1,6 @@
 package net.kunmc.lab.toiletplugin.game.quest;
 
 import net.kunmc.lab.toiletplugin.ToiletPlugin;
-import net.kunmc.lab.toiletplugin.events.PlayerRespawnEvent;
 import net.kunmc.lab.toiletplugin.events.PlayerToiletJoinEvent;
 import net.kunmc.lab.toiletplugin.game.GameMain;
 import net.kunmc.lab.toiletplugin.game.player.GamePlayer;
@@ -72,13 +71,6 @@ public class QuestLogic implements Listener
                 gamePlayer.setMaxTimeLimit(respawn);
             }
         }.runTaskLater(ToiletPlugin.getPlugin(), 5L);
-    }
-
-    @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent event)
-    {
-        if (this.game.getConfig().isAutoRescheduleOnRespawn())
-            this.questManager.reSchedule(event.getPlayer());
     }
 
     @EventHandler

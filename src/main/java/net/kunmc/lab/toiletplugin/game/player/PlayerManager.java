@@ -195,6 +195,9 @@ public class PlayerManager extends BukkitRunnable implements Listener
                 player.setGameMode(GameMode.SURVIVAL);
                 gamePlayer.getDisplay().onRespawn();
                 Bukkit.getPluginManager().callEvent(new PlayerRespawnEvent(gamePlayer));
+
+                if (this.game.getConfig().isAutoRescheduleOnRespawn())
+                    this.game.getQuestManager().reSchedule(player);
             }
         });
     }

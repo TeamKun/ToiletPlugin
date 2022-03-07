@@ -60,12 +60,12 @@ public class QuestManager extends BukkitRunnable
     {
         GamePlayer info = this.stateManager.getPlayer(player);
 
-        if (info.getQuestPhase() != QuestPhase.SCHEDULED)
+        if (info.getQuestPhase() != QuestPhase.NONE)
             return -1;
 
         int scheduleTime = this.game.getConfig().generateScheduleTime();
 
-        info.setTime(scheduleTime);
+        info.setMaxTimeLimit(scheduleTime);
         return scheduleTime;
     }
 
