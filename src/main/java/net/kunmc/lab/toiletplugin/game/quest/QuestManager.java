@@ -352,8 +352,7 @@ public class QuestManager extends BukkitRunnable
             if (!info.isPlaying())
                 return;
 
-            if (info.getQuestPhase() == QuestPhase.NONE ||
-                    info.getQuestPhase() == QuestPhase.SCHEDULED)
+            if (info.getQuestPhase() == QuestPhase.NONE)
                 return;
 
             if (info.getQuestPhase() != QuestPhase.PLAYER_COOLDOWN)
