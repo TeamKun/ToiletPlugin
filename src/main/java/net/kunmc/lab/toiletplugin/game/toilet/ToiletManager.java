@@ -146,6 +146,7 @@ public class ToiletManager
         OnGroundToilet toilet = toilets.remove(name);
         toilet.killEntities();
 
+        game.getToiletMap().updateToilets();
         return toilet;
     }
 
