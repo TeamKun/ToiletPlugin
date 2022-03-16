@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ToiletManager
 {
@@ -161,6 +162,13 @@ public class ToiletManager
                 .map(Toilet::getArmorStandLocation)
                 .map(locationPojo -> new Location(Bukkit.getWorld(locationPojo.getWorldName()), locationPojo.getX(), locationPojo.getY(), locationPojo.getZ()))
                 .toArray(Location[]::new);
+    }
+
+    public Stream<Location> getToiletLocationsStream()
+    {
+        return this.toilets.values().stream()
+                .map(Toilet::getArmorStandLocation)
+                .map(locationPojo -> new Location(Bukkit.getWorld(locationPojo.getWorldName()), locationPojo.getX(), locationPojo.getY(), locationPojo.getZ()));
     }
 
     public List<String> getToiletNames()

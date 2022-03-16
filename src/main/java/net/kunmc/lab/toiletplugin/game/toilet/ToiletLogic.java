@@ -11,6 +11,7 @@ import net.kunmc.lab.toiletplugin.game.sound.GameSound;
 import net.kunmc.lab.toiletplugin.game.sound.SoundArea;
 import net.kunmc.lab.toiletplugin.utils.DirectionUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -225,5 +227,30 @@ public class ToiletLogic implements Listener
 
         int cooldown = game.getConfig().generateToiletCooldownTime();
         toilet.setCooldown(ToiletState.TOILET_COOLDOWN, cooldown);
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerBreakBlock(BlockBreakEvent e)
+    {
+        if (!this.playerManager.getPlayer(e.getPlayer()).isPlaying())
+            return;
+
+        Location location = e.getBlock().getLocation();
+
+        boolean b = this.toiletManager.getToiletLocationsStream()
+                .parallel()
+                .anyMatch(loc -> {
+                    int distanceX = Math.abs(loc.getBlockX() - location.getBlockX());
+                    int distanceY = Math.abs(loc.getBlockY() - location.getBlockY());
+                    int distanceZ = Math.abs(loc.getBlockZ() - location.getBlockZ());
+
+                    return distanceX < 7 && distanceY < 7 && distanceZ < 7;
+                });
+
+        if (!b)
+            return;
+
+        e.getPlayer().sendMessage(ChatColor.RED + "トイレの近くのブロックは破壊できません！");
+        e.setCancelled(true);
     }
 }
