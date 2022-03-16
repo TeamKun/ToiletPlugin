@@ -52,6 +52,7 @@ public class ToiletMap extends MapRenderer
         Map<Location, OnGroundToilet> toiletMap = toiletManager.getToilets().values().stream().parallel()
                 .collect(Collectors.toMap(toilet -> toilet.getScytheLocation().toLocation(), toilet -> toilet));
 
+        toilets.clear();
         toilets.putAll(toiletMap);
     }
 
