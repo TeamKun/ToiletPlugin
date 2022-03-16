@@ -29,6 +29,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ToiletLogic implements Listener
 {
@@ -168,7 +170,34 @@ public class ToiletLogic implements Listener
     @EventHandler
     public void onEntityBreakBlock(EntityExplodeEvent e)
     {
-        e.blockList().removeIf(block -> this.toiletManager.getToilet(block.getLocation()) != null);
+        List<Block> blocks = e.blockList();
+
+        this.toiletManager.getToiletLocationsStream()
+                .parallel()
+                .forEach(location -> {
+                    try
+                    {
+                        List<Block> removeBlocks = blocks.stream()
+                                .filter(block -> {
+                                    if (block == null)
+                                        return false;
+
+                                    Location loc = block.getLocation();
+
+                                    int distanceX = Math.abs(loc.getBlockX() - location.getBlockX());
+                                    int distanceY = Math.abs(loc.getBlockY() - location.getBlockY());
+                                    int distanceZ = Math.abs(loc.getBlockZ() - location.getBlockZ());
+
+                                    return distanceX < 7 && distanceY < 7 && distanceZ < 7;
+                                }).collect(Collectors.toList());
+
+                        e.blockList().removeAll(removeBlocks);
+                    }
+                    catch (Exception ignored)
+                    {
+                    }
+                });
+
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
