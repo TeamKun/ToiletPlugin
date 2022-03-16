@@ -1,5 +1,5 @@
 name: ToiletPlugin
-version: 1.0.0
+version: 1.0.1
 main: net.kunmc.lab.toiletplugin.ToiletPlugin
 api-version: 1.16
 authors: [Peyang]
